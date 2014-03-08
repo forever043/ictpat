@@ -1,5 +1,9 @@
-sudo pip install django-endless-pagination
-sudo pip install django_nav
-sudo pip install django-filetransfers
-sudo pip install pil
-sudo pip install grappelli django-filebrowser
+grappelli
+South
+django-filetransfers
+django-chartit
+django-datatables-view
+
+django-nav
+pil
+
