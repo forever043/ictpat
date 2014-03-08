@@ -1,0 +1,6 @@
+{% load staticfiles %}
+<!-- MenuItem: {{ nav.name }} -->
+<li><a class="shortcut-button" href="{{ nav.get_absolute_url }}"><span>
+	<img src="{% static nav.icon %}" alt="icon" /><br />
+	{{ nav.name }}
+</span></a></li>

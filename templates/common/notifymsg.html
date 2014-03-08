@@ -1,0 +1,11 @@
+{% load staticfiles %}
+{% if messages %}
+			<!-- Start Notifications -->
+			{% for message in messages %}
+			<div class="notification {{message.tags}} png_bg">
+				<a href="#" class="close"><img src="{% static "images/icons/cross_grey_small.png" %}" title="关闭通知" alt="close" /></a>
+				<div>{{ message }}</div>
+			</div>
+			{% endfor %}
+			<!-- End Notifications -->
+{% endif %}

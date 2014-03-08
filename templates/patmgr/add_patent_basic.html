@@ -1,0 +1,226 @@
+{% extends "common/mgrbase.html" %}
+{% load staticfiles %}
+
+{% block main_content %}
+			
+			<!-- Page Head -->
+			<h2>专利申请登记</h2>
+			<p id="page-intro">使用普通模式登记单个专利申请，或使用高级模式批量登记专利申请</p>
+
+			{% include 'common/notifymsg.html' %}
+
+			<div class="content-box"><!-- Start Content Box -->
+				
+				<div class="content-box-header">
+					
+					<h3>专利信息</h3>
+					<ul class="content-box-tabs">
+						<li><a href="#tab_basic" class="default-tab">普通模式</a></li>
+						<li><a href="{% url 'patent-batchadd' %}">高级模式</a></li>
+					</ul>
+
+					<div class="clear"></div>
+					
+				</div> <!-- End .content-box-header -->
+				
+				<div class="content-box-content">
+
+					<div class="tab-content default-tab" id="tab_basic" >
+					
+						<form method="post" {% if form.is_multipart %}enctype="multipart/form-data"{% endif %}>
+
+							{% csrf_token %}
+							
+							<fieldset>
+								
+								<p>
+									<label>
+										{{ form.name.label }}*
+										{% if form.name.errors %}
+										<span class="input-notification error png_bg">
+											{% for error in form.name.errors %}
+											{{ error }}
+											{% endfor %}
+										</span>
+										{% endif %}
+									</label>
+									{{ form.name }}
+								</p>
+								
+								<p>
+									<label>
+										{{ form.inventors.label }}*
+										{% if form.inventors.errors %}
+										<span class="input-notification error png_bg">
+											{% for error in form.inventors.errors %}
+											{{ error }}
+											{% endfor %}
+										</span>
+										{% endif %}
+									</label>
+									{{ form.inventors }}
+									<br />
+									<small>多个发明人使用全角分号"；"分隔</small>
+								</p>
+
+								<p>
+									<label>
+									{{ form.department.label }}*
+									{% if form.department.errors %}
+									<span class="input-notification error png_bg"></span>
+									{% endif %}
+									{{ form.department }}
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+									{{ form.type.label }}*
+									{% if form.type.errors %}
+									<span class="input-notification error png_bg"></span>
+									{% endif %}
+									{{ form.type }}
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+									{{ form.state.label }}*
+									{% if form.state.errors %}
+									<span class="input-notification error png_bg"></span>
+									{% endif %}
+									{{ form.state }}
+
+									</label>
+								</p>
+
+							</fieldset>
+
+							<fieldset class="column-left">
+
+								<p>
+									<label>
+										{{ form.apply_code.label }}*
+										{% if form.apply_code.errors %}
+										<span class="input-notification error png_bg">
+											{% for error in form.apply_code.errors %}
+											{{ error }}
+											{% endfor %}
+										</span>
+										{% endif %}
+									</label>
+									{{ form.apply_code }}
+								</p>
+
+							</fieldset>
+
+							<fieldset class="column-right">
+
+								<p>
+									<label>
+										{{ form.apply_date.label }}*
+										{% if form.apply_date.errors %}
+										<span class="input-notification error png_bg">
+											{% for error in form.apply_date.errors %}
+											{{ error }}
+											{% endfor %}
+										</span>
+										{% endif %}
+									</label>
+									{{ form.apply_date }}
+								</p>
+								
+							</fieldset>
+
+							<fieldset>
+
+								<p>
+									<label>
+										{{ form.apply_file.label }}*
+										{% if form.apply_file.errors %}
+										<span class="input-notification error png_bg"></span>
+										{% endif %}
+										{{ form.apply_file }}
+									</label>
+								</p>
+
+							</fieldset>
+
+							<fieldset class="column-left">
+
+								<p>
+									<label>
+										{{ form.authorize_code.label }}
+										{% if form.authorize_code.errors %}
+										<span class="input-notification error png_bg">
+											{% for error in form.authorize_code.errors %}
+											{{ error }}
+											{% endfor %}
+										</span>
+										{% endif %}
+									</label>
+									{{ form.authorize_code }}
+								</p>
+
+							</fieldset>
+
+							<fieldset class="column-right">
+
+								<p>
+									<label>
+										{{ form.authorize_date.label }}
+										{% if form.authorize_date.errors %}
+										<span class="input-notification error png_bg">
+											{% for error in form.authorize_date.errors %}
+											{{ error }}
+											{% endfor %}
+										</span>
+										{% endif %}
+									</label>
+									{{ form.authorize_date }}
+								</p>
+
+							</fieldset>
+
+							<fieldset>
+
+								<p>
+									<label>
+										{{ form.apply_file.label }}
+										{% if form.authorize_file.errors %}
+										<span class="input-notification error png_bg"></span>
+										{% endif %}
+										{{ form.apply_file }}
+									</label>
+								</p>
+
+							</fieldset>
+
+							<div class="clear"></div><!-- End .clear -->
+
+							<fieldset>
+
+								{% for field in form.get_extfields %}
+								<p>
+									<label>
+										{{ field.label }}
+										{% if field.errors %}
+										<span class="input-notification error png_bg">
+											{% for error in field.errors %}
+											{{ error }}
+											{% endfor %}
+										</span>
+										{% endif %}
+									</label>
+									{{ field }}
+								</p>
+								{% endfor %}
+
+							</fieldset>
+
+							<p>
+								<input class="button" type="submit" value="提交" />
+							</p>
+					
+						</form>
+					</div> <!-- End #tab_basic -->
+
+				</div> <!-- End .content-box-content -->
+				
+			</div> <!-- End .content-box -->
+						
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "common/mgrbase.html" %}
+{% load staticfiles %}
+
+{% block scripts %}
+{{ block.super }}
+<script type="text/javascript">
+    $(document).ready(function() {
+        // Reset filter form
+        $("#reset").click(function() {
+            window.location.href='{% url "patent-list-fresh" %}';
+            return false;
+        })
+
+        // Delete
+        $(".delete").click(function(){
+            $.post(this.href, function(data) {
+                if (data.result == "ok"){
+                    $(this).parent().parent().remove();
+                    alert("删除成功");
+                } else {
+                    // handle error processed by server here
+                    alert("删除失败：" + data.result);
+                }
+            }).fail(function() {
+                // handle unexpected error here
+                alert("error");
+            });
+            return false;
+        }
+    });
+</script>
+{% endblock %}
+
+{% block main_content %}
+			<!-- Page Head -->
+			<h2>专利列表查询</h2>
+			<p id="page-intro">快捷任务列表</p>
+
+			<!-- PatentType List -->
+			<div class="content-box column-left">
+				{% include "sysmgr/meta_patent_type.html" %}
+			</div>
+
+			<!-- PatentState List -->
+			<div class="content-box column-right">
+				{% include "sysmgr/meta_patent_state.html" %}
+			</div>
+
+			<!-- Department List -->
+			<div class="content-box column-left">
+				{% include "sysmgr/meta_department.html" %}
+			</div>
+
+{% endblock %}
+

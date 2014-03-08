@@ -1,0 +1,18 @@
+delete from patmgr_department;
+insert into patmgr_department (name, sort, disabled) values ('集成应用中心', 10, 0);
+insert into patmgr_department (name, sort, disabled) values ('高性能计算机研究中心', 20, 0);
+insert into patmgr_department (name, sort, disabled) values ('计算机体系结构国家重点实验室', 30, 0);
+insert into patmgr_department (name, sort, disabled) values ('网络重点实验室', 40, 0);
+insert into patmgr_department (name, sort, disabled) values ('微处理器研究中心', 50, 0);
+insert into patmgr_department (name, sort, disabled) values ('信息安全研究中心', 60, 0);
+insert into patmgr_department (name, sort, disabled) values ('智能信息处理重点实验室', 70, 0);
+insert into patmgr_department (name, sort, disabled) values ('普适计算研究中心', 80, 0);
+insert into patmgr_department (name, sort, disabled) values ('网络技术研究中心', 90, 0);
+insert into patmgr_department (name, sort, disabled) values ('前瞻研究实验室', 100, 0);
+insert into patmgr_department (name, sort, disabled) values ('无线通信技术研究中心', 110, 0);
+insert into patmgr_department (name, sort, disabled) values ('前瞻研究中心', 120, 0);
+insert into patmgr_department (name, sort, disabled) values ('数据存储技术研究中心', 130, 0);
+insert into patmgr_department (name, sort, disabled) values ('技术发展处', 140, 0);
+insert into patmgr_department (name, sort, disabled) values ('网络数据科学与工程研究中心', 150, 0);
+insert into patmgr_department (name, sort, disabled) values ('先进计算机系统实验室', 160, 0);
+insert into patmgr_department (name, sort, disabled) values ('计算机应用研究中心', 170, 0);

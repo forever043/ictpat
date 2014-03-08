@@ -1,0 +1,143 @@
+{% extends "common/mgrbase.html" %}
+{% load staticfiles %}
+
+{% block csslink %}
+{{ block.super }}
+<link href='{% static "css/jquery.rating.css" %}' type="text/css" rel="stylesheet"/>
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }}
+<script type="text/javascript" src="{% static "scripts/jquery.rating.js" %}"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	$('input[name="cancel"]').each(function () {
+		$(this).click(function() {
+			window.location.href='{{ i__next__ }}';
+			return false;
+		})
+	})
+})
+</script>
+{% endblock %}
+
+{% block main_content %}
+			
+			<!-- Page Head -->
+			<h2>专利等级评定</h2>
+			<p id="page-intro">为专利评级，并填写专利意见</p>
+
+			{% include 'common/notifymsg.html' %}
+
+			<div class="content-box"><!-- Start Content Box -->
+				
+				<div class="content-box-header">
+					
+					<h3>专利信息</h3>
+					<div class="clear"></div>
+					
+				</div> <!-- End .content-box-header -->
+
+
+				<form method="post">
+
+					{% csrf_token %}
+
+					<input type="hidden" name="__next__" value="{{ i__next__ }}">
+				
+					<div class="content-box-content">
+
+						<div class="tab-content{% if not extmode %} default-tab{% endif %}" id="tab1" >
+					
+							<fieldset class="column-left">
+								
+								<p>
+									<label>专利名称：</label>{{ patent.name }}
+								</p>
+								
+								<p>
+									<label>发明人：</label>{{ patent.inventors }}
+								</p>
+
+								<p>
+									<b>所属部门：</b>{{ patent.department }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									<b>专利类型：</b>{{ patent.type }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								</p>
+								<p>
+									<b>专利状态：</b>{{ patent.state }}
+								</p>
+
+								<p>
+									<label>
+									{% if not patent.apply_file and not patent.authorize_file %}
+									<label>暂无相关证书</label>
+									{% else %}
+									<label>
+										查看证书：
+										{% if patent.apply_file %}
+										<a target="_blank" href="{% url 'patent-file-service' patent.apply_code %}">申请证书</a>
+										&nbsp;&nbsp;&nbsp;&nbsp;
+										{% endif %}
+										{% if patent.authorize_file %}
+										<a target="_blank" href="{% url 'patent-file-service' patent.authorize_code %}">授权证书</a>
+										{% endif %}
+									</label>
+									{% endif %}
+									</label>
+								</p>
+								
+							</fieldset>
+
+							<fieldset class="column-right">
+
+								{{ form.patent }} {{ form.expert }}
+								<p>
+									<label>
+										{{ form.rank.label }}*
+
+										{% if form.rank.errors %}
+										<span class="input-notification error png_bg">
+											{% for error in form.rank.errors %}
+											{{ error }}
+											{% endfor %}
+										</span>
+										{% endif %}
+									</label>
+									{% for radio in form.rank %}
+										{{ radio.tag }}
+									{% endfor %}
+									<br />
+								</p>
+								
+								<p>
+									<label>
+										{{ form.remark.label }}*
+										{% if form.remark.errors %}
+										<span class="input-notification error png_bg">
+											{% for error in form.remark.errors %}
+											{{ error }}
+											{% endfor %}
+										</span>
+										{% endif %}
+									</label>
+									{{ form.remark }}
+								</p>
+
+								<p>
+									<input class="button" type="submit" name="save" value="保存" />
+									<input class="button" type="submit" name="cancel" value="取消" />
+								</p>
+
+							</fieldset>
+
+							<div class="clear"></div><!-- End .clear -->
+					
+						</div> <!-- End #tab1 -->
+
+					</div> <!-- End .content-box-content -->
+				
+				</div> <!-- End .content-box -->
+			</form>
+						
+{% endblock %}
+

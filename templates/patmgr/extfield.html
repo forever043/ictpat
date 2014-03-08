@@ -1,0 +1,259 @@
+{% extends "common/mgrbase.html" %}
+{% load staticfiles %}
+
+{% block main_content %}
+
+<!-- Page Head -->
+<h2>专利扩展属性管理</h2>
+<p id="page-intro">管理专利数据库扩展属性</p>
+
+<!-- PatentType List -->
+<div class="content-box column-left">
+	{% include "patmgr/meta_patent_type.html" %}
+</div>
+
+<!-- PatentState List -->
+<div class="content-box column-right">
+	{% include "patmgr/meta_patent_state.html" %}
+</div>
+
+<div class="clear"></div><!-- End .clear -->
+
+<!-- PatentExtFieldType List -->
+<div class="content-box">
+
+	<div class="content-box-header">
+			
+		<h3>专利扩展属性列表</h3>
+		<div class="clear"></div>
+					
+	</div> <!-- End .content-box-header -->
+				
+	<div class="content-box-content">
+					
+		<div class="tab-content default-tab" id="tab1"> <!-- This is the target div. id must match the href of this div's tab -->
+			
+			{% include "common/notifymsg.html" %}
+
+			<table id="extfield_table" class="datatable">
+				<thead>
+				<tr>
+					<th>字段标签</th>
+					<th>字段名称</th>
+					<th>可检索</th>
+					<th>状态</th>
+					<th>排序</th>
+					<th>操作</th>
+				</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+
+			<div class="clear"></div><!-- End .clear -->
+				
+		</div> <!-- End #tab1 -->
+					
+	</div> <!-- End .content-box-content -->
+				
+</div>
+
+{% endblock %}
+
+
+{% block csslink %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static "css/jquery.dataTables.css" %}" type="text/css" media="screen" />
+{% endblock %}
+
+
+{% block scripts %}
+{{ block.super }}
+<script type="text/javascript" src="{% static "scripts/jquery.jeditable.mini.js" %}"></script>
+<script type="text/javascript" src="{% static "scripts/jquery.dataTables.min.js" %}"></script>
+<script type="text/javascript" src="{% static "scripts/simpla.dataTables.configuration.js" %}"></script>
+<script type="text/javascript">
+
+$.fn.dataTableExt.afnFiltering.push(
+	function( oSettings, aData, iDataIndex ) {
+		var state = document.getElementById('state_filter').value;
+		if (state == "all")
+			return true;
+		return state==aData[3];
+	}
+);
+
+function fnRowInit(submitURL, oTable) {
+	// MouseOver high-light
+	$(".datatable tr").not(':first').hover(
+		function () { $(this).addClass('selected-row'); }, 
+		function () { $(this).removeClass('selected-row'); }
+	);
+
+	// For new created row
+	$('.creating-row td.edititem').editable(
+		function(sValue, settings) { 
+			var aPos = oTable.fnGetPosition( this );
+			oTable.fnUpdate( sValue, aPos[0], aPos[1] );
+			return(sValue);
+		}, {
+		"height": "15px",
+		"width": "80%",
+	});
+
+	// Row editable
+	$('.datatable td.edititem').editable(submitURL, {
+		"callback": function( sValue, y ) {
+			sValue = JSON.parse(sValue)
+			var aPos = oTable.fnGetPosition( this );
+			oTable.fnUpdate(sValue.value , aPos[0], aPos[1] );
+		},
+		"submitdata": function ( value, settings ) {
+			return {
+				"pk": this.parentNode.getAttribute('id'),
+				"column": oTable.fnGetPosition( this )[2]
+			};
+		},
+		"height": "15px",
+		"width": "80%",
+		"tooltip": "Click to edit..."
+	});
+
+	// ******** Cancel New Row ************
+	$("#cancelrow").unbind("click")
+	$("#cancelrow").click(function(){
+		oTable.creating_row = false;
+		oTable.fnDeleteRow(this.parentNode.parentNode);
+		return false;
+	});
+	$("#submitrow").unbind("click")
+	$("#submitrow").click(function(){
+		var tr = this.parentNode.parentNode;
+		var data = oTable.fnGetData(tr);
+		$.post(this.href, {'pk':'-1', 'field_name':data['field_name'], 'field_label':data['field_label']}, function(data, status) {
+			if (data.result == "ok") {
+				oTable.fnUpdate(data.value, tr);
+				oTable.creating_row = false;
+				$(tr).removeClass("creating-row");
+			}
+			else {
+				alert("保存失败：" + data.text);
+			}
+		});
+		return false;
+	});
+}
+
+$(document).ready(function() {
+
+	var typeTable = $('#patenttype_table').dataTable({
+		"bProcessing": true,
+		"sAjaxSource": "{% url "patent-type-json" %}",
+		"bSort": false,
+		"bFilter": false,
+		"bLengthChange": false,
+		"sPaginationType": "full_numbers",
+		"oLanguage": oLanguage,
+		// Column Design
+		"bAutoWidth": false,
+		"aoColumns": [
+			{ "mData": "pk",   "sWidth": "15%" },
+			{ "mData": "name", "sWidth": "40%", "sClass": "edititem" },
+			{ "mData": "sort", "sWidth": "15%" },
+			{ "mData": "pk",   "sWidth": "15%" },
+		],
+
+		// Editable, RowCreating, MouseOver Highlight
+		"fnDrawCallback": function () { return fnRowInit("{% url 'patent-type-json' %}", typeTable); },
+	});
+
+	var stateTable = $('#patentstate_table').dataTable({
+		"bProcessing": true,
+		"sAjaxSource": "{% url "patent-state-json" %}",
+		"bSort": false,
+		"bFilter": false,
+		"bLengthChange": false,
+		"sPaginationType": "full_numbers",
+		"oLanguage": oLanguage,
+		// Column Design
+		"bAutoWidth": false,
+		"aoColumns": [
+			{ "mData": "pk",   "sWidth": "15%" },
+			{ "mData": "name", "sWidth": "40%", "sClass": "edititem" },
+			{ "mData": "sort", "sWidth": "15%" },
+			{ "mData": "pk",   "sWidth": "15%" },
+		],
+		// Editable, RowCreating, MouseOver Highlight
+		"fnDrawCallback": function () { return fnRowInit("{% url 'patent-state-json' %}", stateTable); },
+	});
+
+	var oTable = $('#extfield_table').dataTable({
+		"bProcessing": true,
+		//"bServerSide": true,
+		"sAjaxSource": "{% url "patent-extfield-json" %}",
+		"bLengthChange": true,
+		"bSort": false,
+		"sPaginationType": "full_numbers",
+		"iDisplayLength": "10",
+		"oLanguage": oLanguage,
+		// Editable, RowCreating, MouseOver Highlight
+		"fnDrawCallback": function () { return fnRowInit("{% url 'patent-extfield-json' %}", oTable); },
+		"sDom": 'l<"state_filter">frti<"addnew">p',
+
+		// Column Design
+		"bAutoWidth": false,
+		"aoColumns": [
+			{ "mData": "field_label", "sWidth": "25%", "sClass": "edititem" },
+			{ "mData": "field_name",  "sWidth": "35%", "sClass": "edititem" },
+			{ "mData": "retrieval",   "sWidth": "10%",
+				"fnRender": function (o, v) {
+					return '<input type="checkbox" id="someCheckbox" name="someCheckbox" ' + (v ? 'checked' : '') + ' />';
+				} },
+			{ "mData": "disabled",    "sWidth": "10%",
+				"fnRender": function (o, v) {
+					return v ? '禁用' : '启用';
+				} },
+			{ "mData": "sort",        "sWidth": "10%" },
+			{ "mData": "pk",          "sWidth": "15%", "sClass": "edit",
+				"fnRender": function (o, v) {
+					if (v!=-1) {
+						return '<a href="#" title="Edit"><img src="/resources/images/icons/pencil.png" alt="Edit" /></a>'
+							 + '<a href="#" class="delete" title="Delete"><img src="/resources/images/icons/cross.png" alt="Delete" /></a>'
+							 + '<a href="#" title="Edit Meta"><img src="/resources/images/icons/hammer_screwdriver.png" alt="Edit Meta" /></a>';
+					}
+					else {
+						return '<a id="submitrow" href="{% url "patent-extfield-json" %}">保存</a>&nbsp;|&nbsp;<a id="cancelrow" href="{% url "patent-extfield-json" %}">取消</a>';
+					}
+				} },
+		],
+	});
+
+	// ToolBar
+	$("div.state_filter").html('<label>状态<select id="state_filter" name="dropdown" class="small-input">'
+						+ '	<option value="all">全部</option>'
+						+ '	<option value="启用">启用</option>'
+						+ '	<option value="禁用">禁用</option>'
+						+ '</select></label>');
+	// Filter ExtField State
+	$('#state_filter').change( function() { oTable.fnDraw(); } );
+	$("div.addnew").html('<a id="addrow" href="#">添加...</a>');
+	$("#addrow").click(function() {
+		if (oTable.creating_row)
+			return false;
+		oTable.creating_row = true;
+    	oTable.fnAddData( {
+			"field_label":"请单击输入",
+			"field_name":"请单击输入",
+    		"retrieval":false,
+			"disabled":true,
+			"sort":"不可用",
+			"pk":-1,
+			"DT_RowId":-1,
+			"DT_RowClass":"creating-row",
+   		});
+		return false;
+	});
+});
+
+</script>
+{% endblock %}
+

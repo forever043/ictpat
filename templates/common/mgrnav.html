@@ -1,0 +1,59 @@
+{% load staticfiles %}
+<script type="text/javascript">
+window.onload= function() {
+    document.getElementById("patlist").className = "current";
+    document.getElementById("patmgr").className += " current";
+    $("#patmgr").parent().find("ul").toggle();
+}
+</script>
+			
+			<ul id="main-nav">  <!-- Accordion Menu -->
+				
+				<li>
+					<a href="http://www.google.com/" class="nav-top-item no-submenu">Dashboard</a>       
+				</li>
+				
+				<li> 
+					<a id="patmgr" href="#" class="nav-top-item">专利管理</a>
+					<ul>
+						<li><a href="#">登记申请</a></li>
+						<li><a id="patlist" href="#">列表查询</a></li>
+						<li><a href="#">状态维护</a></li>
+						<li><a href="#">检索管理</a></li>
+					</ul>
+				</li>
+				
+				<li>
+					<a href="#" class="nav-top-item">软件著作权登记管理</a>
+					<ul>
+						<li><a href="#">登记申请</a></li>
+						<li><a href="#">状态维护</a></li>
+						<li><a href="#">列表查询</a></li>
+						<li><a href="#">检索管理</a></li>
+					</ul>
+				</li>
+				
+				<li>
+					<a href="#" class="nav-top-item">知识产权等级评定</a>
+					<ul>
+						<li><a href="#">知识产权评级统计</a></li>
+						<li><a href="#">专利等级评定</a></li>
+						<li><a href="#">软件等级评定</a></li>
+						<li><a href="#">专家管理</a></li>
+					</ul>
+				</li>
+				
+				<li>
+					<a href="#" class="nav-top-item">系统信息维护</a>
+					<ul>
+						<li><a href="#">基础信息管理</a></li>
+						<li><a href="#">数据导入</a></li>
+						<li><a href="#">查看文件(ftp)</a></li>
+						<li><a href="#">个人信息维护</a></li>
+						<li><a href="#">登录安全设置</a></li>
+						<li><a href="#">退出登录</a></li>
+					</ul>
+				</li>
+				
+			</ul> <!-- End #main-nav -->
+			

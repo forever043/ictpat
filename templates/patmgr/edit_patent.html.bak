@@ -1,0 +1,220 @@
+{% extends "common/mgrbase.html" %}
+{% load staticfiles %}
+
+{% block main_content %}
+			
+			<!-- Page Head -->
+			<h2>专利信息更新</h2>
+			<p id="page-intro">分别更新基本信息和扩展信息</p>
+
+			{% include 'common/notifymsg.html' %}
+
+			<div class="content-box"><!-- Start Content Box -->
+				
+				<div class="content-box-header">
+					
+					<h3>专利信息</h3>
+					<ul class="content-box-tabs">
+						<li><a href="#tab1"{% if not extmode %} class="default-tab" {% endif %}>基本信息</a></li>
+						<li><a href="#tab2"{% if extmode %} class="default-tab" {% endif %}>扩展信息</a></li>
+					</ul>
+
+					<div class="clear"></div>
+					
+				</div> <!-- End .content-box-header -->
+				
+				<div class="content-box-content">
+
+					<div class="tab-content{% if not extmode %} default-tab{% endif %}" id="tab1" >
+					
+						<form method="post">
+
+							{% csrf_token %}
+							
+							<fieldset>
+								
+								<p>
+									<label>
+										{{ form.basic.name.label }}*
+										{% if form.basic.name.errors %}
+										<span class="input-notification error png_bg">
+											{% for error in form.basic.name.errors %}
+											{{ error }}
+											{% endfor %}
+										</span>
+										{% endif %}
+									</label>
+									{{ form.basic.name }}
+								</p>
+								
+								<p>
+									<label>
+										{{ form.basic.inventors.label }}*
+										{% if form.basic.inventors.errors %}
+										<span class="input-notification error png_bg">
+											{% for error in form.basic.inventors.errors %}
+											{{ error }}
+											{% endfor %}
+										</span>
+										{% endif %}
+									</label>
+									{{ form.basic.inventors }}
+									<br />
+									<small>多个发明人使用全角分号"；"分隔</small>
+								</p>
+
+								<p>
+									<label>
+									{{ form.basic.department.label }}*
+									{% if form.basic.department.errors %}
+									<span class="input-notification error png_bg"></span>
+									{% endif %}
+									{{ form.basic.department }}
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+									{{ form.basic.type.label }}*
+									{% if form.basic.type.errors %}
+									<span class="input-notification error png_bg"></span>
+									{% endif %}
+									{{ form.basic.type }}
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+									{{ form.basic.state.label }}*
+									{% if form.basic.state.errors %}
+									<span class="input-notification error png_bg"></span>
+									{% endif %}
+									{{ form.basic.state }}
+
+									</label>
+								</p>
+
+							</fieldset>
+
+							<fieldset class="column-left">
+
+								<p>
+									<label>
+										{{ form.basic.apply_code.label }}*
+										{% if form.basic.apply_code.errors %}
+										<span class="input-notification error png_bg">
+											{% for error in form.basic.apply_code.errors %}
+											{{ error }}
+											{% endfor %}
+										</span>
+										{% endif %}
+									</label>
+									{{ form.basic.apply_code }}
+								</p>
+
+							</fieldset>
+
+							<fieldset class="column-right">
+
+								<p>
+									<label>
+										{{ form.basic.apply_date.label }}*
+										{% if form.basic.apply_date.errors %}
+										<span class="input-notification error png_bg">
+											{% for error in form.basic.apply_date.errors %}
+											{{ error }}
+											{% endfor %}
+										</span>
+										{% endif %}
+									</label>
+									{{ form.basic.apply_date }}
+								</p>
+								
+							</fieldset>
+
+							<fieldset class="column-left">
+
+								<p>
+									<label>
+										{{ form.basic.authorize_code.label }}
+										{% if form.basic.authorize_code.errors %}
+										<span class="input-notification error png_bg">
+											{% for error in form.basic.authorize_code.errors %}
+											{{ error }}
+											{% endfor %}
+										</span>
+										{% endif %}
+									</label>
+									{{ form.basic.authorize_code }}
+								</p>
+
+							</fieldset>
+
+							<fieldset class="column-right">
+
+								<p>
+									<label>
+										{{ form.basic.authorize_date.label }}
+										{% if form.basic.authorize_date.errors %}
+										<span class="input-notification error png_bg">
+											{% for error in form.basic.authorize_date.errors %}
+											{{ error }}
+											{% endfor %}
+										</span>
+										{% endif %}
+									</label>
+									{{ form.basic.authorize_date }}
+								</p>
+
+							</fieldset>
+
+							<div class="clear"></div><!-- End .clear -->
+
+							<p>
+								<input class="button" type="submit" name="save" value="保存" />
+								<input class="button" type="submit" name="discard" value="重置" />
+								<input class="button" type="submit" name="save_and_return" value="保存并返回" />
+								<input class="button" type="submit" name="discard_and_return" value="返回" />
+							</p>
+					
+						</form>
+					</div> <!-- End #tab1 -->
+
+					<div class="tab-content{% if extmode %} default-tab{% endif %}" id="tab2" >
+
+						<form method="post">
+
+							{% csrf_token %}
+							
+							<fieldset>
+								
+								{% for field in form.extent %}
+								<p>
+									<label>
+										{{ field.label }}
+										{% if field.errors %}
+										<span class="input-notification error png_bg">
+											{% for error in field.errors %}
+											{{ error }}
+											{% endfor %}
+										</span>
+										{% endif %}
+									</label>
+									{{ field }}
+								</p>
+								
+								{% endfor %}
+
+							</fieldset>
+
+							<div class="clear"></div><!-- End .clear -->
+
+							<p>
+								<input class="button" type="submit" value="保存" />
+								<input class="button" type="submit" value="保存并返回" />
+							</p>
+
+						</form>
+						
+					</div> <!-- End #tab2 -->	
+					
+				</div> <!-- End .content-box-content -->
+				
+			</div> <!-- End .content-box -->
+						
+{% endblock %}
+

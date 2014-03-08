@@ -1,0 +1,12 @@
+<!-- MenuItem: {{ nav.name }} -->
+				<li> 
+
+					<a class="nav-top-item{% if not nav.option_list %} no-submenu{% endif %}{% if nav.active %} current{% endif %}" href="{{ nav.get_absolute_url }}">{{ nav.name }}</a>
+    					{% if nav.option_list %}
+    					<ul>
+        				{% for option in nav.option_list %}
+        					{{ option }}
+					{% endfor %}
+    					</ul>
+    					{% endif %}
+				</li>
