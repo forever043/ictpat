@@ -216,39 +216,6 @@ class PatentUpdateView(SuccessMessageMixin, UpdateView):
 		messages.error(self.request, self.error_message % dict(name=self.object.name))
 		return super(PatentUpdateView, self).form_invalid(form)
 
-	# Comment out for "Save/SaveAndReturn"
-	#def form_valid(self, form):
-	#	# save_and_return click
-	#	if self.request.POST.get('save_and_return', None):
-	#		self.success_url = self.request.POST['__next__']
-	#	else:
-	#		self.success_url = reverse_lazy('patent-edit', args=(self.object.pk,))
-	#	return super(PatentUpdateView, self).form_valid(form)
-	
-
-#class PatentEditView(SuccessMessageMixin, FormView):
-#	form_class = PatentEditForm
-#	template_name = 'patmgr/edit_patent.html'
-#	success_message = u'专利 "%(name)s" 信息更新成功'
-#	error_message = u'专利 "%(name)s" 信息更新失败'
-#
-#	def get_context_data(self, **kwargs):
-#		context = super(PatentEditView, self).get_context_data(**kwargs)
-#		context['request'] = self.request
-#		return context
-#
-#	def get_success_message(self, cleaned_data):
-#		return self.success_message % cleaned_data['basic']
-#
-#	def form_valid(self, form):
-#		basic_cd = form.cleaned_data['basic']
-#		extent_cd = form.cleaned_data['extent']
-#		return super(PatentEditView, self).form_valid(form)
-#
-#	def form_invalid(self, form):
-#		messages.error(self.request, self.error_message % dict(name=self.object.name))
-#		return super(PatentEditView, self).form_invalid(form)
-
 
 class PatentDeleteView(DeleteView):
 	model = Patent
