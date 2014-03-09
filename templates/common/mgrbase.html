@@ -36,7 +36,7 @@
 			<div id="profile-links">
 				您好, <a href="#" title="Edit your profile">{{ user.username }}</a><br />
 				<br />
-				<a href="#" title="查看专利检索系统首页">检索首页</a> | <a href="{% url 'dashboard-logout' %}" title="退出当前登录用户">退出登录</a>
+				<a href="{% url 'retrvhome-index' %}" title="查看专利检索系统首页">检索首页</a> | <a href="{% url 'dashboard-logout' %}" title="退出当前登录用户">退出登录</a>
 			</div>
 			
 			{% get_nav "main" as main %}
