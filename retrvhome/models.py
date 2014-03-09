@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 from django.db import models
 from django.utils.encoding import smart_unicode
-from retrv.dynamic_models_tool import create_dynamic_model
+from retrvhome.dynamic_models_tool import create_dynamic_model
 
 class PatentField(models.Model):
 	field_name = models.CharField(unique=True, max_length=128, verbose_name='扩展字段类型名')
@@ -20,8 +20,8 @@ try:
 except:
 	pass
 Patent = create_dynamic_model(modelname = "Patent",
-					 app_label = "retrv",
-					 module = "retrv.models",
+					 app_label = "retrvhome",
+					 module = "retrvhome.models",
 					 options = {"verbose_name": u"检索专利", "verbose_name_plural": u"检索专利"},
 					 admin_options = {},
 					 fields = fields)

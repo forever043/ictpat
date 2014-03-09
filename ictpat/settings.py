@@ -47,7 +47,7 @@ INSTALLED_APPS = (
     'rankmgr',
     'sysmgr',
 
-    'retrv',
+    'retrvhome',
 )
 
 MIDDLEWARE_CLASSES = (
