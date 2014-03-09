@@ -126,7 +126,7 @@ MESSAGE_TAGS = {
 
 # Authentication
 from django.core.urlresolvers import reverse
-LOGIN_REDIRECT_URL = reverse('dashboard.views.dashboard')
+LOGIN_REDIRECT_URL = reverse('dashboard')
 LOGIN_URL = reverse('dashboard-login')
 LOGOUT_URL = reverse('dashboard-logout')
 
