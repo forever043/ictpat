@@ -27,6 +27,9 @@ urlpatterns = patterns('',
 	url(r'^meta/patentstate/data/$', login_required(PatentMetaJson.as_view(model=PatentState)), name='patent-state-json'),
 
     url(r'^retvmgr/', 		  PatentRetrieveManager.as_view(template_name='patmgr/retvmgr.html'), name='patent-retvmgr'),
+
+	url(r'^retrvmgr/export/$', RetrvSchemeExport.as_view(), name='retrv-scheme-export'),
+
     url(r'^import/',		  PatentImportWizard.as_view(),	name='patent-import'),
 
 	# Patent File

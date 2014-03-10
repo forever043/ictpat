@@ -5,3 +5,4 @@ from metamgr.extfield import *
 from metamgr.metafield import *
 from rank import *
 from file import *
+from RetrvScheme import *

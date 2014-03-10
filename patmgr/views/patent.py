@@ -233,19 +233,3 @@ class PatentDeleteView(DeleteView):
 		else:
 			return resp
 
-
-class PatentRetrieveManager(FormView):
-	template_name = 'patmgr/patlist.html'
-	form_class = PatentRetrieveConfigForm
-	success_url = reverse_lazy('patent-retvmgr')
-
-	def get_context_data(self, **kwargs):
-		context = super(PatentRetrieveManager, self).get_context_data(**kwargs)
-		context['request'] = self.request
-		return context
-
-	def get_success_message(self, cleaned_data):
-		return u'保存成功'
-
-	def form_valid(self, form):
-		return super(PatentRetrieveManager, self).form_valid(form)

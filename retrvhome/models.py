@@ -7,7 +7,7 @@ class PatentField(models.Model):
 	field_name = models.CharField(unique=True, max_length=128, verbose_name='扩展字段类型名')
 	field_label = models.CharField(max_length=123, verbose_name='扩展字段类型标签')
 	display = models.BooleanField(verbose_name='列表显示')
-	retrieval = models.BooleanField(verbose_name='检索字段')
+	retrieve = models.BooleanField(verbose_name='检索字段')
 	sort = models.IntegerField(verbose_name='排序值')
 	def __unicode__(self):
 		return self.field_label

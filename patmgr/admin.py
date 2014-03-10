@@ -1,8 +1,7 @@
 from django.contrib import admin
-from patmgr.models import Department, PatentType, PatentState, PatentExtFieldType, PatentExtField, PatentRank, Patent
+from patmgr.models import *
 
 # Register your models here.
-
 class DepartmentAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')
     choise_display = 'name'
@@ -26,3 +25,14 @@ admin.site.register(PatentExtFieldType, PatentExtFieldTypeAdmin)
 admin.site.register(PatentExtField, PatentExtFieldAdmin)
 admin.site.register(PatentRank, PatentRankAdmin)
 admin.site.register(Patent, PatentAdmin)
+
+
+class RetrvSchemeAdmin(admin.ModelAdmin):
+	list_display = ('id', 'name', 'current')
+class BuiltinRetrvFieldAdmin(admin.ModelAdmin):
+	list_display = ('id', 'field_name', 'scheme', 'retrieve', 'display', 'sort')
+class CustomizedRetrvFieldAdmin(admin.ModelAdmin):
+	list_display = ('id', 'field', 'scheme', 'retrieve', 'display', 'sort')
+admin.site.register(RetrvScheme, RetrvSchemeAdmin)
+admin.site.register(BuiltinRetrvField, BuiltinRetrvFieldAdmin)
+admin.site.register(CustomizedRetrvField, CustomizedRetrvFieldAdmin)
