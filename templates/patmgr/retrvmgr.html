@@ -1,0 +1,71 @@
+{% extends "common/mgrbase.html" %}
+{% load staticfiles %}
+
+{% block main_content %}
+<h2>专利检索管理</h2>
+<p id="page-intro">管理专利检索方案，并向检索系统导出数据</p>
+
+<div class="content-box">
+	
+	<div class="content-box-header">
+		
+		<h3>检索方案设置</h3>
+
+		<div class="clear"></div>
+		
+	</div> <!-- End .content-box-header -->
+	
+	<div class="content-box-content">
+
+		<div class="tab-content default-tab" >
+		
+			<form action="#" method="post">
+
+				{% csrf_token %}
+				
+				<fieldset>
+
+					<legend>检索方案</legend>
+					
+					<p>
+						<select name="dropdown" class="small-input">
+						{% for scheme in scheme_list %}
+							<option value="{{ scheme.pk }}">{{ scheme.name }}</option>
+						{% endfor %}
+						</select> 
+						<input class="button" type="button" value="新建" />
+					</p>
+
+				</fieldset>
+
+				<fieldset class="column-left">
+
+					<legend>内建字段</legend>
+
+					<p>
+						<label>专利名称</label>
+						<span>不导出</span><span>可检索</span>
+					</p>
+					
+				</fieldset>
+
+				<fieldset class="column-right">
+
+					<legend>扩展字段</legend>
+					
+				</fieldset>
+				
+				<div class="clear"></div><!-- End .clear -->
+
+				<input class="button" type="submit" value="预览" />
+				<input class="button" type="submit" value="导出" />
+				
+			</form>
+			
+		</div> <!-- End #tab2 -->        
+		
+	</div> <!-- End .content-box-content -->
+	
+</div> <!-- End .content-box -->
+{% endblock %}
+

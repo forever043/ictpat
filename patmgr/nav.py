@@ -16,8 +16,8 @@ class PATListOption(NavOption):
 		return self.regex.match(path)
 
 class PATRetvMgrOption(NavOption):
-	name = '检索管理'
-	view = 'patent-retvmgr'
+	name = '检索方案管理'
+	view = 'patent-retrvscheme'
 
 class PATExtFieldMgrOption(NavOption):
 	name = '扩展属性管理'

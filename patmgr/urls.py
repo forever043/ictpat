@@ -26,9 +26,8 @@ urlpatterns = patterns('',
 	url(r'^meta/patenttype/data/$',  login_required(PatentMetaJson.as_view(model=PatentType)),  name='patent-type-json'),
 	url(r'^meta/patentstate/data/$', login_required(PatentMetaJson.as_view(model=PatentState)), name='patent-state-json'),
 
-    url(r'^retvmgr/', 		  PatentRetrieveManager.as_view(template_name='patmgr/retvmgr.html'), name='patent-retvmgr'),
-
-	url(r'^retrvmgr/export/$', RetrvSchemeExport.as_view(), name='retrv-scheme-export'),
+    url(r'^retrvmgr/$',			login_required(PatentRetrvSchemeView.as_view()), name='patent-retrvscheme'),
+	url(r'^retrvmgr/export/$',	login_required(RetrvSchemeExport.as_view()), name='patent-retrvscheme-export'),
 
     url(r'^import/',		  PatentImportWizard.as_view(),	name='patent-import'),
 
