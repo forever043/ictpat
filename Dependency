@@ -1,8 +1,9 @@
-grappelli
+django-grappelli
 South
 django-filetransfers
 django-chartit
 django-datatables-view
+xlrd
 
 django-nav
 pil
