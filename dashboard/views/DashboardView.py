@@ -1,8 +1,8 @@
 # coding=utf-8
 from django.shortcuts import render, render_to_response
 from django.template import RequestContext
-from django.db.models import Count
 from django.views.generic import TemplateView
+from django.db.models import Count
 
 from libs.chartit import DataPool, Chart
 
