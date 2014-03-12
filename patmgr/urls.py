@@ -7,16 +7,24 @@ from patmgr.views import *
 from dashboard.views import *
 
 urlpatterns = patterns('',
-    url(r'^$',			  RedirectView.as_view(pattern_name='patent-list'), name='patent'),
+    url(r'^$', login_required(RedirectView.as_view(pattern_name='patent-list')), name='patent'),
 
 	# Patent List
-    url(r'^list/$',			login_required(PatentListView.as_view()),	name='patent-list'),
-    url(r'^list/fresh/$',	login_required(PatentFreshListView.as_view(pattern_name='patent-list')), name='patent-list-fresh'),
+    url(r'^list/$',
+		login_required(DashMgrListView.as_view(
+				model = Patent,
+				form_class = PatentFilterForm,
+				context_object_name = 'patent_list',
+				template_name = 'patmgr/list_patent.html',
+				success_url = reverse_lazy('patent-list'))),
+		name='patent-list'),
+    url(r'^list/fresh/$',
+		login_required(DashMgrFreshListView.as_view(
+				pattern_name='patent-list')),
+		name='patent-list-fresh'),
     url(r'^list/data/$', 	login_required(PatentListJson.as_view()), name='patent-list-json'),
 
 	# Patent Details
-    url(r'^add/batch/$',	  PatentBatchAddView.as_view(),	name='patent-batchadd'),
-
     url(r'^(?P<pk>\d+)/$',
 		login_required(DashMgrDetailView.as_view(
 				model = Patent,
@@ -33,6 +41,7 @@ urlpatterns = patterns('',
 				success_message = u'专利 "%(name)s" 添加成功',
 				error_message = u'专利添加失败')),
 		name='patent-add'),
+    url(r'^add/batch/$',	  PatentBatchAddView.as_view(),	name='patent-batchadd'),
 	url(r'^(?P<pk>\d+)/edit/$',
 		login_required(DashMgrUpdateView.as_view(
 				model = Patent,

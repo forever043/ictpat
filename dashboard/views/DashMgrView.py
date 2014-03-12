@@ -18,12 +18,12 @@ class DashMgrFreshListView(RedirectView):
 		return super(DashMgrFreshListView, self).get(request, *args, **kwargs)
 
 class DashMgrListView(ListView, FormMixin):
-	model = Patent
-	form_class = PatentFilterForm
-	context_object_name = 'patent_list'
-	template_name = 'patmgr/list_patent.html'
+	#model = Patent
+	#form_class = PatentFilterForm
+	#context_object_name = 'patent_list'
+	#template_name = 'patmgr/list_patent.html'
+	#success_url = reverse_lazy('patent-list')
 	paginate_by = 10
-	success_url = reverse_lazy('patent-list')
 
 	def get_context_data(self, **kwargs):
 		context = super(DashMgrListView, self).get_context_data(**kwargs)
