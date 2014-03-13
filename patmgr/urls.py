@@ -51,12 +51,12 @@ urlpatterns = patterns('',
 				error_message = u'专利 "%(name)s" 信息更新失败')),
 		name='patent-edit'),
 	url(r'^(?P<pk>\d+)/delete/$',
-		view=login_required(DashMgrDeleteView.as_view(
+		login_required(DashMgrDeleteView.as_view(
 				model = Patent,
 				success_url = reverse_lazy('patent-list'))),
 		name='patent-delete'),
 	url(r'^(?P<pk>\d+)/rank/$',
-		view=login_required(DashMgrRankView.as_view(
+		login_required(DashMgrRankView.as_view(
 				model = PatentRank,
 				form_class = PatentRankForm,
 				template_name = 'patmgr/patent_rank.html',
@@ -66,11 +66,20 @@ urlpatterns = patterns('',
 
 
 	# Patent MetaField Manager
-	url(r'^meta/$',					 login_required(TemplateView.as_view(template_name='patmgr/extfield.html')), name='patent-extfield'),
-	url(r'^meta/extfield/data/$',    login_required(PatentExtFieldJson.as_view()),			    name='patent-extfield-json'),
-	url(r'^meta/patenttype/data/$',  login_required(PatentMetaJson.as_view(model=PatentType)),  name='patent-type-json'),
-	url(r'^meta/patentstate/data/$', login_required(PatentMetaJson.as_view(model=PatentState)), name='patent-state-json'),
+	url(r'^meta/$',
+		login_required(TemplateView.as_view(template_name='patmgr/extfield.html')),
+		name='patent-extfield'),
+	url(r'^meta/extfield/data/$',
+		login_required(ExtFieldJson.as_view(model=PatentExtFieldType)),
+		name='patent-extfield-json'),
+	url(r'^meta/patenttype/data/$',
+		login_required(MetaJson.as_view(model=PatentType)),
+		name='patent-type-json'),
+	url(r'^meta/patentstate/data/$',
+		login_required(MetaJson.as_view(model=PatentState)),
+		name='patent-state-json'),
 
+	# Patent Retrieve Manager
     url(r'^retrvmgr/$',			login_required(PatentRetrvSchemeView.as_view()), name='patent-retrvscheme'),
 	url(r'^retrvmgr/export/$',	login_required(RetrvSchemeExport.as_view()), name='patent-retrvscheme-export'),
 
