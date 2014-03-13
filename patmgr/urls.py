@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 
 from patmgr.views import *
 from dashboard.views import *
+from patmgr.forms import *
 
 urlpatterns = patterns('',
     url(r'^$', login_required(RedirectView.as_view(pattern_name='patent-list')), name='patent'),
@@ -83,7 +84,21 @@ urlpatterns = patterns('',
     url(r'^retrvmgr/$',			login_required(PatentRetrvSchemeView.as_view()), name='patent-retrvscheme'),
 	url(r'^retrvmgr/export/$',	login_required(RetrvSchemeExport.as_view()), name='patent-retrvscheme-export'),
 
-    url(r'^import/',		  PatentImportWizard.as_view(),	name='patent-import'),
+    url(r'^import/',
+		login_required(ImportWizardView.as_view(
+				model=Patent,
+				form_list = [
+    				#("import_config", PatentImportForm),
+    				("db_select",     UploadXlsxFileForm),
+    				("matchfield",    MatchFieldForm),
+				],
+				template_list = {
+    				"import_config": "patmgr/import/import_config.html",
+    				"db_select":     "patmgr/import/db_select.html",
+    				"matchfield":    "patmgr/import/matchfield.html",
+				}
+		)),
+		name='patent-import'),
 
 	# Patent File
 	url(r'^file/$',			TemplateView.as_view(template_name='patmgr/patent_file_upload.html'), name='patent-file'),
@@ -105,3 +120,4 @@ urlpatterns = patterns('',
 			}),
 		name='patent-file-service'),
 )
+
