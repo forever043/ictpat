@@ -1,5 +1,7 @@
 # coding=utf-8
 from django_nav import nav_groups, Nav, NavOption
+from django.core.urlresolvers import reverse
+import re
 
 class SCRApplyOption(NavOption):
     name = '登记申请'
@@ -10,8 +12,11 @@ class SCRStateOption(NavOption):
     view = 'scrmgr.views.scrmgr'
 
 class SCRListOption(NavOption):
-    name = '列表查询'
-    view = 'scrmgr.views.scrmgr'
+	name = '列表查询'
+	view = 'scr-list-fresh'
+	regex = re.compile(r'^/dashboard/scr/(?:list|(\d+))/')
+	def active_if(self, url, path):
+		return self.regex.match(path)
 
 class SCRRetvMgrOption(NavOption):
     name = '检索管理'

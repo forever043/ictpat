@@ -3,14 +3,19 @@ from django.conf.urls import patterns, include, url
 from django.views.generic import RedirectView, TemplateView
 from django.contrib.auth.decorators import login_required
 
-from patmgr.views import *
+from patmgr.views import PatentRetrvSchemeView, RetrvSchemeExport, PatentListJson, PatentBatchAddView
 from dashboard.views import *
 from patmgr.forms import *
+
 
 urlpatterns = patterns('',
     url(r'^$', login_required(RedirectView.as_view(pattern_name='patent-list')), name='patent'),
 
 	# Patent List
+    url(r'^list/fresh/$',
+		login_required(DashMgrFreshListView.as_view(
+				pattern_name='patent-list')),
+		name='patent-list-fresh'),
     url(r'^list/$',
 		login_required(DashMgrListView.as_view(
 				model = Patent,
@@ -19,10 +24,6 @@ urlpatterns = patterns('',
 				template_name = 'patmgr/list_patent.html',
 				success_url = reverse_lazy('patent-list'))),
 		name='patent-list'),
-    url(r'^list/fresh/$',
-		login_required(DashMgrFreshListView.as_view(
-				pattern_name='patent-list')),
-		name='patent-list-fresh'),
     url(r'^list/data/$', 	login_required(PatentListJson.as_view()), name='patent-list-json'),
 
 	# Patent Details
