@@ -87,6 +87,21 @@ urlpatterns = patterns('',
 
 	# Patent File
 	url(r'^file/$',			TemplateView.as_view(template_name='patmgr/patent_file_upload.html'), name='patent-file'),
-	url(r'^file/upload/$',	PatentFileUploadView.as_view(), name='patent-file-upload'),
-	url(r'^file/(?P<fcode>.+)/$', PatentFileView.as_view(), name='patent-file-service'),
+	#url(r'^file/upload/$',	PatentFileUploadView.as_view(), name='patent-file-upload'),
+	url(r'^file/upload/$',
+		FileUploadView.as_view(
+			model = Patent,
+			fcode_map = {
+				"apply_code": "apply_file",
+				"authorize_code": "authorize_file"
+			}),
+		name='patent-file-upload'),
+	url(r'^file/(?P<fcode>.+)/$',
+		FileServeView.as_view(
+			model = Patent,
+			fcode_map = {
+				"apply_code": "apply_file",
+				"authorize_code": "authorize_file"
+			}),
+		name='patent-file-service'),
 )
