@@ -44,6 +44,7 @@ class FileServeView(View):
 class FileUploadView(View):
 	model = None
 	fcode_map = {}
+	file_service_view = None
 
 	def get(self, request, *args, **kwargs):
 		return HttpResponse('')
@@ -70,7 +71,7 @@ class FileUploadView(View):
 					if getattr(entry, code_attr) == fcode:
 						setattr(entry, file_attr, file)
 						file_entry["name"] = u"申请文件：%s" % entry.name
-						file_entry["url"] = reverse("patent-file-service", args=(getattr(entry, code_attr),))
+						file_entry["url"] = reverse(self.file_service_view, args=(getattr(entry, code_attr),))
 						break
 				entry.save()
 				file_entry["thumbnailUrl"] = "/resources/images/icon_pdf.png"

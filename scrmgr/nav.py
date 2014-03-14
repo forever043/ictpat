@@ -5,11 +5,7 @@ import re
 
 class SCRApplyOption(NavOption):
     name = '登记申请'
-    view = 'scrmgr.views.scrmgr'
-
-class SCRStateOption(NavOption):
-    name = '状态维护'
-    view = 'scrmgr.views.scrmgr'
+    view = 'scr-add'
 
 class SCRListOption(NavOption):
 	name = '列表查询'
@@ -22,11 +18,15 @@ class SCRRetvMgrOption(NavOption):
     name = '检索管理'
     view = 'scrmgr.views.scrmgr'
 
+class SCRFileUploadOption(NavOption):
+	name = '软件登记证书上传'
+	view = 'scr-file'
+
 class SCRMgrNav(Nav):
     name = '软件著作权登记管理'
     view = 'scrmgr.views.scrmgr'
     nav_group = 'main'
-    options = [SCRApplyOption, SCRStateOption, SCRListOption, SCRRetvMgrOption]
+    options = [SCRApplyOption, SCRListOption, SCRRetvMgrOption, SCRFileUploadOption]
 
 nav_groups.register(SCRMgrNav)
 

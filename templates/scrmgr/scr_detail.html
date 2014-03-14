@@ -1,0 +1,94 @@
+{% extends "common/mgrbase.html" %}
+{% load staticfiles %} {% load verbose_name %}
+
+{% block csslink %}
+{{ block.super }}
+<link href='{% static "css/jquery.rating.css" %}' type="text/css" rel="stylesheet"/>
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }}
+<script type="text/javascript" src="{% static "scripts/jquery.rating.js" %}"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	$('input[name="cancel"]').each(function () {
+		$(this).click(function() {
+			window.location.href='{{ i__next__ }}';
+			return false;
+		})
+	})
+})
+</script>
+{% endblock %}
+
+{% block main_content %}
+			
+			<!-- Page Head -->
+			<h2>软件登记信息详情</h2>
+			<p id="page-intro">查看软件登记信息详情</p>
+
+			{% include 'common/notifymsg.html' %}
+
+			<div class="content-box"><!-- Start Content Box -->
+				
+				<div class="content-box-header">
+					
+					<h3>软件登记信息</h3>
+					<div class="clear"></div>
+					
+				</div> <!-- End .content-box-header -->
+
+
+				<form method="post">
+
+					{% csrf_token %}
+
+					<input type="hidden" name="__next__" value="{{ i__next__ }}">
+				
+					<div class="content-box-content">
+
+						<div class="tab-content{% if not extmode %} default-tab{% endif %}" id="tab1" >
+					
+							<fieldset class="column-left">
+								
+								<p>
+									<label>{% get_verbose_field_name scr "name" %}：</label>{{ scr.name }}
+								</p>
+								
+								<p>
+									<label>{% get_verbose_field_name scr "developers" %}：</label>{{ scr.developers }}
+								</p>
+
+								<p>
+									<label>{% get_verbose_field_name scr "department" %}：</label>{{ scr.department }}
+								</p>
+
+								<p>
+									{% if not scr.authorize_file %}
+									<label>暂无相关证书</label>
+									{% else %}
+									<label>
+										<a target="_blank" href="{% url 'scr-file-service' scr.authorize_code %}">
+										{% get_verbose_field_name scr "authorize_file" %}
+										</a>
+									</label>
+									{% endif %}
+								</p>
+								
+							</fieldset>
+
+							<div class="clear"></div><!-- End .clear -->
+
+							<fieldset>
+								<input class="button" type="submit" name="cancel" value="返回" />
+							<fieldset>
+					
+						</div> <!-- End #tab1 -->
+
+					</div> <!-- End .content-box-content -->
+				
+				</div> <!-- End .content-box -->
+			</form>
+						
+{% endblock %}
+

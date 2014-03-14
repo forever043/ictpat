@@ -1,0 +1,42 @@
+from django.conf.urls import patterns, include, url
+from django.views.generic import RedirectView, TemplateView
+from django.contrib.auth.decorators import login_required
+
+from scrmgr.views import *
+
+urlpatterns = patterns('',
+    url(r'^$', RedirectView.as_view(pattern_name='scr-list'), name='scr'),
+	
+	# SCR List
+    url(r'^list/$',					login_required(SCRListView.as_view()),		name='scr-list'),
+    url(r'^list/fresh/$',			login_required(SCRFreshListView.as_view(pattern_name='scr-list')),
+																				name='scr-list-fresh'),
+    url(r'^list/data/$', 			login_required(SCRListJson.as_view()),		name='scr-list-json'),
+
+	# SCR Details
+    url(r'^add/$',					login_required(SCRCreateView.as_view()),	name='scr-add'),
+    url(r'^add/batch/$',			login_required(SCRBatchAddView.as_view()),	name='scr-batchadd'),
+    url(r'^(?P<pk>\d+)/$',			login_required(SCRDetailView.as_view()),	name='scr-detail'),
+    url(r'^(?P<pk>\d+)/edit/$',		login_required(SCRUpdateView.as_view()),	name='scr-edit'),
+    url(r'^(?P<pk>\d+)/delete/$',	login_required(SCRDeleteView.as_view()),	name='scr-delete'),
+	url(r'^(?P<pk>\d+)/rank/$',		login_required(SCRRankView.as_view()),		name='scr-rank'),
+
+	# SCR MetaField Manager
+	url(r'^meta/$',					login_required(TemplateView.as_view(template_name='scrmgr/extfield.html')),
+																							name='scr-extfield'),
+	url(r'^meta/extfield/data/$',	login_required(SCRExtFieldJson.as_view()),		    	name='scr-extfield-json'),
+	url(r'^meta/scrtype/data/$',	login_required(SCRMetaJson.as_view(model=SCRType)),		name='scr-type-json'),
+	url(r'^meta/scrstate/data/$',	login_required(SCRMetaJson.as_view(model=SCRState)),	name='scr-state-json'),
+
+    url(r'^retrvmgr/$',				login_required(SCRRetrvSchemeView.as_view()),			name='scr-retrvscheme'),
+	url(r'^retrvmgr/export/$',		login_required(RetrvSchemeExport.as_view()),			name='scr-retrvscheme-export'),
+
+	# data import
+    url(r'^import/',				login_required(SCRImportWizard.as_view()),				name='scr-import'),
+
+	# SCR File
+	url(r'^file/$',					login_required(TemplateView.as_view(template_name='scrmgr/scr_file_upload.html')),
+																							name='scr-file'),
+	url(r'^file/upload/$',			login_required(SCRFileUploadView.as_view()),			name='scr-file-upload'),
+	url(r'^file/(?P<fcode>.+)/$',	login_required(SCRFileView.as_view()),					name='scr-file-service'),
+)

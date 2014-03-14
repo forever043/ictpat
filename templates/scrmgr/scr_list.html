@@ -17,7 +17,7 @@
 	$(document).ready(function() {
 		// Reset filter form
 		$("#reset").click(function() {
-			window.location.href='{% url "patent-list-fresh" %}';
+			window.location.href='{% url "scr-list-fresh" %}';
 			return false;
 		});
 
@@ -38,52 +38,14 @@
 			return false;
 		});
 	});
-
-$(document).ready(function() {
-	var queryTable = $('#patent-list').dataTable({
-		"bProcessing": true,
-		"bServerSide": true,
-		"sAjaxSource": "{% url "patent-list-json" %}",
-		"bSort": false,
-		"sPaginationType": "full_numbers",
-		"oLanguage": oLanguage,
-		// Column Design
-		"bAutoWidth": false,
-		"aoColumns": [
-			{ "mData": "department",		"sWidth": "15%" },
-			{ "mData": "name",				"sWidth": "28%",
-				"fnRender": function (o, v) {
-					return '<a href="#">' + v + '</a>'
-				}},
-			{ "mData": "inventors", 		"sWidth": "20%"},
-			{ "mData": "apply_code",		"sWidth": "10%" },
-			{ "mData": "apply_date",		"sWidth": "8%" },
-			{ "mData": "authorize_code",	"sWidth": "11%" },
-			{ "mData": "pk",				"sWidth": "8%",
-				"fnRender": function (o, v) {
-					return '<a href="#" title="Edit"><img src="/resources/images/icons/pencil.png" alt="Edit" /></a>'
-						 + '<a href="#" class="delete" title="Delete"><img src="/resources/images/icons/cross.png" alt="Delete" /></a>'
-						 + '<a href="#" title="Edit Meta"><img src="/resources/images/icons/hammer_screwdriver.png" alt="Edit Meta" /></a>';
-				}}
-		],
-		"fnDrawCallback": function () {
-			// MouseOver high-light
-			$(".datatable tr").not(':first').hover(
-				function () { $(this).addClass('selected-row'); }, 
-				function () { $(this).removeClass('selected-row'); }
-			);
-		},
-	});
-});
-
 </script>
 {% endblock %}
 
 {% block main_content %}
 			
 			<!-- Page Head -->
-			<h2>专利列表查询</h2>
-			<p id="page-intro">快捷任务列表</p>
+			<h2>软件登记列表查询</h2>
+			<p id="page-intro">选择检索条件查询软件登记情况，可对软件登记信息进行修改、删除操作</p>
 
 			<div class="content-box{% if scr_list %} closed-box{% endif %}"><!-- Start Content Box -->
 				
@@ -99,7 +61,7 @@ $(document).ready(function() {
 
 					<div class="tab-content default-tab" >
 					
-						<form action="{% url 'patent-list' %}" method="post">
+						<form action="{% url 'scr-list' %}" method="post">
 
 							{% csrf_token %}
 
@@ -113,20 +75,6 @@ $(document).ready(function() {
 									{% endif %}
 									{{ form.department }}
 									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-									{{ form.type.label }}
-									{% if form.type.errors %}
-									<span class="input-notification error png_bg"></span>
-									{% endif %}
-									{{ form.type }}
-									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-									{{ form.state.label }}
-									{% if form.state.errors %}
-									<span class="input-notification error png_bg"></span>
-									{% endif %}
-									{{ form.state }}
-
 									</label>
 								</p>
 
@@ -150,35 +98,22 @@ $(document).ready(function() {
 
 								<p>
 									<label>
-										{{ form.inventors.label }}
-										{% if form.inventors.errors %}
+										{{ form.developers.label }}
+										{% if form.developers.errors %}
 										<span class="input-notification error png_bg">
-											{% for error in form.inventors.errors %}
+											{% for error in form.developers.errors %}
 											{{ error }}
 											{% endfor %}
 										</span>
 										{% endif %}
 									</label>
-									{{ form.inventors }}
+									{{ form.developers }}
 								</p>
 
 							</fieldset>
 
 							<fieldset class="column-right">
 
-								<p>
-									<label>
-										{{ form.apply_code.label }}
-										{% if form.apply_code.errors %}
-										<span class="input-notification error png_bg">
-											{% for error in form.apply_code.errors %}
-											{{ error }}
-											{% endfor %}
-										</span>
-										{% endif %}
-									</label>
-									{{ form.apply_code }}
-								</p>
 								<p>
 									<label>
 										{{ form.authorize_code.label }}
@@ -191,6 +126,20 @@ $(document).ready(function() {
 										{% endif %}
 									</label>
 									{{ form.authorize_code }}
+								</p>
+
+								<p>
+									<label>
+										{{ form.authorize_date.label }}
+										{% if form.authorize_date.errors %}
+										<span class="input-notification error png_bg">
+											{% for error in form.authorize_date.errors %}
+											{{ error }}
+											{% endfor %}
+										</span>
+										{% endif %}
+									</label>
+									{{ form.authorize_date }}
 								</p>
 								
 							</fieldset>
@@ -220,13 +169,13 @@ $(document).ready(function() {
 					<h3>检索结果</h3>
 					
 					<ul class="content-box-tabs">
-						<li><a href="#tab1" class="default-tab">全部专利</a></li> <!-- href must be unique and match the id of target div -->
-						<li><a href="#tab2">已授权专利</a></li>
+						<li><a href="#tab1" class="default-tab">全部软件登记</a></li> <!-- href must be unique and match the id of target div -->
+						<li><a href="#tab2">已授权软件</a></li>
 					</ul>
 					
 					<div class="clear"></div>
 					
-				</div> <!-- End .content-box-header -->
+				</div>
 				
 				<div class="content-box-content">
 					
@@ -234,20 +183,17 @@ $(document).ready(function() {
 						
 						{% include "common/notifymsg.html" %}
 
-						{% if not scr_list %}
-						无结果
-						{% else %}
+						{% if scr_list %}
 						<table>
 							
 							<thead>
 							<tr>
 								<th><input class="check-all" type="checkbox" /></th>
-								<th>申请部门</th>
-								<th>专利名称</th>
-								<th>发明人</th>
-								<th>申请号</th>
-								<th>申请时间</th>
-								<th>授权号</th>
+								<th>部门</th>
+								<th>软件名称</th>
+								<th>完成人</th>
+								<th>发证日期</th>
+								<th>软件登记号</th>
 								<th>操作</th>
 							</tr>
 								
@@ -266,17 +212,17 @@ $(document).ready(function() {
 										</div>
 										
 										<div class="pagination">
-											<a href="{% if not page_obj.has_previous %}javascript:void(0){% else %}{% url 'patent-list' %}?page=1{% endif %}" title="First Page">&laquo; First</a>
-											<a href="{% if not page_obj.has_previous %}javascript:void(0){% else %}{% url 'patent-list' %}?page={{ page_obj.previous_page_number }}{% endif %}" title="Previous Page">&laquo; Previous</a>
+											<a href="{% if not page_obj.has_previous %}javascript:void(0){% else %}{% url 'scr-list' %}?page=1{% endif %}" title="First Page">&laquo; First</a>
+											<a href="{% if not page_obj.has_previous %}javascript:void(0){% else %}{% url 'scr-list' %}?page={{ page_obj.previous_page_number }}{% endif %}" title="Previous Page">&laquo; Previous</a>
 											
 
 											{% for pid in page_obj.paginator.page_range %}
-											<a href="{% url 'patent-list' %}?page={{ pid }}" class="number{% ifequal pid page_obj.number %} current{% endifequal %}" title="{{pid}}">{{pid}}</a>
+											<a href="{% url 'scr-list' %}?page={{ pid }}" class="number{% ifequal pid page_obj.number %} current{% endifequal %}" title="{{pid}}">{{pid}}</a>
 											{% endfor %}
 
-											<a href="{% if not page_obj.has_next %}javascript:void(0){% else %}{% url 'patent-list' %}?page={{ page_obj.next_page_number }}{% endif %}" title="Next page">Next &raquo;</a>
+											<a href="{% if not page_obj.has_next %}javascript:void(0){% else %}{% url 'scr-list' %}?page={{ page_obj.next_page_number }}{% endif %}" title="Next page">Next &raquo;</a>
 
-											<a href="{% if not page_obj.has_next %}javascript:void(0){% else %}{% url 'patent-list' %}?page={{ page_obj.paginator.num_pages }}{% endif %}" title="Last Page">Last &raquo;</a>
+											<a href="{% if not page_obj.has_next %}javascript:void(0){% else %}{% url 'scr-list' %}?page={{ page_obj.paginator.num_pages }}{% endif %}" title="Last Page">Last &raquo;</a>
 										</div> <!-- End .pagination -->
 										
 										<div class="clear"></div>
@@ -285,24 +231,23 @@ $(document).ready(function() {
 							</tfoot>
 						 
 							<tbody>
-								{% for patent in scr_list %}
+								{% for software in scr_list %}
 								<tr>
 									<td><input type="checkbox" /></td>
-									<td>{{ patent.department.name }}</td>
-									<td><a href="{% url 'patent-detail' patent.id %}" title="点击查看详细信息">{{ patent.name }}</a></td>
-									<td>{{ patent.inventors }}</td>
-									<td>{{ patent.apply_code }}</td>
-									<td>{{ patent.apply_date|date:"Y-m-d" }}</td>
-									<td>{% if patent.authorize_code %}{{ patent.authorize_code}}{% else %}{{patent.state}}{% endif %}</td>
+									<td>{{ software.department.name }}</td>
+									<td><a href="{% url 'scr-detail' software.id %}" title="点击查看详细信息">{{ software.name }}</a></td>
+									<td>{{ software.developers }}</td>
+									<td>{{ software.authorize_date|date:"Y-m-d" }}</td>
+									<td>{{ software.authorize_code }}</td>
 									<td>
 										<!-- Icons -->
-										<a href="{% url 'patent-edit' patent.id %}" title="编辑">
+										<a href="{% url 'scr-edit' software.id %}" title="编辑">
 											<img src="{% static "images/icons/pencil.png" %}" alt="Edit" />
 										</a>
-										<a href="{% url 'patent-delete' patent.id %}" class="delete" title="删除">
+										<a href="{% url 'scr-delete' software.id %}" class="delete" title="删除">
 											<img src="{% static "images/icons/cross.png" %}" alt="Delete" />
 										</a>
-										<a href="{% url 'patent-rank' patent.id %}" title="评级">
+										<a href="{% url 'patent-rank' software.id %}" title="评级">
 											<img src="{% static "images/icons/hammer_screwdriver.png" %}" alt="Edit Meta" />
 										</a>
 									</td>
@@ -315,33 +260,14 @@ $(document).ready(function() {
 						<!-- End if scr_list -->
 						{% endif %}
 						
-					</div> <!-- End #tab1 -->
+					</div>
 					
 					<div class="tab-content" id="tab2">
-
-						<table id="patent-list" class="datatable">
-							<thead>
-							<tr>
-<!--
-								<th><input class="check-all" type="checkbox" /></th>
--->
-								<th>申请部门</th>
-								<th>专利名称</th>
-								<th>发明人</th>
-								<th>申请号</th>
-								<th>申请时间</th>
-								<th>授权号</th>
-								<th>操作</th>
-							</tr>
-							</thead>
-						</table>
-
 						<div class="clear"></div>
+					</div>
 					
-					</div> <!-- End #tab2 -->		
-					
-				</div> <!-- End .content-box-content -->
+				</div>
 				
-			</div> <!-- End .content-box -->
+			</div>
 {% endblock %}
 

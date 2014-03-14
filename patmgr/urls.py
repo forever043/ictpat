@@ -47,6 +47,8 @@ urlpatterns = patterns('',
 	url(r'^(?P<pk>\d+)/edit/$',
 		login_required(DashMgrUpdateView.as_view(
 				model = Patent,
+				extfield_model = PatentExtField,
+				extfield_ref = 'patent',
 				form_class = PatentExtForm,
 				template_name = 'patmgr/edit_patent.html',
 				success_message = u'专利 "%(name)s" 信息更新成功',
@@ -103,10 +105,10 @@ urlpatterns = patterns('',
 
 	# Patent File
 	url(r'^file/$',			TemplateView.as_view(template_name='patmgr/patent_file_upload.html'), name='patent-file'),
-	#url(r'^file/upload/$',	PatentFileUploadView.as_view(), name='patent-file-upload'),
 	url(r'^file/upload/$',
 		FileUploadView.as_view(
 			model = Patent,
+			file_service_view = "patent-file-service",
 			fcode_map = {
 				"apply_code": "apply_file",
 				"authorize_code": "authorize_file"

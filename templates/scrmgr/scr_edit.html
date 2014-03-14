@@ -1,11 +1,25 @@
 {% extends "common/mgrbase.html" %}
 {% load staticfiles %}
 
+{% block scripts %}
+{{ block.super }}
+<script type="text/javascript">
+$(document).ready(function() {
+	$('input[name="cancel"]').each(function () {
+		$(this).click(function() {
+			window.location.href='{{ i__next__ }}';
+			return false;
+		})
+	})
+})
+</script>
+{% endblock %}
+
 {% block main_content %}
 			
 			<!-- Page Head -->
-			<h2>专利申请登记</h2>
-			<p id="page-intro">使用普通模式登记单个专利申请，或使用高级模式批量登记专利申请</p>
+			<h2>软件登记信息更新</h2>
+			<p id="page-intro">分别更新基本信息和扩展信息</p>
 
 			{% include 'common/notifymsg.html' %}
 
@@ -13,23 +27,26 @@
 				
 				<div class="content-box-header">
 					
-					<h3>专利信息</h3>
+					<h3>软件登记信息</h3>
 					<ul class="content-box-tabs">
-						<li><a href="#tab_basic" class="default-tab">普通模式</a></li>
-						<li><a href="{% url 'patent-batchadd' %}">高级模式</a></li>
+						<li><a href="#tab1"{% if not extmode %} class="default-tab" {% endif %}>基本信息</a></li>
+						<li><a href="#tab2"{% if extmode %} class="default-tab" {% endif %}>扩展信息</a></li>
 					</ul>
 
 					<div class="clear"></div>
 					
 				</div> <!-- End .content-box-header -->
+
+
+				<form method="post">
+
+					{% csrf_token %}
+
+					<input type="hidden" name="__next__" value="{{ i__next__ }}">
 				
-				<div class="content-box-content">
+					<div class="content-box-content">
 
-					<div class="tab-content default-tab" id="tab_basic" >
-					
-						<form method="post" {% if form.is_multipart %}enctype="multipart/form-data"{% endif %}>
-
-							{% csrf_token %}
+						<div class="tab-content default-tab" id="tab1" >
 							
 							<fieldset>
 								
@@ -49,18 +66,18 @@
 								
 								<p>
 									<label>
-										{{ form.inventors.label }}*
-										{% if form.inventors.errors %}
+										{{ form.developers.label }}*
+										{% if form.developers.errors %}
 										<span class="input-notification error png_bg">
-											{% for error in form.inventors.errors %}
+											{% for error in form.developers.errors %}
 											{{ error }}
 											{% endfor %}
 										</span>
 										{% endif %}
 									</label>
-									{{ form.inventors }}
+									{{ form.developers }}
 									<br />
-									<small>多个发明人使用全角分号"；"分隔</small>
+									<small>多个完成人使用全角分号"；"分隔</small>
 								</p>
 
 								<p>
@@ -70,21 +87,6 @@
 									<span class="input-notification error png_bg"></span>
 									{% endif %}
 									{{ form.department }}
-									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-									{{ form.type.label }}*
-									{% if form.type.errors %}
-									<span class="input-notification error png_bg"></span>
-									{% endif %}
-									{{ form.type }}
-									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-									{{ form.state.label }}*
-									{% if form.state.errors %}
-									<span class="input-notification error png_bg"></span>
-									{% endif %}
-									{{ form.state }}
-
 									</label>
 								</p>
 
@@ -94,16 +96,16 @@
 
 								<p>
 									<label>
-										{{ form.apply_code.label }}*
-										{% if form.apply_code.errors %}
+										{{ form.version.label }}*
+										{% if form.version.errors %}
 										<span class="input-notification error png_bg">
-											{% for error in form.apply_code.errors %}
+											{% for error in form.version.errors %}
 											{{ error }}
 											{% endfor %}
 										</span>
 										{% endif %}
 									</label>
-									{{ form.apply_code }}
+									{{ form.version }}
 								</p>
 
 							</fieldset>
@@ -112,32 +114,18 @@
 
 								<p>
 									<label>
-										{{ form.apply_date.label }}*
-										{% if form.apply_date.errors %}
+										{{ form.release_date.label }}*
+										{% if form.release_date.errors %}
 										<span class="input-notification error png_bg">
-											{% for error in form.apply_date.errors %}
+											{% for error in form.release_date.errors %}
 											{{ error }}
 											{% endfor %}
 										</span>
 										{% endif %}
 									</label>
-									{{ form.apply_date }}
+									{{ form.release_date }}
 								</p>
 								
-							</fieldset>
-
-							<fieldset>
-
-								<p>
-									<label>
-										{{ form.apply_file.label }}*
-										{% if form.apply_file.errors %}
-										<span class="input-notification error png_bg"></span>
-										{% endif %}
-										{{ form.apply_file }}
-									</label>
-								</p>
-
 							</fieldset>
 
 							<fieldset class="column-left">
@@ -180,9 +168,13 @@
 
 								<p>
 									<label>
-										{{ form.authorize_file.label }}
+										{{ form.authorize_file.label }}*
 										{% if form.authorize_file.errors %}
-										<span class="input-notification error png_bg"></span>
+										<span class="input-notification error png_bg">
+											{% for error in form.authorize_file.errors %}
+											{{ error }}
+											{% endfor %}
+										</span>
 										{% endif %}
 										{{ form.authorize_file }}
 									</label>
@@ -191,6 +183,15 @@
 							</fieldset>
 
 							<div class="clear"></div><!-- End .clear -->
+
+							<p>
+								<input class="button" type="submit" name="save" value="保存" />
+								<input class="button" type="submit" name="cancel" value="取消" />
+							</p>
+					
+						</div> <!-- End #tab1 -->
+
+						<div class="tab-content" id="tab2" >
 
 							<fieldset>
 
@@ -212,15 +213,20 @@
 
 							</fieldset>
 
-							<p>
-								<input class="button" type="submit" value="提交" />
-							</p>
-					
-						</form>
-					</div> <!-- End #tab_basic -->
+							<div class="clear"></div><!-- End .clear -->
 
-				</div> <!-- End .content-box-content -->
+							<p>
+								<input class="button" type="submit" name="save" value="保存" />
+								<input class="button" type="submit" name="cancel" value="取消" />
+							</p>
+
+						
+						</div> <!-- End #tab2 -->	
+					
+					</div> <!-- End .content-box-content -->
 				
-			</div> <!-- End .content-box -->
+				</div> <!-- End .content-box -->
+			</form>
 						
 {% endblock %}
+

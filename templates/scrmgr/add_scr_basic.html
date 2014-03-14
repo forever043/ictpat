@@ -4,8 +4,8 @@
 {% block main_content %}
 			
 			<!-- Page Head -->
-			<h2>专利申请登记</h2>
-			<p id="page-intro">使用普通模式登记单个专利申请，或使用高级模式批量登记专利申请</p>
+			<h2>软件著作权登记</h2>
+			<p id="page-intro">使用普通模式登记单个软件著作权信息，或使用高级模式批量登记软件著作权信息</p>
 
 			{% include 'common/notifymsg.html' %}
 
@@ -13,7 +13,7 @@
 				
 				<div class="content-box-header">
 					
-					<h3>专利信息</h3>
+					<h3>软件信息</h3>
 					<ul class="content-box-tabs">
 						<li><a href="#tab_basic" class="default-tab">普通模式</a></li>
 						<li><a href="{% url 'patent-batchadd' %}">高级模式</a></li>
@@ -49,18 +49,18 @@
 								
 								<p>
 									<label>
-										{{ form.inventors.label }}*
-										{% if form.inventors.errors %}
+										{{ form.developers.label }}*
+										{% if form.developers.errors %}
 										<span class="input-notification error png_bg">
-											{% for error in form.inventors.errors %}
+											{% for error in form.developers.errors %}
 											{{ error }}
 											{% endfor %}
 										</span>
 										{% endif %}
 									</label>
-									{{ form.inventors }}
+									{{ form.developers }}
 									<br />
-									<small>多个发明人使用全角分号"；"分隔</small>
+									<small>多个完成人使用全角分号"；"分隔</small>
 								</p>
 
 								<p>
@@ -70,21 +70,6 @@
 									<span class="input-notification error png_bg"></span>
 									{% endif %}
 									{{ form.department }}
-									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-									{{ form.type.label }}*
-									{% if form.type.errors %}
-									<span class="input-notification error png_bg"></span>
-									{% endif %}
-									{{ form.type }}
-									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-									{{ form.state.label }}*
-									{% if form.state.errors %}
-									<span class="input-notification error png_bg"></span>
-									{% endif %}
-									{{ form.state }}
-
 									</label>
 								</p>
 
@@ -94,53 +79,17 @@
 
 								<p>
 									<label>
-										{{ form.apply_code.label }}*
-										{% if form.apply_code.errors %}
+										{{ form.version.label }}
+										{% if form.version.errors %}
 										<span class="input-notification error png_bg">
-											{% for error in form.apply_code.errors %}
+											{% for error in form.version.errors %}
 											{{ error }}
 											{% endfor %}
 										</span>
 										{% endif %}
 									</label>
-									{{ form.apply_code }}
+									{{ form.version }}
 								</p>
-
-							</fieldset>
-
-							<fieldset class="column-right">
-
-								<p>
-									<label>
-										{{ form.apply_date.label }}*
-										{% if form.apply_date.errors %}
-										<span class="input-notification error png_bg">
-											{% for error in form.apply_date.errors %}
-											{{ error }}
-											{% endfor %}
-										</span>
-										{% endif %}
-									</label>
-									{{ form.apply_date }}
-								</p>
-								
-							</fieldset>
-
-							<fieldset>
-
-								<p>
-									<label>
-										{{ form.apply_file.label }}*
-										{% if form.apply_file.errors %}
-										<span class="input-notification error png_bg"></span>
-										{% endif %}
-										{{ form.apply_file }}
-									</label>
-								</p>
-
-							</fieldset>
-
-							<fieldset class="column-left">
 
 								<p>
 									<label>
@@ -159,6 +108,20 @@
 							</fieldset>
 
 							<fieldset class="column-right">
+
+								<p>
+									<label>
+										{{ form.release_date.label }}
+										{% if form.release_date.errors %}
+										<span class="input-notification error png_bg">
+											{% for error in form.release_date.errors %}
+											{{ error }}
+											{% endfor %}
+										</span>
+										{% endif %}
+									</label>
+									{{ form.release_date }}
+								</p>
 
 								<p>
 									<label>
