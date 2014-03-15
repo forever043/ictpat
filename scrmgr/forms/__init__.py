@@ -1,5 +1,5 @@
 from SoftwareCRForm import *
 from SoftwareCRFilterForm import *
+from SoftwareCRRankForm import *
 #from SoftwareImportForm import *
-#from SoftwareRankForm import *
 #from SoftwareRetrvSchemeForm import *

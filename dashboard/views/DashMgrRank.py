@@ -18,7 +18,10 @@ class DashMgrRankView(SuccessMessageMixin, CreateView):
 	#form_class = PatentRankForm
 	#template_name = 'patmgr/patent_rank.html'
 	#success_message = u'专利 "%(name)s" 评价成功'
-	error_message = u'专利 "%(name)s" 评价失败'
+	ref_model = None
+	ref_name = ''
+	error_message = u'"%(name)s" 评价失败'
+	default_referer_url = '/'
 
 	def get_context_data(self, **kwargs):
 		context = super(DashMgrRankView, self).get_context_data(**kwargs)
@@ -30,17 +33,17 @@ class DashMgrRankView(SuccessMessageMixin, CreateView):
 			if 'HTTP_REFERER' in self.request.META:
 				context['i__next__'] = self.request.META['HTTP_REFERER']
 			else:
-				context['i__next__'] = reverse_lazy('patent-list')
+				context['i__next__'] = self.default_referer_url
 
 		pk = self.kwargs.get(self.pk_url_kwarg, None)
-		context['patent'] = Patent.objects.get(pk=pk)
+		context[self.ref_name] = self.ref_model.objects.get(pk=pk)
 
 		return context
 
 	def get_success_message(self, cleaned_data):
 		pk = self.kwargs.get(self.pk_url_kwarg, None)
-		patent = Patent.objects.get(pk=pk)
-		return self.success_message % dict(cleaned_data, **{'name':patent.name})
+		refobject = self.ref_model.objects.get(pk=pk)
+		return self.success_message % dict(cleaned_data, **{'name':refobject.name})
 
 	def get_success_url(self):
 		return self.request.POST['__next__']
@@ -49,17 +52,17 @@ class DashMgrRankView(SuccessMessageMixin, CreateView):
 		initial = {}
 
 		pk = self.kwargs.get(self.pk_url_kwarg, None)
-		patent = Patent.objects.get(pk=pk)
+		refobject = self.ref_model.objects.get(pk=pk)
 		expert = self.request.user
 
 		try:
- 			rank = self.model.objects.get(patent=patent, expert=expert)
+ 			rank = self.model.objects.get((self.ref_name, refobject), expert=expert)
 			initial['rank'] = rank.rank
 			initial['remark'] = rank.remark
 		except ObjectDoesNotExist:
 			initial['remark'] = ""
 		finally:
-			initial['patent'] = patent
+			initial[self.ref_name] = refobject
 			initial['expert'] = expert
 		return initial
 

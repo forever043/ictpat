@@ -56,6 +56,18 @@ urlpatterns = patterns('scrmgr.views',
 				model = SoftwareCR,
 				success_url = reverse_lazy('scr-list'))),
 		name='scr-delete'),
+	url(r'^(?P<pk>\d+)/rank/$',
+		login_required(DashMgrRankView.as_view(
+				model = SoftwareCRRank,
+				ref_model = SoftwareCR,
+				ref_name = 'scr',
+				form_class = SoftwareCRRankForm,
+				template_name = 'scrmgr/scr_rank.html',
+				default_referer_url = reverse_lazy('scr-list'),
+				success_message = u'软件 "%(name)s" 评价成功',
+				error_message = u'软件 "%(name)s" 评价失败')),
+		name='scr-rank'),
+
 
 	# SoftwareCR File
 	url(r'^file/$',			TemplateView.as_view(template_name='scrmgr/scr_file_upload.html'), name='scr-file'),
