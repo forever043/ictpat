@@ -48,7 +48,7 @@ class MatchFieldForm(forms.Form):
 		super(MatchFieldForm, self).__init__(*args, **kwargs)
 
 		self.FIELD_CHOICES = [('None', '不导入')]
-		for colid in range(0, len(colname_list)-1):
+		for colid in range(0, len(colname_list)):
 			self.FIELD_CHOICES.append((colid, colname_list[colid]))
 
 		self.basefields = {}

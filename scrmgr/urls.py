@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 
 from scrmgr.models import *
 from scrmgr.forms import *
+import scrmgr.forms
 from dashboard.views import *
 
 urlpatterns = patterns('scrmgr.views',
@@ -67,6 +68,27 @@ urlpatterns = patterns('scrmgr.views',
 				success_message = u'软件 "%(name)s" 评价成功',
 				error_message = u'软件 "%(name)s" 评价失败')),
 		name='scr-rank'),
+
+	# Patent Retrieve Manager
+    url(r'^retrvmgr/$', login_required(DashMgrFreshListView.as_view(pattern_name='scr-list')), name='scr-retrvscheme'),
+    url(r'^retrvmgr/export/$', login_required(DashMgrFreshListView.as_view(pattern_name='scr-list')), name='scr-retrvscheme-export'),
+
+	# SoftwareCR ImportWizard View
+    url(r'^import/',
+		login_required(ImportWizardView.as_view(
+				model=SoftwareCR,
+				form_list = [
+    				#("import_config", PatentImportForm),
+    				("db_select",     scrmgr.forms.UploadXlsxFileForm),
+    				("matchfield",    scrmgr.forms.MatchFieldForm),
+				],
+				template_list = {
+    				"import_config": "scrmgr/import/import_config.html",
+    				"db_select":     "scrmgr/import/db_select.html",
+    				"matchfield":    "scrmgr/import/matchfield.html",
+				}
+		)),
+		name='scr-import'),
 
 
 	# SoftwareCR File

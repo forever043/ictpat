@@ -90,6 +90,7 @@ urlpatterns = patterns('',
     url(r'^retrvmgr/$',			login_required(PatentRetrvSchemeView.as_view()), name='patent-retrvscheme'),
 	url(r'^retrvmgr/export/$',	login_required(RetrvSchemeExport.as_view()), name='patent-retrvscheme-export'),
 
+	# Patent ImportWizard View
     url(r'^import/',
 		login_required(ImportWizardView.as_view(
 				model=Patent,

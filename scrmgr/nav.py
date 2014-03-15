@@ -14,19 +14,23 @@ class SCRListOption(NavOption):
 	def active_if(self, url, path):
 		return self.regex.match(path)
 
-class SCRRetvMgrOption(NavOption):
-    name = '检索管理'
-    view = 'scrmgr.views.scrmgr'
+class SCRImportOption(NavOption):
+	name = '软件登记数据导入'
+	view = 'scr-import'
 
 class SCRFileUploadOption(NavOption):
 	name = '软件登记证书上传'
 	view = 'scr-file'
 
+class SCRRetrvMgrOption(NavOption):
+    name = '检索方案管理'
+    view = 'scr-retrvscheme'
+
 class SCRMgrNav(Nav):
     name = '软件著作权登记管理'
     view = 'scrmgr.views.scrmgr'
     nav_group = 'main'
-    options = [SCRApplyOption, SCRListOption, SCRRetvMgrOption, SCRFileUploadOption]
+    options = [SCRApplyOption, SCRListOption, SCRImportOption, SCRFileUploadOption, SCRRetrvMgrOption]
 
 nav_groups.register(SCRMgrNav)
 

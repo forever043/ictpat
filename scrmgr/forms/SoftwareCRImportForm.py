@@ -1,12 +1,10 @@
 # coding=utf-8
 from django import forms
 from django.utils import timezone
-from libs.multiform import MultiModelForm
 
 from scrmgr.models import *
 
-
-class SoftwareImportForm(forms.Form):
+class SoftwareCRImportForm(forms.Form):
 	content = forms.CharField(widget=forms.Textarea(attrs={'class': 'text-area', 'rows':'20'}))
 
 class UploadXlsxFileForm(forms.Form):
@@ -31,13 +29,11 @@ class MatchFieldForm(forms.Form):
 
 	name = forms.ChoiceField(label="软件名称")
 	department = forms.ChoiceField(label="所属部门")
-	inventors = forms.ChoiceField(label="发明人")
-	type = forms.ChoiceField(label="软件类型")
-	state = forms.ChoiceField(label='软件状态')
-	apply_code = forms.ChoiceField(label='申请号')
-	apply_date = forms.ChoiceField(label='申请时间')
-	authorize_code = forms.ChoiceField(label='授权号')
-	authorize_date = forms.ChoiceField(label='授权时间')
+	developers = forms.ChoiceField(label="完成人")
+	release_date = forms.ChoiceField(label='首次发表时间')
+	version = forms.ChoiceField(label='版本号')
+	authorize_code = forms.ChoiceField(label='软件登记号')
+	authorize_date = forms.ChoiceField(label='发证日期')
 
 	extfields = {}
 	basefields = {}
@@ -48,7 +44,7 @@ class MatchFieldForm(forms.Form):
 		super(MatchFieldForm, self).__init__(*args, **kwargs)
 
 		self.FIELD_CHOICES = [('None', '不导入')]
-		for colid in range(0, len(colname_list)-1):
+		for colid in range(0, len(colname_list)):
 			self.FIELD_CHOICES.append((colid, colname_list[colid]))
 
 		self.basefields = {}
@@ -58,7 +54,7 @@ class MatchFieldForm(forms.Form):
 				self.basefields[fieldname] = item
 
 		self.extfields = {}
-		extfield_list = SoftwareExtFieldType.objects.all()
+		extfield_list = SoftwareCRExtFieldType.objects.all()
 		for extfield in extfield_list:
 			self.fields[extfield.field_name] = forms.ChoiceField(required = False,
 				label = extfield.field_label, choices=self.FIELD_CHOICES)

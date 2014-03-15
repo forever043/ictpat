@@ -1,0 +1,57 @@
+{% extends "scrmgr/import/base.html" %}
+{% load staticfiles %}
+
+{% block intro %}
+选择数据导入方式并上传数据文件
+{% endblock %}
+
+{% block form_content %}
+			
+				<div class="content-box"><!-- Start Content Box -->
+				
+					<div class="content-box-header">
+					
+						<h3>选择数据文件</h3>
+						<div class="clear"></div>
+					
+					</div> <!-- End .content-box-header -->
+
+					<div class="content-box-content">
+				
+						<div class="tab-content default-tab" id="tab_batch" >
+
+							<fieldset class="column-left">
+
+								<p>
+									<label>
+										{{ wizard.form.file.label }}
+										{% if wizard.form.file.errors %}
+										<span class="input-notification error png_bg"></span>
+										{% endif %}
+									</label>
+									{{ wizard.form.file }}
+								</p>
+
+							</fieldset>
+
+							<fieldset class="column-right">
+								<p>
+									<a href="#">增量模板下载</a> <br/>
+									<span style="margin-left:20px;">数据文件中的数据会追加到系统中，已存在的数据将会被更新</span> <br/>
+									<a href="#">更新模板下载</a> <br/>
+									<span style="margin-left:20px;">仅更新系统中存在的数据（通过专利申请号区分不同专利）</span> <br/>
+									<a href="#">覆盖模板下载</a> <br/>
+									<span style="margin-left:20px;">清空系统数据，并重新从数据文件中导入（请谨慎使用该功能）</span> <br/>
+								</p>
+							</fieldset>
+
+							<div class="clear"></div><!-- End .clear -->
+
+						</div> <!-- End #tab2 -->	
+					
+					</div> <!-- End .content-box-content -->
+				
+				</div> <!-- End .content-box -->
+
+{% endblock %}
+

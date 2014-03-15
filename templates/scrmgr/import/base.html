@@ -1,0 +1,39 @@
+{% extends "common/mgrbase.html" %}
+{% load staticfiles %}
+
+{% block main_content %}
+			
+			<!-- Page Head -->
+			<h2>软件登记数据导入 ({{ wizard.steps.step1 }}/{{ wizard.steps.count }})</h2>
+			<p id="page-intro">
+				{% block intro %}{% endblock %}
+			</p>
+
+			{% include 'common/notifymsg.html' %}
+
+			<form enctype="multipart/form-data" method="post">
+				{% csrf_token %}
+				{{ wizard.management_form }}
+
+				{% block form_content %}
+				{% endblock %}
+
+				<p>
+					
+					{% if wizard.steps.prev %}
+					<button class="button" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">上一步</button>
+					{% else %}
+					<button class="button" name="wizard_goto_step" disabled="true" type="submit" value="{{ wizard.steps.prev }}">上一步</button>
+					{% endif %}
+
+					{% if wizard.steps.next %}
+					<input class="button" type="submit" value="下一步" />
+					{% else %}
+					<input class="button" type="submit" value="开始导入" />
+					{% endif %}
+				</p>
+						
+			</form>
+						
+{% endblock %}
+
