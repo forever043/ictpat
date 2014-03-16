@@ -17,7 +17,5 @@ urlpatterns = patterns('',
 				success_url = reverse_lazy('patent-list')),
 		name='retrvhome-patent-list'),
 	url(r'^scr/$',		TemplateView.as_view(template_name='retrvhome/index.html'), name='retrvhome-scr-list'),
-
-	url(r'^meta/$', TemplateView.as_view(template_name='retrvhome/base.html'), name='metatest'),
 )
 

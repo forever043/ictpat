@@ -1,90 +1,184 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!doctype html>
 {% load staticfiles %} 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 <head>
-	<title>jQuery: Collapsible sidebar layout (examples) - 4. Adding style and usability</title>
-	<link rel="stylesheet" type="text/css" href="{% static "style.css" %}" media="screen" />
-	<link rel="stylesheet" type="text/css" href="{% static "devheart-examples.css" %}" media="screen" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>mb.extruder</title>
+<link rel="stylesheet" href="{% static "css/reset.css" %}" type="text/css" media="screen" />
+<link rel="stylesheet" href="{% static "css/retrvhome.style.css" %}" type="text/css" media="screen" />
+<link rel="stylesheet" href="{% static "css/invalid.css" %}" type="text/css" media="screen" />	
+	<style type="text/css">
+		body{
+			font-family:Arial, Helvetica, sans-serif;
+			margin:10px;
+		}
+		.wrapper{
+			position:relative;
+			font-family:Arial, Helvetica, sans-serif;
+			padding-top:90px;
+			padding-left:50px;
+			margin:auto
+		}
+		.wrapper .text{
+			font-family:Arial, Helvetica, sans-serif;
+			padding-top:50px;
+		}
+		.wrapper h1{
+			font-family:Arial, Helvetica, sans-serif;
+			font-size:26px;
+		}
+		.longText{
+			margin-top:20px;
+			width:600px;
+			font:18px/24px Arial, Helvetica, sans-serif;
+			color:gray;
+		}
+		span.btn{
+			padding:10px;
+			display:inline-block;
+			cursor:pointer;
+			font:12px/14px Arial, Helvetica, sans-serif;
+			color:#aaa;
+			background-color:#eee;
+			-moz-border-radius:10px;
+			-webkit-border-radius:10px;
+			-moz-box-shadow:#999 2px 0px 3px;
+			-webkit-box-shadow:#999 2px 0px 3px;
+		}
+		span.btn:hover{
+			background-color:#000;
+		}
+
+			/*
+			custom style for extruder
+			*/
+
+		.extruder.left.a .flap{
+			font-size:18px;
+			color:white;
+			top:0;
+			padding:10px 0 10px 10px;
+			background:#772B14;
+			width:30px;
+			position:absolute;
+			right:0;
+			-moz-border-radius:0 10px 10px 0;
+			-webkit-border-top-right-radius:10px;
+			-webkit-border-bottom-right-radius:10px;
+			-moz-box-shadow:#666 2px 0px 3px;
+			-webkit-box-shadow:#666 2px 0px 3px;
+		}
+
+		.extruder.left.a .content{
+			border-right:3px solid #772B14;
+		}
+
+		.extruder.top .optionsPanel .panelVoice a:hover{
+			color:#fff;
+			background: url("elements/black_op_30.png");
+			border-bottom:1px solid #000;
+		}
+		.extruder.top .optionsPanel .panelVoice a{
+			border-bottom:1px solid #000;
+		}
+
+		.extruder.left.a .flap .flapLabel{
+			background:#772B14;
+		}
+	</style>
+	{% block extcss %}
+	{% endblock %}
+
+	<link href="{% static "mb.extruder/css/mbExtruder.css" %}" media="all" rel="stylesheet" type="text/css">
+
+	{% block scripts %}
+	<script type="text/javascript" src="{% static "scripts/jquery-1.9.1.js" %}"></script>
+	<script type="text/javascript" src="{% static "scripts/django.jquery.configuration.js" %}"></script>
+	<script type="text/javascript" src="{% static "scripts/simpla.jquery.configuration.js" %}"></script>
+	<script type="text/javascript" src="{% static "scripts/facebox.js" %}"></script>
+	<script type="text/javascript" src="{% static "scripts/jquery.date.js" %}"></script>
+	<script type="text/javascript" src="{% static "scripts/jquery.datePicker.js" %}"></script>
+	<script type="text/javascript" src="{% static "mb.extruder/inc/jquery.hoverIntent.min.js" %}"></script>
+	<script type="text/javascript" src="{% static "mb.extruder/inc/jquery.mb.flipText.js" %}"></script>
+	<script type="text/javascript" src="{% static "mb.extruder/inc/mbExtruder.js" %}"></script>
+	{% endblock %}
+
+	<script type="text/javascript">
+		$(function(){
+
+			if (self.location.href == top.location.href){
+				$("body").css({font:"normal 13px/16px 'trebuchet MS', verdana, sans-serif"});
+				var logo=$("<a href='http://pupunzi.com'><img id='logo' border='0' src='http://pupunzi.com/images/logo.png' alt='mb.ideas.repository' style='display:none;'></a>").css({position:"absolute"});
+				$("body").prepend(logo);
+				$("#logo").fadeIn();
+			}
+
+			$("#extruderLeft").buildMbExtruder({
+				position:"left",
+				width:300,
+				extruderOpacity:.8,
+				hidePanelsOnClose:true,
+				accordionPanels:true,
+				onExtOpen:function(){},
+				onExtContentLoad:function(){},
+				onExtClose:function(){}
+			});
+
+
+			/*
+			 $("#extruderLeft").buildMbExtruder({
+			 position:"left",
+			 width:300,
+			 extruderOpacity:.8,
+			 hidePanelsOnClose:false,
+			 accordionPanels:false,
+			 onExtOpen:function(){},
+			 onExtContentLoad:function(){$("#extruderLeft").openPanel();},
+			 onExtClose:function(){}
+			 });
+			 */
+
+			$("#extruderLeft1").buildMbExtruder({
+				position:"left",
+				width:300,
+				extruderOpacity:.8,
+				onExtOpen:function(){},
+				onExtContentLoad:function(){},
+				onExtClose:function(){}
+			});
+
+			$("#extruderLeft2").buildMbExtruder({
+				position:"top",
+				width:300,
+				positionFixed:false,
+				top:0,
+				extruderOpacity:.8,
+				onExtOpen:function(){},
+				onExtContentLoad:function(){},
+				onExtClose:function(){}
+			});
+		});
+
+	</script>
 </head>
-<body class="dhe-body">
 
-<div id="center-wrapper">
+<body>
 
-		<p class="dhe-p dhe-large">Examples for the article <a href="http://devheart.org/articles/jquery-collapsible-sidebar-layout/" class="dhe-link">jQuery: Collapsible sidebar layout</a> by <a href="http://devheart.org/" class="dhe-link">DevHeart</a>.</p>
-
-			<div class="use-sidebar sidebar-at-right" id="main">
-
-				<div id="content">Content</div>
-
-				<div id="sidebar">Sidebar</div>
-
-				<a href="#" id="separator"></a>
-
-				<div class="clearer">&nbsp;</div>
-
-			</div>
-
-			<!-- Sidebar at left side
-
-			<div class="use-sidebar sidebar-at-left" id="main">
-
-				<div id="content">Content</div>
-
-				<div id="sidebar">Sidebar</div>
-
-				<a href="#" id="sidebar-separator"></a>
-
-				<div class="clearer">&nbsp;</div>
-
-			</div>
-			 -->
-
+<div id="main-content" class="wrapper">
+	{% block main_content %}
+	{% endblock %}
+	<div class="clear"></div>
+	<div id="footer">
+		<small>
+				&#169; Copyright 2014 中国科学院计算技术研究所知识产权办公室 | Powered by <a href="http://www.ict.ac.cn">科研支撑中心</a> | <a href="#">Top</a>
+		</small>
+	</div>
 </div>
-
-<!-- Example JavaScript files -->
-<script type="text/javascript" src="{% static "scripts/jquery-1.9.1.js" %}"></script>
-<script type="text/javascript" src="{% static "jquery.cookie.js" %}"></script>
-
-<!-- Example jQuery code (JavaScript)  -->
-<script type="text/javascript">
-
-$(document).ready(function(){
-
-	// Variables
-	var objMain = $('#main');
-
-	// Show sidebar
-	function showSidebar(){
-		objMain.addClass('use-sidebar');
-		$.cookie('sidebar-pref2', 'use-sidebar', { expires: 30 });
-	}
-
-	// Hide sidebar
-	function hideSidebar(){
-		objMain.removeClass('use-sidebar');
-		$.cookie('sidebar-pref2', null, { expires: 30 });
-	}
-
-	// Sidebar separator
-	var objSeparator = $('#separator');
-
-	objSeparator.click(function(e){
-		e.preventDefault();
-		if ( objMain.hasClass('use-sidebar') ){
-			hideSidebar();
-		}
-		else {
-			showSidebar();
-		}
-	}).css('height', objSeparator.parent().outerHeight() + 'px');
-
-	// Load preference
-	if ( $.cookie('sidebar-pref2') == null ){
-		objMain.removeClass('use-sidebar');
-	}
-});
-
-</script>
+<div id="extruderLeft" class="{title:'检索条件 '}">
+	{% block sidebar %}
+	{% endblock %}
+</div>
+<!--<div id="extruderLeft1" class="a {title:'What\'s new in this part of world', url:'{% static "mb.extruder/parts/extruderLeft1.html" %}'}"></div>-->
 
 </body>
 </html>

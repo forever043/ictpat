@@ -1,4 +1,4 @@
-{% extends "common/retrvhome.html" %}
+{% extends "retrvhome/base.html" %}
 {% load staticfiles %}
 
 {% block csslink %}
@@ -8,7 +8,6 @@
 
 {% block scripts %}
 {{ block.super }}
-<script type="text/javascript" src="{% static "scripts/jquery.jeditable.mini.js" %}"></script>
 <script type="text/javascript" src="{% static "scripts/jquery.dataTables.min.js" %}"></script>
 <script type="text/javascript" src="{% static "scripts/simpla.dataTables.configuration.js" %}"></script>
 
@@ -49,75 +48,36 @@ $(document).ready(function() {
 		}
 	});
 });
-
-$(function() {
-    var top = $('#sidebar').offset().top - parseFloat($('#sidebar').css('marginTop').replace(/auto/, 0));
-    var footTop = $('#footer').offset().top - parseFloat($('#footer').css('marginTop').replace(/auto/, 0));
-
-    var maxY = footTop - $('#sidebar').outerHeight();
-
-    $(window).scroll(function(evt) {
-        var y = $(this).scrollTop();
-        if (y > top) {
-            if (y < maxY) {
-                $('#sidebar').addClass('fixed').removeAttr('style');
-            } else {
-                $('#sidebar').removeClass('fixed').css({
-                    position: 'absolute',
-                    top: (maxY - top) + 'px'
-                });
-            }
-        } else {
-            $('#sidebar').removeClass('fixed');
-        }
-    });
-});
-
 </script>
 {% endblock %}
 
 {% block main_content %}
 
-			<!-- Page Head -->
-			<h2>专利检索</h2>
-			<p id="page-intro">快捷任务列表</p>
-			
-			<div class="content-box">
-				
-				<div class="content-box-header">
-					<h3>检索结果</h3>
-					<div class="clear"></div>
-				</div>
-				
-				<div class="content-box-content">
-					
-					<div class="tab-content default-tab" id="tab1">
-						
-						<table id="patent-list" class="datatable">
-							<thead>
-							<tr>
+<!-- Page Head -->
+<h2>专利检索</h2>
+<p id="page-intro">快捷任务列表</p>
+
+<h3>检索结果</h3>
+	
+<table id="patent-list" class="datatable">
+	<thead>
+	<tr>
 <!--
-								<th><input class="check-all" type="checkbox" /></th>
+		<th><input class="check-all" type="checkbox" /></th>
 -->
-								<th>申请部门</th>
-								<th>专利名称</th>
-								<th>发明人</th>
-								<th>申请号</th>
-								<th>申请时间</th>
-								<th>授权号</th>
-								<th>操作</th>
-							</tr>
-							</thead>
-						</table>
+		<th>申请部门</th>
+		<th>专利名称</th>
+		<th>发明人</th>
+		<th>申请号</th>
+		<th>申请时间</th>
+		<th>授权号</th>
+		<th>操作</th>
+	</tr>
+	</thead>
+</table>
 
-						<div class="clear"></div>
+<div class="clear"></div>
 					
-					</div>
-					
-				</div>
-				
-			</div>
-
 {% endblock %}
 
 {% block sidebar %}
