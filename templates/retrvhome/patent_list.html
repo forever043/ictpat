@@ -1,0 +1,150 @@
+{% extends "common/retrvhome.html" %}
+{% load staticfiles %}
+
+{% block csslink %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static "css/jquery.dataTables.css" %}" type="text/css" media="screen" />
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }}
+<script type="text/javascript" src="{% static "scripts/jquery.jeditable.mini.js" %}"></script>
+<script type="text/javascript" src="{% static "scripts/jquery.dataTables.min.js" %}"></script>
+<script type="text/javascript" src="{% static "scripts/simpla.dataTables.configuration.js" %}"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	var queryTable = $('#patent-list').dataTable({
+		"bProcessing": true,
+		"bServerSide": true,
+		"sAjaxSource": "{% url "patent-list-json" %}",
+		"bSort": false,
+		"sPaginationType": "full_numbers",
+		"oLanguage": oLanguage,
+		// Column Design
+		"bAutoWidth": false,
+		"aoColumns": [
+			{ "mData": "department",		"sWidth": "15%" },
+			{ "mData": "name",				"sWidth": "28%",
+				"fnRender": function (o, v) {
+					return '<a href="#">' + v + '</a>'
+				}},
+			{ "mData": "inventors", 		"sWidth": "20%"},
+			{ "mData": "apply_code",		"sWidth": "10%" },
+			{ "mData": "apply_date",		"sWidth": "8%" },
+			{ "mData": "authorize_code",	"sWidth": "11%" },
+			{ "mData": "pk",				"sWidth": "8%",
+				"fnRender": function (o, v) {
+					return '<a href="#" title="Edit"><img src="/resources/images/icons/pencil.png" alt="Edit" /></a>'
+						 + '<a href="#" class="delete" title="Delete"><img src="/resources/images/icons/cross.png" alt="Delete" /></a>'
+						 + '<a href="#" title="Edit Meta"><img src="/resources/images/icons/hammer_screwdriver.png" alt="Edit Meta" /></a>';
+				}}
+		],
+		"fnDrawCallback": function () {
+			// MouseOver high-light
+			$(".datatable tr").not(':first').hover(
+				function () { $(this).addClass('selected-row'); }, 
+				function () { $(this).removeClass('selected-row'); }
+			);
+		}
+	});
+});
+
+</script>
+{% endblock %}
+
+{% block main_content %}
+
+			<!-- Page Head -->
+			<h2>专利检索</h2>
+			<p id="page-intro">快捷任务列表</p>
+			
+			<div class="content-box">
+				
+				<div class="content-box-header">
+					<h3>检索结果</h3>
+					<div class="clear"></div>
+				</div>
+				
+				<div class="content-box-content">
+					
+					<div class="tab-content default-tab" id="tab1">
+						
+						<table id="patent-list" class="datatable">
+							<thead>
+							<tr>
+<!--
+								<th><input class="check-all" type="checkbox" /></th>
+-->
+								<th>申请部门</th>
+								<th>专利名称</th>
+								<th>发明人</th>
+								<th>申请号</th>
+								<th>申请时间</th>
+								<th>授权号</th>
+								<th>操作</th>
+							</tr>
+							</thead>
+						</table>
+
+						<div class="clear"></div>
+					
+					</div>
+					
+				</div>
+				
+			</div>
+
+{% endblock %}
+
+{% block sidebar %}
+<form enctype="application/x-www-form-urlencoded" method="post" action="/patent-query"><dl class="zend_form">
+
+			<fieldset>
+				<legend>基本属性</legend>
+				<ul id="fieldlist">
+				{% for field in form %}
+					<li style="background:none;">
+						<label>{{ field.label }}
+						{{ field }}
+						</label>
+					</li>
+				{% endfor %}
+				</ul>
+				<div class="clear"></div><!-- End .clear -->
+			</fieldset>
+
+<dt id="org-label"><label for="org" class="optional">实验室/中心:</label></dt>
+<dd id="org-element">
+<select name="org" id="org">
+    <option value="" label="===== (所有部门) =====" selected="selected">===== (所有部门) =====</option>
+    <option value="集成应用中心" label="集成应用中心">集成应用中心</option>
+    <option value="高性能" label="高性能">高性能</option>
+    <option value="体系结构" label="体系结构">体系结构</option>
+    <option value="网络数据" label="网络数据">网络数据</option>
+    <option value="微处理器" label="微处理器">微处理器</option>
+</select></dd>
+<dt id="status-label"><label for="status" class="optional">状态:</label></dt>
+<dd id="status-element">
+<select name="status" id="status">
+    <option value="" label="== (全部) ==" selected="selected">== (全部) ==</option>
+    <option value="授权" label="授权">授权</option>
+    <option value="审核中" label="审核中">审核中</option>
+    <option value="撤回" label="撤回">撤回</option>
+</select></dd>
+<dt id="subyear-label"><label for="subyear" class="optional">申请年份:</label></dt>
+<dd id="subyear-element">
+<select name="subyear" id="subyear">
+    <option value="" label="===== (全部) =====" selected="selected">===== (全部) =====</option>
+    <option value="2013" label="2013">2013</option>
+    <option value="2012" label="2012">2012</option>
+</select></dd>
+<dt id="licyear-label"><label for="licyear" class="optional">授权年份:</label></dt>
+<dd id="licyear-element">
+<select name="licyear" id="licyear">
+    <option value="" label="===== (全部) =====" selected="selected">===== (全部) =====</option>
+    <option value="2013" label="2013">2013</option>
+    <option value="2012" label="2012">2012</option>
+</select></dd>
+<input type="submit" name="submit" id="submit" value="检索" /></dd></dl></form>
+{% endblock %}

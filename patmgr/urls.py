@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 from django.conf.urls import patterns, include, url
+from django.core.urlresolvers import reverse_lazy
 from django.views.generic import RedirectView, TemplateView
 from django.contrib.auth.decorators import login_required
 
