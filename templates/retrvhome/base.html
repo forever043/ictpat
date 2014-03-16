@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+{% load staticfiles %} 
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>jQuery: Collapsible sidebar layout (examples) - 4. Adding style and usability</title>
+	<link rel="stylesheet" type="text/css" href="{% static "style.css" %}" media="screen" />
+	<link rel="stylesheet" type="text/css" href="{% static "devheart-examples.css" %}" media="screen" />
+</head>
+<body class="dhe-body">
+
+<div id="center-wrapper">
+
+		<p class="dhe-p dhe-large">Examples for the article <a href="http://devheart.org/articles/jquery-collapsible-sidebar-layout/" class="dhe-link">jQuery: Collapsible sidebar layout</a> by <a href="http://devheart.org/" class="dhe-link">DevHeart</a>.</p>
+
+			<div class="use-sidebar sidebar-at-right" id="main">
+
+				<div id="content">Content</div>
+
+				<div id="sidebar">Sidebar</div>
+
+				<a href="#" id="separator"></a>
+
+				<div class="clearer">&nbsp;</div>
+
+			</div>
+
+			<!-- Sidebar at left side
+
+			<div class="use-sidebar sidebar-at-left" id="main">
+
+				<div id="content">Content</div>
+
+				<div id="sidebar">Sidebar</div>
+
+				<a href="#" id="sidebar-separator"></a>
+
+				<div class="clearer">&nbsp;</div>
+
+			</div>
+			 -->
+
+</div>
+
+<!-- Example JavaScript files -->
+<script type="text/javascript" src="{% static "scripts/jquery-1.9.1.js" %}"></script>
+<script type="text/javascript" src="{% static "jquery.cookie.js" %}"></script>
+
+<!-- Example jQuery code (JavaScript)  -->
+<script type="text/javascript">
+
+$(document).ready(function(){
+
+	// Variables
+	var objMain = $('#main');
+
+	// Show sidebar
+	function showSidebar(){
+		objMain.addClass('use-sidebar');
+		$.cookie('sidebar-pref2', 'use-sidebar', { expires: 30 });
+	}
+
+	// Hide sidebar
+	function hideSidebar(){
+		objMain.removeClass('use-sidebar');
+		$.cookie('sidebar-pref2', null, { expires: 30 });
+	}
+
+	// Sidebar separator
+	var objSeparator = $('#separator');
+
+	objSeparator.click(function(e){
+		e.preventDefault();
+		if ( objMain.hasClass('use-sidebar') ){
+			hideSidebar();
+		}
+		else {
+			showSidebar();
+		}
+	}).css('height', objSeparator.parent().outerHeight() + 'px');
+
+	// Load preference
+	if ( $.cookie('sidebar-pref2') == null ){
+		objMain.removeClass('use-sidebar');
+	}
+});
+
+</script>
+
+</body>
+</html>

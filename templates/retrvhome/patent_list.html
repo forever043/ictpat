@@ -50,6 +50,29 @@ $(document).ready(function() {
 	});
 });
 
+$(function() {
+    var top = $('#sidebar').offset().top - parseFloat($('#sidebar').css('marginTop').replace(/auto/, 0));
+    var footTop = $('#footer').offset().top - parseFloat($('#footer').css('marginTop').replace(/auto/, 0));
+
+    var maxY = footTop - $('#sidebar').outerHeight();
+
+    $(window).scroll(function(evt) {
+        var y = $(this).scrollTop();
+        if (y > top) {
+            if (y < maxY) {
+                $('#sidebar').addClass('fixed').removeAttr('style');
+            } else {
+                $('#sidebar').removeClass('fixed').css({
+                    position: 'absolute',
+                    top: (maxY - top) + 'px'
+                });
+            }
+        } else {
+            $('#sidebar').removeClass('fixed');
+        }
+    });
+});
+
 </script>
 {% endblock %}
 
@@ -98,6 +121,7 @@ $(document).ready(function() {
 {% endblock %}
 
 {% block sidebar %}
+<div id="sidebar">
 <form enctype="application/x-www-form-urlencoded" method="post" action="/patent-query"><dl class="zend_form">
 
 			<fieldset>
@@ -147,4 +171,5 @@ $(document).ready(function() {
     <option value="2012" label="2012">2012</option>
 </select></dd>
 <input type="submit" name="submit" id="submit" value="检索" /></dd></dl></form>
+</div>
 {% endblock %}
