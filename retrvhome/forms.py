@@ -15,5 +15,5 @@ class RetrvFilterForm(forms.Form):
 			self.fields[field.field_name] = forms.CharField(
 				label = field.field_label,
 				required = False,
-				widget = forms.TextInput(attrs={'class': 'text-input large-input'}))
+				widget = forms.TextInput(attrs={'class': 'text-input large-input', 'autocomplete': 'off'}))
 
