@@ -16,7 +16,7 @@ class PatentField(models.Model):
 fields = { '__unicode__': lambda self: smart_unicode(self.name) }
 try:
 	for f in PatentField.objects.all():
-		fields[f.field_name] = models.CharField(max_length=512, verbose_name=f.field_label)
+		fields[f.field_name] = models.CharField(max_length=512, verbose_name=f.field_label, blank=True, null=True)
 except:
 	pass
 Patent = create_dynamic_model(modelname = "Patent",

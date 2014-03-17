@@ -35,7 +35,7 @@ class PatentRetrvSchemeView(FormView):
 class RetrvSchemeExport(View):
 	def get(self, *args, **kwargs):
 		try:
-			db.start_transaction()
+			#db.start_transaction()
 
 			# Delete old RetrvScheme, clear data
 			db.delete_table(RetrvPatent._meta.db_table)
@@ -74,9 +74,9 @@ class RetrvSchemeExport(View):
 				target.save()
 
 			# Commit transaction
-			db.commit_transaction()
+			#db.commit_transaction()
 		except:
-			db.rollback_transaction()
+			#db.rollback_transaction()
 			return HttpResponse('Failed')
 
 		return HttpResponse('OK')
