@@ -12,32 +12,58 @@
 <script type="text/javascript" src="{% static "scripts/simpla.dataTables.configuration.js" %}"></script>
 
 <script type="text/javascript">
+var retrieve_field = {
+	{% for field in field_list %}
+	'{{ field.field_name }}': 'input',
+	{% endfor %}
+};
+
+function retrieveData( sSource, aoData, fnCallback ) {
+	for(var field in retrieve_field) {
+		value = $(retrieve_field[field]+"[name='" + field + "']").val();
+		if (value != "")
+			aoData.push({ "name": field, "value": value });
+	}
+
+	$.ajax({
+		"type": "GET", 
+		"url": sSource,
+		"dataType": "json",
+		"data": aoData,
+		"cache": false,
+		"success": fnCallback,
+		"error": function () {
+			alert( "DataTables warning: JSON data from server failed to load or be parsed. "+
+				"This is most likely to be caused by a JSON formatting error." );
+		}
+	});
+}
+
+var queryTable;
 $(document).ready(function() {
-	var queryTable = $('#patent-list').dataTable({
+	queryTable = $('#patent-list').dataTable({
 		"bProcessing": true,
 		"bServerSide": true,
-		"sAjaxSource": "{% url "patent-list-json" %}",
+		"sAjaxSource": "{% url "retrvhome-patent-list-json" %}",
+		"fnServerData": retrieveData,
 		"bSort": false,
 		"sPaginationType": "full_numbers",
+		"iDisplayLength": "25",
 		"oLanguage": oLanguage,
 		// Column Design
-		"bAutoWidth": false,
+		"bAutoWidth": true,
 		"aoColumns": [
-			{ "mData": "department",		"sWidth": "15%" },
-			{ "mData": "name",				"sWidth": "28%",
+			{ "mData": "pk",				"sWidth": "2%",
 				"fnRender": function (o, v) {
-					return '<a href="#">' + v + '</a>'
+					return '<input type="checkbox" id="pk_' + v + '" value="' + v + '" />';
 				}},
-			{ "mData": "inventors", 		"sWidth": "20%"},
-			{ "mData": "apply_code",		"sWidth": "10%" },
-			{ "mData": "apply_date",		"sWidth": "8%" },
-			{ "mData": "authorize_code",	"sWidth": "11%" },
-			{ "mData": "pk",				"sWidth": "8%",
-				"fnRender": function (o, v) {
-					return '<a href="#" title="Edit"><img src="/resources/images/icons/pencil.png" alt="Edit" /></a>'
-						 + '<a href="#" class="delete" title="Delete"><img src="/resources/images/icons/cross.png" alt="Delete" /></a>'
-						 + '<a href="#" title="Edit Meta"><img src="/resources/images/icons/hammer_screwdriver.png" alt="Edit Meta" /></a>';
-				}}
+			{% for field in field_list %}
+			{% if field.width %}
+			{ "mData": "{{ field.field_name }}", "sWidth": "{{field.width}}%" },
+			{% else %}
+			{ "mData": "{{ field.field_name }}" },
+			{% endif %}
+			{% endfor %}
 		],
 		"fnDrawCallback": function () {
 			// MouseOver high-light
@@ -48,6 +74,19 @@ $(document).ready(function() {
 		}
 	});
 });
+
+function doSubmitQuery() {
+	queryTable.fnDraw();
+	$('#extruderLeft').closeMbExtruder();
+	return false;
+}
+function doResetQuery() {
+	$("input[name='department']").val('')
+	queryTable.fnDraw();
+	$('#extruderLeft').closeMbExtruder();
+	return false;
+}
+
 </script>
 {% endblock %}
 
@@ -62,16 +101,10 @@ $(document).ready(function() {
 <table id="patent-list" class="datatable">
 	<thead>
 	<tr>
-<!--
 		<th><input class="check-all" type="checkbox" /></th>
--->
-		<th>申请部门</th>
-		<th>专利名称</th>
-		<th>发明人</th>
-		<th>申请号</th>
-		<th>申请时间</th>
-		<th>授权号</th>
-		<th>操作</th>
+		{% for field in field_list %}
+		<th>{{ field.field_label }}</th>
+		{% endfor %}
 	</tr>
 	</thead>
 </table>
@@ -83,9 +116,9 @@ $(document).ready(function() {
 {% block sidebar %}
 <div id="sidebar" style="margin-right:10px;">
 <form enctype="application/x-www-form-urlencoded" method="post" action="/patent-query"><dl class="zend_form">
+
 	<fieldset>
 		<legend>检索条件</legend>
-		<hr />
 		<ul id="fieldlist">
 		{% for field in form %}
 			<li style="background:none;">
@@ -97,10 +130,11 @@ $(document).ready(function() {
 		</ul>
 		<div class="clear"></div><!-- End .clear -->
 	</fieldset>
+
 	<fieldset style="float:right;">
-		<input type="submit" class="button" name="submit" id="submit" value="检索" />
-		<input type="submit" class="button" name="submit" id="submit" value="重置" />
+		<input type="submit" class="button" name="submit_query" id="submit_query" value="检索" onclick="return doSubmitQuery();"/>
+		<input type="button" class="button" name="reset_query" id="reset_query" value="重置" onclick="return doResetQuery();"/>
 	</fieldset>
-</form>
+
 </div>
 {% endblock %}
