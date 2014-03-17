@@ -34,25 +34,6 @@ class RetrvListView(ListView, FormMixin):
 		self.form = self.get_form(form_class)
 		return super(RetrvListView, self).get(request, *args, **kwargs)
 
-	def post(self, request, *args, **kwargs):
-		form_class = self.get_form_class()
-		form = self.get_form(form_class)
-		if form.is_valid():
-			self.form_valid(form)
-		else:
-			self.form_invalid(form)  
-		return self.get(request, *args, **kwargs)
-
-	def get_initial(self):
-		initial = {}
-		query_filter_list = self.request.session.get('query-filter', {})
-		for (filter_name, filter_value) in query_filter_list.items():
-			if 'pk' in filter_value:
-				initial[filter_name] = filter_value['pk']
-			elif 'str' in filter_value:
-				initial[filter_name] = filter_value['str']
-		return initial
-
 	def get_queryset(self):
 		object_list = self.model.objects.filter(display=True).order_by('sort')
 		if not object_list:
@@ -60,21 +41,6 @@ class RetrvListView(ListView, FormMixin):
 		for o in object_list:
 			o.width = self.field_display_width.get(o.field_name, None)
 		return object_list
-
-	def form_valid(self, form):
-		filter = {}
-		for (field, value) in form.cleaned_data.items():
-			if value:
-				if isinstance(value, models.Model):
-					filter[field] = {'pk': value.pk}
-				else:
-					#filter[field+'__icontains'] = value
-					filter[field] = {'str': value}
-		self.request.session['query-filter'] = filter
-		return super(RetrvListView, self).form_valid(form)
-
-	def form_invalid(self, form):
-		return super(RetrvListView, self).form_invalid(form)
 
 
 class PatentListJson(BaseDatatableView):
