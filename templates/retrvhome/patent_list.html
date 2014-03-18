@@ -125,9 +125,10 @@ function doResetQuery() {
 
 	<fieldset>
 		<legend>检索条件</legend>
+		<hr />
 		<ul id="fieldlist">
 		{% for field in form %}
-			<li style="background:none;">
+			<li style="background:none; padding-top:10px;">
 				<label>{{ field.label }}</label>
 				{{ field }}
 			</li>
@@ -135,6 +136,8 @@ function doResetQuery() {
 		</ul>
 		<div class="clear"></div><!-- End .clear -->
 	</fieldset>
+
+	<br />
 
 	<fieldset style="float:right;">
 		<input type="submit" class="button" name="submit_query" id="submit_query" value="检索" onclick="return doSubmitQuery();"/>

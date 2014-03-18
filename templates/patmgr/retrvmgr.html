@@ -5,7 +5,10 @@
 <h2>专利检索管理</h2>
 <p id="page-intro">管理专利检索方案，并向检索系统导出数据</p>
 
+{% include 'common/notifymsg.html' %}
+
 <div class="content-box">
+
 	
 	<div class="content-box-header">
 		
@@ -42,23 +45,57 @@
 
 					<legend>内建字段</legend>
 
-					<p>
-						<label>专利名称</label>
-						<span>不导出</span><span>可检索</span>
-					</p>
+					<table>
+					<thead>
+						<th>名称</th>
+						<th>列表显示</th>
+						<th>可检索</th>
+					</thead>
+					<tbody>
+					{% for field in builtin_fields %}
+					<tr>
+						<td>{{ field }}</td>
+						{% if field.display %}<td><img src="{% static 'admin/img/icon-yes.gif' %}" /></td>{% else %}<td><img src="{% static 'admin/img/icon-no.gif' %}" /></td>{% endif %}
+						{% if field.retrieve %}<td><img src="{% static 'admin/img/icon-yes.gif' %}" /></td>{% else %}<td><img src="{% static 'admin/img/icon-no.gif' %}" /></td>{% endif %}
+					</tr>
+					{% endfor %}
+					</tbody>
+					</table>
 					
 				</fieldset>
 
 				<fieldset class="column-right">
 
 					<legend>扩展字段</legend>
+
+					<table>
+					<thead>
+						<th>名称</th>
+						<th>列表显示</th>
+						<th>可检索</th>
+					</thead>
+					<tbody>
+					{% for field in customized_fields %}
+					<tr>
+						<td>{{ field }}</td>
+						{% if field.display %}<td><img src="{% static 'admin/img/icon-yes.gif' %}" /></td>{% else %}<td><img src="{% static 'admin/img/icon-no.gif' %}" /></td>{% endif %}
+						{% if field.retrieve %}<td><img src="{% static 'admin/img/icon-yes.gif' %}" /></td>{% else %}<td><img src="{% static 'admin/img/icon-no.gif' %}" /></td>{% endif %}
+					</tr>
+					{% endfor %}
+					</tbody>
+					</table>
 					
 				</fieldset>
 				
 				<div class="clear"></div><!-- End .clear -->
 
+				<br />
+
+				<!--
 				<input class="button" type="submit" value="预览" />
 				<input class="button" type="submit" value="导出" />
+				-->
+				<a class="button" href="{% url 'patent-retrvscheme-export' %}">导出</a>
 				
 			</form>
 			

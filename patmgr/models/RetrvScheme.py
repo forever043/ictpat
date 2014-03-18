@@ -20,7 +20,8 @@ class BuiltinRetrvField(models.Model):
 	sort = models.IntegerField(verbose_name="排序")
 
 	def __unicode__(self):
-		return u"%s: %s" % (self.scheme.name, Patent._meta.get_field(self.field_name).verbose_name)
+		#return u"%s: %s" % (self.scheme.name, Patent._meta.get_field(self.field_name).verbose_name)
+		return Patent._meta.get_field(self.field_name).verbose_name
 	class Meta:
 		app_label = "patmgr"
 		verbose_name = u"内建检索字段"

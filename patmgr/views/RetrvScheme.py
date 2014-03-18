@@ -1,5 +1,6 @@
 # coding=utf-8
 from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import *
 from django.contrib.messages.views import SuccessMessageMixin
@@ -24,6 +25,8 @@ class PatentRetrvSchemeView(FormView):
 		context = super(PatentRetrvSchemeView, self).get_context_data(**kwargs)
 		context['request'] = self.request
 		context['scheme_list'] = RetrvScheme.objects.all()
+		context['builtin_fields'] = BuiltinRetrvField.objects.all()
+		context['customized_fields'] = CustomizedRetrvField.objects.all()
 		return context
 
 	def get_success_message(self, cleaned_data):
@@ -77,7 +80,9 @@ class RetrvSchemeExport(View):
 			#db.commit_transaction()
 		except:
 			#db.rollback_transaction()
-			return HttpResponse('Failed')
+			messages.error(self.request, u"导出失败")
+			return HttpResponseRedirect(reverse_lazy('patent-retrvscheme'))
 
-		return HttpResponse('OK')
+		messages.success(self.request, u"成功导出%d条记录至专利检索系统"%Patent.objects.all().count())
+		return HttpResponseRedirect(reverse_lazy('patent-retrvscheme'))
 
