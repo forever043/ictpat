@@ -4,11 +4,18 @@ from django.utils.encoding import smart_unicode
 from retrvhome.dynamic_models_tool import create_dynamic_model
 
 class PatentField(models.Model):
-	field_name = models.CharField(unique=True, max_length=128, verbose_name='扩展字段类型名')
-	field_label = models.CharField(max_length=123, verbose_name='扩展字段类型标签')
-	display = models.BooleanField(verbose_name='列表显示')
-	retrieve = models.BooleanField(verbose_name='检索字段')
-	sort = models.IntegerField(verbose_name='排序值')
+	INPUT_TYPE = 'TX'
+	OPTION_TYPE = 'OP'
+	RETRIEVE_TYPES = (
+		(INPUT_TYPE, 'Input'),
+		(OPTION_TYPE, 'Option'),
+	)
+	field_name = models.CharField(unique=True, max_length=128, verbose_name=u'扩展字段类型名')
+	field_label = models.CharField(max_length=123, verbose_name=u'扩展字段类型标签')
+	display = models.BooleanField(verbose_name=u'列表显示')
+	retrieve = models.BooleanField(verbose_name=u'检索字段')
+	sort = models.IntegerField(verbose_name=u'排序值')
+	type = models.CharField(max_length=2, verbose_name=u'检索类型', choices=RETRIEVE_TYPES, default=INPUT_TYPE)
 	def __unicode__(self):
 		return self.field_label
 

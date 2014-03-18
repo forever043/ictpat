@@ -13,20 +13,14 @@ from retrvhome.models import *
 from retrvhome.forms import *
 
 class RetrvListView(ListView, FormMixin):
-	field_display_width = {
-		"name": 25,
-		"department": 13,
-		"inventors": 20,
-		"type": 8,
-		"apply_code": 10,
-		"apply_date": 8,
-		"authorize_code": 10,
-	}
+	field_display_width = {}
+	retrieve_list = 'retrieve_list'
 
 	def get_context_data(self, **kwargs):
 		context = super(RetrvListView, self).get_context_data(**kwargs)
 		context['request'] = self.request
 		context['form'] = self.form
+		context[self.retrieve_list] = self.model.objects.filter(retrieve=True).order_by('sort')
 		return context
 
 	def get(self, request, *args, **kwargs):
@@ -44,12 +38,10 @@ class RetrvListView(ListView, FormMixin):
 
 
 class PatentListJson(BaseDatatableView):
-	model = Patent
-	field_model = PatentField
 	columns = []
-	#columns = ['department', 'name', 'inventors', 'apply_code', 'apply_date', 'authorize_code', 'pk', 'DT_RowId']
-	#order_columns = ['field_label', 'field_name', '', '', 'sort', 'pk', 'pk']
-	#max_display_length = 2000
+	model = None
+	field_model = None
+	column_template = {}
 
 	def __init__(self, *args, **kwargs):
 		super(PatentListJson, self).__init__(*args, **kwargs)
@@ -73,12 +65,10 @@ class PatentListJson(BaseDatatableView):
 		return qs.filter(q)
 
 	def render_column(self, row, column):
+		if column in self.column_template:
+			return self.column_template[column](row)
 		if column == 'DT_RowId':
 			return '%d' % (row.pk)
-		elif column == 'name':
-			return u'<a href="#">%s</a>' % row.name
-		elif column == 'apply_code':
-			return u'<a href="#">%s</a>' % row.apply_code
 		elif column == 'authorize_code':
 			if row.authorize_code:
 				return u'<a href="#">%s</a>' % row.authorize_code

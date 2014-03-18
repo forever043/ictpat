@@ -13,8 +13,12 @@
 
 <script type="text/javascript">
 var retrieve_fields = {
-	{% for field in field_list %}
+	{% for field in retrieve_list %}
+	{% if field.type == "OP" %}
+	'{{ field.field_name }}': 'select',
+	{% else %}
 	'{{ field.field_name }}': 'input',
+	{% endif %}
 	{% endfor %}
 };
 
@@ -124,9 +128,8 @@ function doResetQuery() {
 		<ul id="fieldlist">
 		{% for field in form %}
 			<li style="background:none;">
-				<label>{{ field.label }}
+				<label>{{ field.label }}</label>
 				{{ field }}
-				</label>
 			</li>
 		{% endfor %}
 		</ul>
