@@ -22,6 +22,10 @@ class SCRFileUploadOption(NavOption):
 	name = '软件登记证书上传'
 	view = 'scr-file'
 
+class SCRExtFieldMgrOption(NavOption):
+	name = '扩展属性管理'
+	view = 'scr-extfield'
+
 class SCRRetrvMgrOption(NavOption):
     name = '检索方案管理'
     view = 'scr-retrvscheme'
@@ -30,7 +34,7 @@ class SCRMgrNav(Nav):
     name = '软件著作权登记管理'
     view = 'scrmgr.views.scrmgr'
     nav_group = 'main'
-    options = [SCRApplyOption, SCRListOption, SCRImportOption, SCRFileUploadOption, SCRRetrvMgrOption]
+    options = [SCRApplyOption, SCRListOption, SCRImportOption, SCRFileUploadOption, SCRExtFieldMgrOption, SCRRetrvMgrOption]
 
 nav_groups.register(SCRMgrNav)
 

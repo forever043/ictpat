@@ -69,6 +69,14 @@ urlpatterns = patterns('scrmgr.views',
 				error_message = u'软件 "%(name)s" 评价失败')),
 		name='scr-rank'),
 
+	# Patent MetaField Manager
+	url(r'^meta/$',
+		login_required(TemplateView.as_view(template_name='scrmgr/scr_extfield.html')),
+		name='scr-extfield'),
+	url(r'^meta/extfield/data/$',
+		login_required(ExtFieldJson.as_view(model=SoftwareCRExtFieldType)),
+		name='scr-extfield-json'),
+
 	# Patent Retrieve Manager
     url(r'^retrvmgr/$', login_required(DashMgrFreshListView.as_view(pattern_name='scr-list')), name='scr-retrvscheme'),
     url(r'^retrvmgr/export/$', login_required(DashMgrFreshListView.as_view(pattern_name='scr-list')), name='scr-retrvscheme-export'),
@@ -92,7 +100,7 @@ urlpatterns = patterns('scrmgr.views',
 
 
 	# SoftwareCR File
-	url(r'^file/$',			TemplateView.as_view(template_name='scrmgr/scr_file_upload.html'), name='scr-file'),
+	url(r'^file/$', TemplateView.as_view(template_name='scrmgr/scr_file_upload.html'), name='scr-file'),
 	url(r'^file/upload/$',
 		FileUploadView.as_view(
 			model = SoftwareCR,
