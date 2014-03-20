@@ -126,7 +126,8 @@ urlpatterns = patterns('',
     				"import_config": "patmgr/import/import_config.html",
     				"db_select":     "patmgr/import/db_select.html",
     				"matchfield":    "patmgr/import/matchfield.html",
-				}
+				},
+				return_url = reverse_lazy('patent-import'),
 		)),
 		name='patent-import'),
 

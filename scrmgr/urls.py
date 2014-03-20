@@ -115,7 +115,8 @@ urlpatterns = patterns('scrmgr.views',
     				"import_config": "scrmgr/import/import_config.html",
     				"db_select":     "scrmgr/import/db_select.html",
     				"matchfield":    "scrmgr/import/matchfield.html",
-				}
+				},
+				return_url = reverse_lazy('scr-import'),
 		)),
 		name='scr-import'),
 

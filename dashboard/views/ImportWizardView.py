@@ -29,6 +29,7 @@ class ImportWizardView(SessionWizardView):
 				"type": "9",
 		},
 	}
+	return_url = reverse_lazy('patent-import')
 
 	def get_context_data(self, **kwargs):
 		context = super(ImportWizardView, self).get_context_data(**kwargs)
@@ -109,7 +110,7 @@ class ImportWizardView(SessionWizardView):
 		if error_count > 0:
 			messages.error(self.request, u"导入失败%d条记录" % error_count)
 
-		return HttpResponseRedirect(reverse_lazy('patent-import'))
+		return HttpResponseRedirect(self.return_url)
 
 	def do_append(self, row, basefields, extfields, field_matchid):
 		entry = self.model()
