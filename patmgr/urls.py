@@ -88,7 +88,15 @@ urlpatterns = patterns('',
 		name='patent-state-json'),
 
 	# Patent Retrieve Manager
-    url(r'^retrvmgr/$',			login_required(PatentRetrvSchemeView.as_view()), name='patent-retrvscheme'),
+    url(r'^retrvmgr/$',
+		login_required(RetrvSchemeView.as_view(
+			template_name = 'patmgr/retrvmgr.html',
+			scheme_model = RetrvScheme,
+			builtinfield_model = BuiltinRetrvField,
+			customizedfield_model = CustomizedRetrvField,
+			form_class = PatentRetrvSchemeForm,
+			success_url = reverse_lazy('patent-retrvscheme'))),
+		name='patent-retrvscheme'),
 	url(r'^retrvmgr/export/$',	login_required(RetrvSchemeExport.as_view()), name='patent-retrvscheme-export'),
 
 	# Patent ImportWizard View

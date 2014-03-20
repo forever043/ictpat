@@ -1,7 +1,7 @@
 # coding=utf-8
 from django.db import models
 
-from patmgr.models import PatentExtFieldType, Patent
+from scrmgr.models import SoftwareCRExtFieldType, SoftwareCR
 
 class RetrvScheme(models.Model):
 	name = models.CharField(max_length=128, verbose_name=u"检索方案名称")
@@ -9,7 +9,7 @@ class RetrvScheme(models.Model):
 	def __unicode__(self):
 		return self.name
 	class Meta:
-		app_label = "patmgr"
+		app_label = "scrmgr"
 		verbose_name = u"检索方案"
 		verbose_name_plural = u"检索方案"
 
@@ -28,10 +28,10 @@ class BuiltinRetrvField(models.Model):
 	type = models.CharField(max_length=2, verbose_name=u"检索类型", choices=RETRIEVE_TYPES, default=INPUT_TYPE)
 
 	def __unicode__(self):
-		#return u"%s: %s" % (self.scheme.name, Patent._meta.get_field(self.field_name).verbose_name)
-		return Patent._meta.get_field(self.field_name).verbose_name
+		#return u"%s: %s" % (self.scheme.name, SoftwareCR._meta.get_field(self.field_name).verbose_name)
+		return SoftwareCR._meta.get_field(self.field_name).verbose_name
 	class Meta:
-		app_label = "patmgr"
+		app_label = "scrmgr"
 		verbose_name = u"内建检索字段"
 		verbose_name_plural = u"内建检索字段"
 	unique_together=(("scheme", "field_name"),)
@@ -44,7 +44,7 @@ class CustomizedRetrvField(models.Model):
 		(OPTION_TYPE, 'Option'),
 	)
 	scheme = models.ForeignKey(RetrvScheme, verbose_name=u"检索方案")
-	field = models.ForeignKey(PatentExtFieldType, verbose_name=u"检索字段")
+	field = models.ForeignKey(SoftwareCRExtFieldType, verbose_name=u"检索字段")
 	retrieve = models.BooleanField(verbose_name=u"可检索")
 	display = models.BooleanField(verbose_name=u"列表显示")
 	sort = models.IntegerField(verbose_name=u"排序")
@@ -53,7 +53,7 @@ class CustomizedRetrvField(models.Model):
 	def __unicode__(self):
 		return (u"%s: %s") % (self.scheme.name, self.field.field_label)
 	class Meta:
-		app_label = "patmgr"
+		app_label = "scrmgr"
 		verbose_name = u"自定义检索字段"
 		verbose_name_plural = u"自定义检索字段"
 	unique_together=(("scheme", "field"),)

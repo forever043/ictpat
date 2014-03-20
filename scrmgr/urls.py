@@ -78,7 +78,15 @@ urlpatterns = patterns('scrmgr.views',
 		name='scr-extfield-json'),
 
 	# Patent Retrieve Manager
-    url(r'^retrvmgr/$', login_required(DashMgrFreshListView.as_view(pattern_name='scr-list')), name='scr-retrvscheme'),
+    url(r'^retrvmgr/$',
+		login_required(RetrvSchemeView.as_view(
+			template_name = 'scrmgr/scr_retrvmgr.html',
+			scheme_model = scrmgr.models.RetrvScheme,
+			builtinfield_model = scrmgr.models.BuiltinRetrvField,
+			customizedfield_model = scrmgr.models.CustomizedRetrvField,
+			form_class = SoftwareCRRetrvSchemeForm,
+			success_url = reverse_lazy('scr-retrvscheme'))),
+		name='scr-retrvscheme'),
     url(r'^retrvmgr/export/$', login_required(DashMgrFreshListView.as_view(pattern_name='scr-list')), name='scr-retrvscheme-export'),
 
 	# SoftwareCR ImportWizard View

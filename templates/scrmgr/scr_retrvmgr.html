@@ -1,0 +1,112 @@
+{% extends "common/mgrbase.html" %}
+{% load staticfiles %}
+
+{% block main_content %}
+<h2>软件登记检索管理</h2>
+<p id="page-intro">管理软件登记检索方案，并向检索系统导出数据</p>
+
+{% include 'common/notifymsg.html' %}
+
+<div class="content-box">
+
+	
+	<div class="content-box-header">
+		
+		<h3>检索方案设置</h3>
+
+		<div class="clear"></div>
+		
+	</div> <!-- End .content-box-header -->
+	
+	<div class="content-box-content">
+
+		<div class="tab-content default-tab" >
+		
+			<form action="#" method="post">
+
+				{% csrf_token %}
+				
+				<fieldset>
+
+					<legend>检索方案</legend>
+					
+					<p>
+						<select name="dropdown" class="small-input">
+						{% for scheme in scheme_list %}
+							<option value="{{ scheme.pk }}">{{ scheme.name }}</option>
+						{% endfor %}
+						</select> 
+						<input class="button" type="button" value="新建" />
+					</p>
+
+				</fieldset>
+
+				<fieldset class="column-left">
+
+					<legend>内建字段</legend>
+
+					<table>
+					<thead>
+						<th>名称</th>
+						<th>列表显示</th>
+						<th>可检索</th>
+						<th>检索类型</th>
+					</thead>
+					<tbody>
+					{% for field in builtin_fields %}
+					<tr>
+						<td>{{ field }}</td>
+						{% if field.display %}<td><img src="{% static 'admin/img/icon-yes.gif' %}" /></td>{% else %}<td><img src="{% static 'admin/img/icon-no.gif' %}" /></td>{% endif %}
+						{% if field.retrieve %}<td><img src="{% static 'admin/img/icon-yes.gif' %}" /></td>{% else %}<td><img src="{% static 'admin/img/icon-no.gif' %}" /></td>{% endif %}
+						<td>{{ field.type }}</td>
+					</tr>
+					{% endfor %}
+					</tbody>
+					</table>
+					
+				</fieldset>
+
+				<fieldset class="column-right">
+
+					<legend>扩展字段</legend>
+
+					<table>
+					<thead>
+						<th>名称</th>
+						<th>列表显示</th>
+						<th>可检索</th>
+						<th>检索类型</th>
+					</thead>
+					<tbody>
+					{% for field in customized_fields %}
+					<tr>
+						<td>{{ field }}</td>
+						{% if field.display %}<td><img src="{% static 'admin/img/icon-yes.gif' %}" /></td>{% else %}<td><img src="{% static 'admin/img/icon-no.gif' %}" /></td>{% endif %}
+						{% if field.retrieve %}<td><img src="{% static 'admin/img/icon-yes.gif' %}" /></td>{% else %}<td><img src="{% static 'admin/img/icon-no.gif' %}" /></td>{% endif %}
+						<td>{{ field.type }}</td>
+					</tr>
+					{% endfor %}
+					</tbody>
+					</table>
+					
+				</fieldset>
+				
+				<div class="clear"></div><!-- End .clear -->
+
+				<br />
+
+				<!--
+				<input class="button" type="submit" value="预览" />
+				<input class="button" type="submit" value="导出" />
+				-->
+				<a class="button" href="{% url 'patent-retrvscheme-export' %}">导出</a>
+				
+			</form>
+			
+		</div> <!-- End #tab2 -->        
+		
+	</div> <!-- End .content-box-content -->
+	
+</div> <!-- End .content-box -->
+{% endblock %}
+

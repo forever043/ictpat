@@ -5,3 +5,4 @@ from extfield import *
 from metafield import *
 from file import *
 from ImportWizardView import *
+from RetrvScheme import *

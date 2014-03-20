@@ -20,12 +20,12 @@ admin.site.register(SoftwareCRExtField, SoftwareCRExtFieldAdmin)
 #admin.site.register(SoftwareCRRank, SoftwareCRRankAdmin)
 
 
-#class RetrvSchemeAdmin(admin.ModelAdmin):
-#	list_display = ('id', 'name', 'current')
-#class BuiltinRetrvFieldAdmin(admin.ModelAdmin):
-#	list_display = ('id', 'field_name', 'scheme', 'retrieve', 'display', 'sort')
-#class CustomizedRetrvFieldAdmin(admin.ModelAdmin):
-#	list_display = ('id', 'field', 'scheme', 'retrieve', 'display', 'sort')
-#admin.site.register(RetrvScheme, RetrvSchemeAdmin)
-#admin.site.register(BuiltinRetrvField, BuiltinRetrvFieldAdmin)
-#admin.site.register(CustomizedRetrvField, CustomizedRetrvFieldAdmin)
+class RetrvSchemeAdmin(admin.ModelAdmin):
+	list_display = ('id', 'name', 'current')
+class BuiltinRetrvFieldAdmin(admin.ModelAdmin):
+	list_display = ('id', 'field_name', 'scheme', 'retrieve', 'type', 'display', 'sort')
+class CustomizedRetrvFieldAdmin(admin.ModelAdmin):
+	list_display = ('id', 'field', 'scheme', 'retrieve', 'type', 'display', 'sort')
+admin.site.register(RetrvScheme, RetrvSchemeAdmin)
+admin.site.register(BuiltinRetrvField, BuiltinRetrvFieldAdmin)
+admin.site.register(CustomizedRetrvField, CustomizedRetrvFieldAdmin)
