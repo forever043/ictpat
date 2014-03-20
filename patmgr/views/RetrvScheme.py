@@ -51,6 +51,7 @@ class RetrvSchemeExport(View):
 					field_label = Patent._meta.get_field(field.field_name).verbose_name,
 					display = field.display,
 					retrieve = field.retrieve,
+					type = field.type,
 					sort = field.sort).save()
 			for field in CustomizedRetrvField.objects.filter(scheme__current=True).order_by('sort'):
 				RetrvPatentField(
@@ -58,6 +59,7 @@ class RetrvSchemeExport(View):
 					field_label = field.field.field_label,
 					display = field.display,
 					retrieve = field.retrieve,
+					type = field.type,
 					sort = field.sort).save()
 
 			# Recreate RetrvPatent table

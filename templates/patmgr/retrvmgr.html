@@ -50,6 +50,7 @@
 						<th>名称</th>
 						<th>列表显示</th>
 						<th>可检索</th>
+						<th>检索类型</th>
 					</thead>
 					<tbody>
 					{% for field in builtin_fields %}
@@ -57,6 +58,7 @@
 						<td>{{ field }}</td>
 						{% if field.display %}<td><img src="{% static 'admin/img/icon-yes.gif' %}" /></td>{% else %}<td><img src="{% static 'admin/img/icon-no.gif' %}" /></td>{% endif %}
 						{% if field.retrieve %}<td><img src="{% static 'admin/img/icon-yes.gif' %}" /></td>{% else %}<td><img src="{% static 'admin/img/icon-no.gif' %}" /></td>{% endif %}
+						<td>{{ field.type }}</td>
 					</tr>
 					{% endfor %}
 					</tbody>
@@ -73,6 +75,7 @@
 						<th>名称</th>
 						<th>列表显示</th>
 						<th>可检索</th>
+						<th>检索类型</th>
 					</thead>
 					<tbody>
 					{% for field in customized_fields %}
@@ -80,6 +83,7 @@
 						<td>{{ field }}</td>
 						{% if field.display %}<td><img src="{% static 'admin/img/icon-yes.gif' %}" /></td>{% else %}<td><img src="{% static 'admin/img/icon-no.gif' %}" /></td>{% endif %}
 						{% if field.retrieve %}<td><img src="{% static 'admin/img/icon-yes.gif' %}" /></td>{% else %}<td><img src="{% static 'admin/img/icon-no.gif' %}" /></td>{% endif %}
+						<td>{{ field.type }}</td>
 					</tr>
 					{% endfor %}
 					</tbody>
