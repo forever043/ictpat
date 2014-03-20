@@ -8,6 +8,9 @@ from patmgr.views import PatentRetrvSchemeView, RetrvSchemeExport, PatentListJso
 from dashboard.views import *
 from patmgr.forms import *
 
+import patmgr.models
+import retrvhome.models
+
 
 urlpatterns = patterns('',
     url(r'^$', login_required(RedirectView.as_view(pattern_name='patent-list')), name='patent'),
@@ -97,7 +100,18 @@ urlpatterns = patterns('',
 			form_class = PatentRetrvSchemeForm,
 			success_url = reverse_lazy('patent-retrvscheme'))),
 		name='patent-retrvscheme'),
-	url(r'^retrvmgr/export/$',	login_required(RetrvSchemeExport.as_view()), name='patent-retrvscheme-export'),
+	#url(r'^retrvmgr/export/$',	login_required(RetrvSchemeExport.as_view()), name='patent-retrvscheme-export'),
+	url(r'^retrvmgr/export/$',
+		login_required(RetrvSchemeExport.as_view(
+			model = Patent,
+			extfield_model = PatentExtField,
+			ref_name = 'patent',
+			builtin_field_model		= patmgr.models.BuiltinRetrvField,
+			customized_field_model	= patmgr.models.CustomizedRetrvField,
+			retrv_model				= retrvhome.models.Patent,
+			retrv_field_model		= retrvhome.models.PatentField,
+			return_url = reverse_lazy('patent-retrvscheme'))),
+		name='patent-retrvscheme-export'),
 
 	# Patent ImportWizard View
     url(r'^import/',

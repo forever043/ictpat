@@ -1,0 +1,148 @@
+{% extends "retrvhome/base.html" %}
+{% load staticfiles %}
+
+{% block csslink %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static "css/jquery.dataTables.css" %}" type="text/css" media="screen" />
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }}
+<script type="text/javascript" src="{% static "scripts/jquery.dataTables.min.js" %}"></script>
+<script type="text/javascript" src="{% static "scripts/simpla.dataTables.configuration.js" %}"></script>
+
+<script type="text/javascript">
+var retrieve_fields = {
+	{% for field in retrieve_list %}
+	{% if field.type == "OP" %}
+	'{{ field.field_name }}': 'select',
+	{% else %}
+	'{{ field.field_name }}': 'input',
+	{% endif %}
+	{% endfor %}
+};
+
+function retrieveData( sSource, aoData, fnCallback ) {
+	for(var field in retrieve_fields) {
+		value = $(retrieve_fields[field]+"[name='" + field + "']").val();
+		if (value != "")
+			aoData.push({ "name": field, "value": value });
+	}
+
+	$.ajax({
+		"type": "GET", 
+		"url": sSource,
+		"dataType": "json",
+		"data": aoData,
+		"cache": false,
+		"success": fnCallback,
+		"error": function () {
+			alert( "DataTables warning: JSON data from server failed to load or be parsed. "+
+				"This is most likely to be caused by a JSON formatting error." );
+		}
+	});
+}
+
+var queryTable;
+$(document).ready(function() {
+	queryTable = $('#scr-list').dataTable({
+		"bProcessing": true,
+		"bServerSide": true,
+		"sAjaxSource": "{% url "retrvhome-scr-list-json" %}",
+		"fnServerData": retrieveData,
+		"bSort": false,
+		"sPaginationType": "full_numbers",
+		"iDisplayLength": "25",
+		"oLanguage": oLanguage,
+		// Column Design
+		"bAutoWidth": true,
+		"aoColumns": [
+			{ "mData": "pk",				"sWidth": "2%",
+				"fnRender": function (o, v) {
+					return '<input type="checkbox" id="pk_' + v + '" value="' + v + '" />';
+				}},
+			{% for field in field_list %}
+			{% if field.width %}
+			{ "mData": "{{ field.field_name }}", "sWidth": "{{field.width}}%" },
+			{% else %}
+			{ "mData": "{{ field.field_name }}" },
+			{% endif %}
+			{% endfor %}
+		],
+		"fnDrawCallback": function () {
+			// MouseOver high-light
+			$(".datatable tr").not(':first').hover(
+				function () { $(this).addClass('selected-row'); }, 
+				function () { $(this).removeClass('selected-row'); }
+			);
+		}
+	});
+});
+
+function doSubmitQuery() {
+	queryTable.fnDraw();
+	$('#extruderLeft').closeMbExtruder();
+	return false;
+}
+function doResetQuery() {
+	$.each(retrieve_fields, function(field_name, field_type) {
+		$(field_type + "[name='" + field_name + "']").val('')
+	});
+	queryTable.fnDraw();
+	$('#extruderLeft').closeMbExtruder();
+	return false;
+}
+
+</script>
+{% endblock %}
+
+{% block main_content %}
+
+<!-- Page Head -->
+<h2>软件登记检索</h2>
+<p id="page-intro">当前检索条件：全部</p>
+
+<h3>检索结果</h3>
+	
+<table id="scr-list" class="datatable">
+	<thead>
+	<tr>
+		<th><input class="check-all" type="checkbox" /></th>
+		{% for field in field_list %}
+		<th>{{ field.field_label }}</th>
+		{% endfor %}
+	</tr>
+	</thead>
+</table>
+
+<div class="clear"></div>
+					
+{% endblock %}
+
+{% block sidebar %}
+<div id="sidebar" style="margin-right:10px;">
+<form enctype="application/x-www-form-urlencoded" method="post" action="/scr-query"><dl class="zend_form">
+
+	<fieldset>
+		<legend>检索条件</legend>
+		<hr />
+		<ul id="fieldlist">
+		{% for field in form %}
+			<li style="background:none; padding-top:10px;">
+				<label>{{ field.label }}</label>
+				{{ field }}
+			</li>
+		{% endfor %}
+		</ul>
+		<div class="clear"></div><!-- End .clear -->
+	</fieldset>
+
+	<br />
+
+	<fieldset style="float:right;">
+		<input type="submit" class="button" name="submit_query" id="submit_query" value="检索" onclick="return doSubmitQuery();"/>
+		<input type="button" class="button" name="reset_query" id="reset_query" value="重置" onclick="return doResetQuery();"/>
+	</fieldset>
+
+</div>
+{% endblock %}

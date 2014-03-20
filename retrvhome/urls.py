@@ -13,7 +13,7 @@ urlpatterns = patterns('',
 	url(r'^patent/$',
 		RetrvListView.as_view(
 				model = PatentField,
-				form_class = RetrvFilterForm,
+				form_class = PatentRetrvFilterForm,
 				context_object_name = 'field_list',
 				retrieve_list = 'retrieve_list',
 				template_name = 'retrvhome/patent_list.html',
@@ -29,7 +29,7 @@ urlpatterns = patterns('',
 				success_url = reverse_lazy('patent-list')),
 		name='retrvhome-patent-list'),
     url(r'^patent/data/$', 
-		PatentListJson.as_view(
+		RetrvListJson.as_view(
 			model = Patent,
 			field_model = PatentField,
 			column_template = {
@@ -45,6 +45,32 @@ urlpatterns = patterns('',
 		name='retrvhome-patent-list-json'),
 
 	# SoftwareCR
-	url(r'^scr/$',		TemplateView.as_view(template_name='retrvhome/index.html'), name='retrvhome-scr-list'),
+	url(r'^scr/$',
+		RetrvListView.as_view(
+				model = RetrvSoftwareCRField,
+				form_class = SoftwareCRRetrvFilterForm,
+				context_object_name = 'field_list',
+				retrieve_list = 'retrieve_list',
+				template_name = 'retrvhome/scr_list.html',
+				field_display_width = {
+					"name": 25,
+					"department": 13,
+					"developers": 20,
+					"authorize_code": 10,
+				},
+				success_url = reverse_lazy('scr-list')),
+		name='retrvhome-scr-list'),
+    url(r'^scr/data/$', 
+		RetrvListJson.as_view(
+			model = RetrvSoftwareCR,
+			field_model = RetrvSoftwareCRField,
+			column_template = {
+				"name":				lambda o: u'<a href="#">%s</a>' % o.name,
+				"authorize_code":	lambda o: u'<a href="%(url)s" target="_blank">%(name)s</a>' % {
+													"url":	reverse_lazy('scr-file-service', args=[o.authorize_code]),
+													"name":	o.authorize_code }
+												if o.authorize_code  else o.state,
+			}),
+		name='retrvhome-scr-list-json'),
 )
 

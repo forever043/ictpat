@@ -37,14 +37,14 @@ class RetrvListView(ListView, FormMixin):
 		return object_list
 
 
-class PatentListJson(BaseDatatableView):
+class RetrvListJson(BaseDatatableView):
 	columns = []
 	model = None
 	field_model = None
 	column_template = {}
 
 	def __init__(self, *args, **kwargs):
-		super(PatentListJson, self).__init__(*args, **kwargs)
+		super(RetrvListJson, self).__init__(*args, **kwargs)
 		if not self.columns:
 			self.columns = [ 'pk', 'DT_RowId' ]
 			field_list = self.field_model.objects.filter(display=True).order_by('sort')
@@ -74,5 +74,5 @@ class PatentListJson(BaseDatatableView):
 				return u'<a href="#">%s</a>' % row.authorize_code
 			else:
 				return row.state
-		return super(PatentListJson, self).render_column(row, column)
+		return super(RetrvListJson, self).render_column(row, column)
 

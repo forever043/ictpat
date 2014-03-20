@@ -6,4 +6,8 @@ from retrvhome.models import *
 class PatentFieldAdmin(admin.ModelAdmin):
 	list_display = ('id', 'field_name', 'field_label', 'display', 'retrieve', 'type', 'sort')
 
+class RetrvSoftwareCRFieldAdmin(admin.ModelAdmin):
+	list_display = ('id', 'field_name', 'field_label', 'display', 'retrieve', 'type', 'sort')
+
 admin.site.register(PatentField, PatentFieldAdmin)
+admin.site.register(RetrvSoftwareCRField, RetrvSoftwareCRFieldAdmin)

@@ -8,6 +8,9 @@ from scrmgr.forms import *
 import scrmgr.forms
 from dashboard.views import *
 
+import scrmgr.models
+import retrvhome.models
+
 urlpatterns = patterns('scrmgr.views',
     url(r'^$', 'scrmgr'),
 
@@ -87,7 +90,17 @@ urlpatterns = patterns('scrmgr.views',
 			form_class = SoftwareCRRetrvSchemeForm,
 			success_url = reverse_lazy('scr-retrvscheme'))),
 		name='scr-retrvscheme'),
-    url(r'^retrvmgr/export/$', login_required(DashMgrFreshListView.as_view(pattern_name='scr-list')), name='scr-retrvscheme-export'),
+	url(r'^retrvmgr/export/$',
+		login_required(RetrvSchemeExport.as_view(
+			model = SoftwareCR,
+			extfield_model = SoftwareCRExtField,
+			ref_name = 'scr',
+			builtin_field_model		= scrmgr.models.BuiltinRetrvField,
+			customized_field_model	= scrmgr.models.CustomizedRetrvField,
+			retrv_model				= retrvhome.models.RetrvSoftwareCR,
+			retrv_field_model		= retrvhome.models.RetrvSoftwareCRField,
+			return_url = reverse_lazy('scr-retrvscheme'))),
+		name='scr-retrvscheme-export'),
 
 	# SoftwareCR ImportWizard View
     url(r'^import/',

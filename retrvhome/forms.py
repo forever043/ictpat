@@ -27,3 +27,12 @@ class RetrvFilterForm(forms.Form):
 					required = False,
 					widget = forms.TextInput(attrs={'class': 'text-input large-input', 'autocomplete': 'off'}))
 
+
+class SoftwareCRRetrvFilterForm(RetrvFilterForm):
+	field_model = RetrvSoftwareCRField
+	model = RetrvSoftwareCR
+
+class PatentRetrvFilterForm(RetrvFilterForm):
+	field_model = PatentField
+	model = Patent
+
