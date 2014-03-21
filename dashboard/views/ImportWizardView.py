@@ -7,6 +7,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.contrib.formtools.wizard.views import SessionWizardView
 from django.contrib import messages
 import os
+import sys
 import string
 import datetime
 import xlrd
@@ -60,9 +61,12 @@ class ImportWizardView(SessionWizardView):
 		row_values = []
 		for cell in cell_list:
 			if cell.ctype == xlrd.XL_CELL_DATE:
-				row_values.append(datetime.datetime(*xlrd.xldate_as_tuple(cell.value, datemode)).strftime('%Y-%m-%d'))
+				value = datetime.datetime(*xlrd.xldate_as_tuple(cell.value, datemode)).strftime('%Y-%m-%d')
+			elif cell.ctype == xlrd.XL_CELL_TEXT:
+				value = cell.value.strip().strip("'")
 			else:
-				row_values.append(cell.value)
+				value = cell.value
+			row_values.append(value if value and value!="" else None)
 		return row_values
 
 	def get_form_kwargs(self, step):
@@ -118,19 +122,23 @@ class ImportWizardView(SessionWizardView):
 			if bf in field_matchid:
 				try:
 					field = getattr(self.model, bf)
-					value = field.get_queryset().get(name=string.strip(row[field_matchid[bf]]))
+					value = field.get_queryset().get(name=row[field_matchid[bf]])
 				except AttributeError:
 					value = row[field_matchid[bf]]
-					if isinstance(value, str):
-						value = string.strip(value)
 				except ObjectDoesNotExist:
-					print "FAILED: ", string.strip(row[1]), bf, ": '", string.strip(row[field_matchid[bf]]), "'"
+					print "FAILED: ", row[1], bf, ": '", row[field_matchid[bf]], "'"
 					return False
-				setattr(entry, bf, value)
+				try:
+					setattr(entry, bf, value)
+				except:
+					print "FAILED: ", row[1], bf, ": ", bf, "=>", value
+					return False
 		try:
 			entry.save()
 		except:
-			print "FAILED: SAVE: ", entry
+			print "FAILED SAVE: ", entry.name
+			info=sys.exc_info()  
+			print info[0],":",info[1]  
 			return False
 
 		return True
