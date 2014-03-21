@@ -64,6 +64,8 @@ class ImportWizardView(SessionWizardView):
 				value = datetime.datetime(*xlrd.xldate_as_tuple(cell.value, datemode)).strftime('%Y-%m-%d')
 			elif cell.ctype == xlrd.XL_CELL_TEXT:
 				value = cell.value.strip().strip("'")
+			elif cell.ctype == xlrd.XL_CELL_NUMBER:
+				value = "%.1f" % cell.value
 			else:
 				value = cell.value
 			row_values.append(value if value and value!="" else None)
@@ -89,6 +91,10 @@ class ImportWizardView(SessionWizardView):
 		for field in dict(basefields, **extfields):
 			if cd[field]:
 				field_matchid[field] = int(cd[field])
+
+		# if replace, clear database
+		if import_type == 'R':
+			self.model.objects.all().delete()
 
 		# process xlsfile
 		xlsfile = xlrd.open_workbook(file_contents = cd['file'].read())
@@ -151,9 +157,5 @@ class ImportWizardView(SessionWizardView):
 		print entry
 
 	def do_replace(self, row, basefields, extfields, field_matchid):
-		entry = self.model()
-		for bf in basefields:
-			if bf in field_matchid:
-				setattr(entry, bf, string.strip(row[field_matchid[bf]]))
-		print entry
+		return self.do_append(row, basefields, extfields, field_matchid)
 

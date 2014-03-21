@@ -17,27 +17,45 @@ class DashboardView(TemplateView):
 		context['request'] = self.request
 
 		qs = Department.objects.annotate(patent_count=Count('patent'))
-		patentdata = DataPool(
+		qs2 = Department.objects.annotate(scr_count=Count('softwarecr'))
+
+		ds = DataPool(
 			series =
 				[{'options': {
 					'source': qs},
-				  'terms': ['name', 'patent_count']}
+				  'terms': ['name', 'patent_count']},
+				 {'options': {
+					'source': qs2},
+				  'terms': [
+					{'s_name': 'name'}, 'scr_count']}
 				])
 		cht = Chart(
-			datasource = patentdata,
+			datasource = ds,
 			series_options = 
 				[{'options': {
 					'type': 'column',
+					'yAxis': 0,
 					'stacking': False},
 				  'terms': {
 					'name': ['patent_count'],
-				}}],
+				}},
+				{'options': {
+					'type': 'column',
+					'yAxis': 1,
+					'stacking': False},
+				  'terms': {
+					's_name': ['scr_count'],
+				}}
+				],
 			chart_options = 
 				{ 'title': {
-					'text': '部门专利统计'},
+					'text': '部门知识产权统计'},
 			  	  'xAxis': {
-					'title': {
-						'text': '部门'}}})
+					'title': { 'text': '部门'}},
+				  'yAxis': [
+					{ 'title': { 'text': '专利数' } },
+					{ 'title': { 'text': '软件登记数'}, 'opposite': True }]
+				})
 
 		context['patentchart'] = cht
 		return context
