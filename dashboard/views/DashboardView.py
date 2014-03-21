@@ -16,46 +16,52 @@ class DashboardView(TemplateView):
 		context = super(DashboardView, self).get_context_data(**kwargs)
 		context['request'] = self.request
 
-		qs = Department.objects.annotate(patent_count=Count('patent'))
-		qs2 = Department.objects.annotate(scr_count=Count('softwarecr'))
+		qs_pat = Department.objects.annotate(patent_count=Count('patent'))
+		qs_scr = Department.objects.annotate(scr_count=Count('softwarecr'))
 
 		ds = DataPool(
 			series =
 				[{'options': {
-					'source': qs},
-				  'terms': ['name', 'patent_count']},
+					'source': qs_pat},
+				  'terms': [{'p_name': 'name'}, 'patent_count']},
 				 {'options': {
-					'source': qs2},
-				  'terms': [
-					{'s_name': 'name'}, 'scr_count']}
+					'source': qs_scr},
+				  'terms': [{'s_name': 'name'}, 'scr_count']}
 				])
 		cht = Chart(
 			datasource = ds,
-			series_options = 
-				[{'options': {
-					'type': 'column',
-					'yAxis': 0,
-					'stacking': False},
-				  'terms': {
-					'name': ['patent_count'],
-				}},
-				{'options': {
-					'type': 'column',
-					'yAxis': 1,
-					'stacking': False},
-				  'terms': {
-					's_name': ['scr_count'],
-				}}
-				],
-			chart_options = 
-				{ 'title': {
-					'text': '部门知识产权统计'},
-			  	  'xAxis': {
-					'title': { 'text': '部门'}},
-				  'yAxis': [
+			series_options = [
+				{
+					'options': {
+						'type': 'column',
+						'yAxis': 0,
+						'stacking': False},
+						'terms': {
+							'p_name': ['patent_count'],
+						}
+				},
+				{
+					'options': {
+						'type': 'column',
+						'yAxis': 1,
+						'stacking': False},
+						'terms': {
+							's_name': ['scr_count'],
+						}
+				}
+			],
+			chart_options = {
+				'title': { 'text': '部门知识产权统计'},
+				'chart': { 'height': '450' },
+		  		'xAxis': {
+					'title': { 'text': '部门'}
+				},
+				'yAxis': [
 					{ 'title': { 'text': '专利数' } },
-					{ 'title': { 'text': '软件登记数'}, 'opposite': True }]
-				})
+					{ 'title': { 'text': '软件登记数'}, 'opposite': True }
+				]
+			}
+		)
 
 		context['patentchart'] = cht
 		return context
