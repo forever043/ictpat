@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.views.generic import RedirectView, TemplateView
 from django.contrib.auth.decorators import login_required
 
-from patmgr.views import PatentRetrvSchemeView, RetrvSchemeExport, PatentListJson, PatentBatchAddView
+from patmgr.views import PatentBatchAddView
 from dashboard.views import *
 from patmgr.forms import *
 
@@ -28,7 +28,35 @@ urlpatterns = patterns('',
 				template_name = 'patmgr/list_patent.html',
 				success_url = reverse_lazy('patent-list'))),
 		name='patent-list'),
-    url(r'^list/data/$', 	login_required(PatentListJson.as_view()), name='patent-list-json'),
+    #url(r'^list/data/$', 	login_required(PatentListJson.as_view()), name='patent-list-json'),
+    url(r'^list/data/$', 
+        login_required(DashMgrListJson.as_view(
+            model = Patent,
+            retrieve_list = [ 'department', 'state', 'type', 'name', 'inventors', 'apply_code', 'authorize_code' ],
+            columns = [ 'department', 'name', 'inventors', 'apply_code', 'apply_date', 'authorize_code' ],
+            column_template = { 
+                "name":             lambda o: u'<a href="%(url)s">%(name)s</a>' % {
+                                                    "url":  reverse_lazy('patent-detail', args=[o.pk]),
+                                                    "name": o.name},
+                "department":		lambda o: u'%s' % o.department.name,
+                "apply_code":       lambda o: u'<a href="%(url)s" target="_blank">%(name)s</a>' % { 
+                                                    "url":  reverse_lazy('patent-file-service', args=[o.apply_code]),
+                                                    "name": o.apply_code},
+                "authorize_code":   lambda o: u'<a href="%(url)s" target="_blank">%(name)s</a>' % { 
+                                                    "url":  reverse_lazy('patent-file-service', args=[o.authorize_code]),
+                                                    "name": o.authorize_code }
+                                                if o.authorize_code  else o.state.name,
+           
+                "pk":               lambda o: u'<a href="%(edit_url)s" title="修改"><img src="/resources/images/icons/pencil.png" alt="Edit" />修改</a>' \
+						                      u'<!--<a href="#" class="delete" title="删除"><img src="/resources/images/icons/cross.png" alt="Delete" /></a>-->' \
+						                      u'&nbsp;&nbsp;<a href="%(rank_url)s" title="评级">' \
+                                                    u'<img src="/resources/images/icons/hammer_screwdriver.png" alt="Edit Meta" />评级</a>'
+                                              % {
+                                                    "edit_url":  reverse_lazy('patent-edit', args=[o.pk]),
+                                                    "rank_url":  reverse_lazy('patent-rank', args=[o.pk]),
+                                              }
+            })), 
+        name='patent-list-json'),
 
 	# Patent Details
     url(r'^(?P<pk>\d+)/$',

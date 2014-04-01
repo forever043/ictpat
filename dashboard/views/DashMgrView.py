@@ -1,12 +1,14 @@
 # -*- coding: UTF-8 -*-
-from django.http import HttpResponse
+from django.contrib import messages
+from django.contrib.messages.views import SuccessMessageMixin
+from django.core import exceptions
 from django.core.urlresolvers import reverse_lazy
+from django.db import IntegrityError, DatabaseError
+from django.db.models import Q
+from django.http import HttpResponse, Http404
 from django.views.generic import *
 from django.views.generic.edit import FormMixin
-from django.contrib.messages.views import SuccessMessageMixin
-from django.contrib import messages
-from django.db import IntegrityError, DatabaseError
-from django.core import exceptions
+from libs.django_datatables_view.base_datatable_view import BaseDatatableView
 import json
 
 from patmgr.models import *
@@ -84,6 +86,36 @@ class DashMgrListView(ListView, FormMixin):
 
 	def form_invalid(self, form):
 		return super(DashMgrListView, self).form_invalid(form)
+
+class DashMgrListJson(BaseDatatableView):
+    model = None
+    retrieve_list = []
+    columns = []
+    column_template = {}
+
+    def __init__(self, *args, **kwargs):
+        super(DashMgrListJson, self).__init__(*args, **kwargs)
+        if 'pk' not in self.columns:
+            self.columns.append('pk')
+            self.columns.append('DT_RowId')
+
+    def filter_queryset(self, qs):
+        q = Q()
+        for field_name in self.retrieve_list:
+            if field_name in self.request.GET:
+                #q &= Q(("%s__icontains"%field_name, self.request.GET.get(field_name)))
+                q &= Q(("%s"%field_name, self.request.GET.get(field_name)))
+        sSearch = self.request.GET.get('sSearch', None)
+        if sSearch:
+            q &= Q(name__icontains=sSearch)
+        return qs.filter(q)
+
+    def render_column(self, row, column):
+        if column in self.column_template:
+            return self.column_template[column](row)
+        elif column == 'DT_RowId':
+            return '%d' % (row.pk)
+        return super(DashMgrListJson, self).render_column(row, column)
 
 
 class DashMgrDetailView(DetailView):

@@ -14,36 +14,44 @@
 <script type="text/javascript" src="{% static "scripts/simpla.dataTables.configuration.js" %}"></script>
 
 <script type="text/javascript">
-	$(document).ready(function() {
-		// Reset filter form
-		$("#reset").click(function() {
-			window.location.href='{% url "patent-list-fresh" %}';
-			return false;
-		});
+var retrieve_fields = {
+    'department': 'select',
+    'type': 'select',
+    'state': 'select',
+    'name': 'input',
+    'inventors': 'input',
+    'apply_code': 'input',
+    'authorize_code': 'input'
+};
 
-		// Delete
-		$(".delete").click(function(){
-			$.post(this.href, function(data) {
-				if (data.result == "ok"){
-					$(this).parent().parent().remove();
-					alert("删除成功");
-				} else {
-					// handle error processed by server here
-					alert("删除失败：" + data.result);
-				}
-			}).fail(function() {
-				// handle unexpected error here
-				alert("error");
-			});
-			return false;
-		});
-	});
+function retrieveData( sSource, aoData, fnCallback ) {
+    for(var field in retrieve_fields) {
+        value = $(retrieve_fields[field]+"[name='" + field + "']").val();
+        if (value != "")
+            aoData.push({ "name": field, "value": value });
+    }
 
+    $.ajax({
+        "type": "GET", 
+        "url": sSource,
+        "dataType": "json",
+        "data": aoData,
+        "cache": false,
+        "success": fnCallback,
+        "error": function () {
+            alert( "DataTables warning: JSON data from server failed to load or be parsed. "+
+                "This is most likely to be caused by a JSON formatting error." );
+        }
+    });
+}
+
+var queryTable;
 $(document).ready(function() {
-	var queryTable = $('#patent-list').dataTable({
+	queryTable = $('#patent-list').dataTable({
 		"bProcessing": true,
 		"bServerSide": true,
 		"sAjaxSource": "{% url "patent-list-json" %}",
+        "fnServerData": retrieveData,
 		"bSort": false,
 		"sPaginationType": "full_numbers",
 		"oLanguage": oLanguage,
@@ -51,20 +59,12 @@ $(document).ready(function() {
 		"bAutoWidth": false,
 		"aoColumns": [
 			{ "mData": "department",		"sWidth": "15%" },
-			{ "mData": "name",				"sWidth": "28%",
-				"fnRender": function (o, v) {
-					return '<a href="#">' + v + '</a>'
-				}},
-			{ "mData": "inventors", 		"sWidth": "20%"},
+			{ "mData": "name",				"sWidth": "25%" },
+			{ "mData": "inventors", 		"sWidth": "20%" },
 			{ "mData": "apply_code",		"sWidth": "10%" },
-			{ "mData": "apply_date",		"sWidth": "8%" },
+			{ "mData": "apply_date",		"sWidth": "8%"  },
 			{ "mData": "authorize_code",	"sWidth": "11%" },
-			{ "mData": "pk",				"sWidth": "8%",
-				"fnRender": function (o, v) {
-					return '<a href="#" title="Edit"><img src="/resources/images/icons/pencil.png" alt="Edit" /></a>'
-						 + '<a href="#" class="delete" title="Delete"><img src="/resources/images/icons/cross.png" alt="Delete" /></a>'
-						 + '<a href="#" title="Edit Meta"><img src="/resources/images/icons/hammer_screwdriver.png" alt="Edit Meta" /></a>';
-				}}
+			{ "mData": "pk",				"sWidth": "11%"  },
 		],
 		"fnDrawCallback": function () {
 			// MouseOver high-light
@@ -76,6 +76,18 @@ $(document).ready(function() {
 	});
 });
 
+function doSubmitQuery() {
+    //$('#filter').removeClass('closed-box');
+    queryTable.fnDraw();
+    return false;
+}
+function doResetQuery() {
+    $.each(retrieve_fields, function(field_name, field_type) {
+        $(field_type + "[name='" + field_name + "']").val('')
+    });
+    queryTable.fnDraw();
+    return false;
+}
 </script>
 {% endblock %}
 
@@ -85,7 +97,7 @@ $(document).ready(function() {
 			<h2>专利列表查询</h2>
 			<p id="page-intro">快捷任务列表</p>
 
-			<div class="content-box{% if patent_list %} closed-box{% endif %}"><!-- Start Content Box -->
+			<div id="filter" class="content-box{% if patent_list %} closed-box{% endif %}"><!-- Start Content Box -->
 				
 				<div class="content-box-header">
 					
@@ -195,136 +207,38 @@ $(document).ready(function() {
 								
 							</fieldset>
 
-							<div class="clear"></div><!-- End .clear -->
+							<div class="clear"></div>
 
 							<p>
 
-								<input class="button" type="submit" id="search" name="search" value="检索" />
-								<input class="button" type="submit" id="reset" name="reset" value="重置" />
+								<input class="button" type="submit" id="search" name="search" value="检索" onclick="return doSubmitQuery();" />
+								<input class="button" type="submit" id="reset" name="reset" value="重置" onclick="return doResetQuery();" />
 
 							</p>
 							
 						</form>
 						
-					</div> <!-- End #tab2 -->		
+					</div>
 					
-				</div> <!-- End .content-box-content -->
+				</div>
 				
-			</div> <!-- End .content-box -->
+			</div>
 					
 
-			<div class="content-box"><!-- Start Content Box -->
+			<div class="content-box">
 				
 				<div class="content-box-header">
-					
 					<h3>检索结果</h3>
-					
-					<ul class="content-box-tabs">
-						<li><a href="#tab1" class="default-tab">全部专利</a></li> <!-- href must be unique and match the id of target div -->
-						<li><a href="#tab2">已授权专利</a></li>
-					</ul>
-					
 					<div class="clear"></div>
-					
-				</div> <!-- End .content-box-header -->
+				</div>
 				
 				<div class="content-box-content">
 					
-					<div class="tab-content default-tab" id="tab1"> <!-- This is the target div. id must match the href of this div's tab -->
-						
-						{% include "common/notifymsg.html" %}
-
-						{% if not patent_list %}
-						无结果
-						{% else %}
-						<table>
-							
-							<thead>
-							<tr>
-								<th><input class="check-all" type="checkbox" /></th>
-								<th>申请部门</th>
-								<th>专利名称</th>
-								<th>发明人</th>
-								<th>申请号</th>
-								<th>申请时间</th>
-								<th>授权号</th>
-								<th>操作</th>
-							</tr>
-								
-							</thead>
-						 
-							<tfoot>
-								<tr>
-									<td colspan="6">
-										<div class="bulk-actions align-left">
-											<select name="dropdown">
-												<option value="option1">Choose an action...</option>
-												<option value="option2">Edit</option>
-												<option value="option3">Delete</option>
-											</select>
-											<a class="button" href="#">Apply to selected</a>
-										</div>
-										
-										<div class="pagination">
-											<a href="{% if not page_obj.has_previous %}javascript:void(0){% else %}{% url 'patent-list' %}?page=1{% endif %}" title="First Page">&laquo; First</a>
-											<a href="{% if not page_obj.has_previous %}javascript:void(0){% else %}{% url 'patent-list' %}?page={{ page_obj.previous_page_number }}{% endif %}" title="Previous Page">&laquo; Previous</a>
-											
-
-											{% for pid in page_obj.paginator.page_range %}
-											<a href="{% url 'patent-list' %}?page={{ pid }}" class="number{% ifequal pid page_obj.number %} current{% endifequal %}" title="{{pid}}">{{pid}}</a>
-											{% endfor %}
-
-											<a href="{% if not page_obj.has_next %}javascript:void(0){% else %}{% url 'patent-list' %}?page={{ page_obj.next_page_number }}{% endif %}" title="Next page">Next &raquo;</a>
-
-											<a href="{% if not page_obj.has_next %}javascript:void(0){% else %}{% url 'patent-list' %}?page={{ page_obj.paginator.num_pages }}{% endif %}" title="Last Page">Last &raquo;</a>
-										</div> <!-- End .pagination -->
-										
-										<div class="clear"></div>
-									</td>
-								</tr>
-							</tfoot>
-						 
-							<tbody>
-								{% for patent in patent_list %}
-								<tr>
-									<td><input type="checkbox" /></td>
-									<td>{{ patent.department.name }}</td>
-									<td><a href="{% url 'patent-detail' patent.id %}" title="点击查看详细信息">{{ patent.name }}</a></td>
-									<td>{{ patent.inventors }}</td>
-									<td>{{ patent.apply_code }}</td>
-									<td>{{ patent.apply_date|date:"Y-m-d" }}</td>
-									<td>{% if patent.authorize_code %}{{ patent.authorize_code}}{% else %}{{patent.state}}{% endif %}</td>
-									<td>
-										<!-- Icons -->
-										<a href="{% url 'patent-edit' patent.id %}" title="编辑">
-											<img src="{% static "images/icons/pencil.png" %}" alt="Edit" />
-										</a>
-										<a href="{% url 'patent-delete' patent.id %}" class="delete" title="删除">
-											<img src="{% static "images/icons/cross.png" %}" alt="Delete" />
-										</a>
-										<a href="{% url 'patent-rank' patent.id %}" title="评级">
-											<img src="{% static "images/icons/hammer_screwdriver.png" %}" alt="Edit Meta" />
-										</a>
-									</td>
-								</tr>
-								{% endfor %}
-							</tbody>
-							
-						</table>
-
-						<!-- End if patent_list -->
-						{% endif %}
-						
-					</div> <!-- End #tab1 -->
-					
-					<div class="tab-content" id="tab2">
+					<div class="tab-content default-tab" id="tab1">
 
 						<table id="patent-list" class="datatable">
 							<thead>
 							<tr>
-<!--
-								<th><input class="check-all" type="checkbox" /></th>
--->
 								<th>申请部门</th>
 								<th>专利名称</th>
 								<th>发明人</th>
@@ -338,10 +252,10 @@ $(document).ready(function() {
 
 						<div class="clear"></div>
 					
-					</div> <!-- End #tab2 -->		
+					</div>
 					
-				</div> <!-- End .content-box-content -->
+				</div>
 				
-			</div> <!-- End .content-box -->
+			</div>
 {% endblock %}
 

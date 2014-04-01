@@ -40,7 +40,7 @@ nav_groups.register(SCRMgrNav)
 
 class SCRApplyShortcut(Nav):
 	name = '软件著作权登记'
-	view = 'scrmgr.views.scrmgr'
+	view = 'scr-add'
 	nav_group = 'shortcut'
 	template = 'dashboard/shortcut.html'
 	icon = 'images/icons/pencil_48.png'
