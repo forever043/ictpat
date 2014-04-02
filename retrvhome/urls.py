@@ -7,7 +7,7 @@ from retrvhome.forms import RetrvFilterForm
 from retrvhome.views import *
 
 urlpatterns = patterns('',
-	url(r'^$',			TemplateView.as_view(template_name='retrvhome/index.html'), name='retrvhome-index'),
+	url(r'^$', RetrvHomeView.as_view(template_name='retrvhome/index.html'), name='retrvhome-index'),
 
 	# Patent
 	url(r'^patent/$',

@@ -1,6 +1,139 @@
-<h1>Hello</h1>
-<ul>
-	<li><a href="{% url 'dashboard' %}">管理页</a></li>
-	<li><a href="{% url 'retrvhome-patent-list' %}">专利检索</a></li>
-	<li><a href="{% url 'retrvhome-scr-list' %}">软件登记检索</a></li>
-</ul>
+
+<!-- application/layouts/scripts/layout.phtml -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>ICT专利检索系统</title>
+  <link href="/css/global.css" media="screen" rel="stylesheet" type="text/css" /></head>
+<body>
+<div id="header" style="background-color: #EEEEEE; height: 30px;">
+    <div id="header-logo" style="float: left">
+        <b>ICT专利检索系统</b>
+    </div>
+    <div id="header-navigation" style="float: right">
+        PoweredBy: 科研支撑中心
+    </div>
+</div>
+
+<script LANGUAGE="javascript">
+<!--
+function ow(owurl){
+  window.open(owurl, "myWindow", "height=500px,width=800px,scrollbars=yes");
+}
+-->
+</script>
+
+<style>
+    a:link,
+    a:visited { color: #0398CA; }
+</style>
+<div style="text-align:center; font-size:12px;">
+    <h1>计算所知识产权情况统计</h1>
+
+    <p>数据更新时间：2014年02月14日</p>
+    <div>
+        <table border=1 align="center" width="80%" style="text-align:center; font-size:12px;">
+            <tr>
+                <td rowspan=3>&nbsp;</td>
+                <td colspan=9>中国专利</td>
+                <td colspan=2>国际专利</td> 
+                <td rowspan=3>软件登记</td> 
+                <td rowspan=3>商标注册</td> 
+                <td rowspan=3>网址注册</td> 
+            </tr>
+            <tr>
+                <td colspan=2>发明专利</td>
+                <td colspan=2>实用新型</td>
+                <td colspan=2>外观设计</td>
+                <td colspan=2>合计</td>
+                <td>转让/许可</td>
+                <td colspan=2>PCT</td>
+<!--
+                <td colspan=2>日本</td>
+-->
+            </tr>
+            <tr>
+                <td>申请数</td>
+                <td>授权数</td>
+                <td>申请数</td>
+                <td>授权数</td>
+                <td>申请数</td>
+                <td>授权数</td>
+                <td>申请数</td>
+                <td>授权数</td>
+                <td>发明</td>
+                <td>申请数</td>
+                <td>授权数</td>
+<!--
+                <td>申请数</td>
+                <td>授权数</td>
+-->
+            </tr>
+{% for patent_year in patent_year_count.items %}
+            <tr>
+                <td>{{ patent_year.0 }}年</td>
+    {% for type_count in patent_year.1 %}
+		{% for data in type_count %}
+                <td>{{ data }}</td>
+		{% endfor %}
+	{% endfor %}
+                <td>33</td>
+                <td>0</td>
+                <td>0</td>
+                <td>1</td>
+                <td>0</td>
+                <td>16</td>
+                <td>3</td>
+                <td>0</td>
+            </tr>
+{% endfor %}
+                        <tr>
+                <td>累计</td>
+                <td>1680</td>
+                <td>964</td>
+                <td>14</td>
+                <td>14</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1695</td>
+                <td>979</td>
+                <td>244</td>
+                <td>28</td>
+                <td>18</td>
+                <td>629</td>
+                <td>25</td>
+                <td>14</td>
+<!--
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+-->
+            </tr>
+        </table>
+        <p><font color="red">注: 由于专利信息尚未完全录入系统，最新的专利信息可能检索不到</font></p>
+        <p style="font-size:14px;">
+          <table align="center">
+            <tr>
+              <td colspan=3><a href="/notice20120921.htm" target="_blank">关于专利代理费调整的说明</a></td>
+            </tr>
+            <tr>
+              <td><a href="{% url "retrvhome-patent-list" %}">&lt;&lt;专利检索&gt;&gt;</a></td>
+              <td>|</td>
+              <td><a href="/patinfo.htm" target="_blank">专利申请流程</a></td>
+            <tr>
+              <td><a href="{% url "retrvhome-scr-list" %}">&lt;&lt;软件登记检索&gt;&gt;</a></td>
+              <td>|</td>
+              <td><a href="#">软件登记申请流程</a></td>
+            </tr>
+          </table>
+        </p>
+        <hr style="width:500px;" />
+        <p>相关链接：<br/>
+          <a target="_blank" href="http://www.sipo.gov.cn/zljs/">国家知识产权局专利检索</a></br>
+          <a target="_blank" href="http://apps.isiknowledge.com/DIIDW_GeneralSearch_input.do?product=DIIDW&search_mode=GeneralSearch&SID=1BPMCBdjmjoLD6Hlchc&preferencesSaved=">德温特（Derwent）数据库专利检索</a>
+        </p>
+    </div>
+</div>
+
+</body>
+</html>
+

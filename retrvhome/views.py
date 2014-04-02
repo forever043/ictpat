@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 from django.http import HttpResponse
 from django.http import Http404
-from django.views.generic import ListView
+from django.views.generic import TemplateView, ListView
 from django.views.generic.edit import FormMixin
 from django.contrib import messages
 from django.db import IntegrityError, DatabaseError
@@ -11,6 +11,29 @@ from libs.django_datatables_view.base_datatable_view import BaseDatatableView
 
 from retrvhome.models import *
 from retrvhome.forms import *
+
+class RetrvHomeView(TemplateView):
+	year_list = [ year for year in range(2000, 2013) ]
+	type_list = ['发明专利', '实用新型', '外观设计']
+
+	def get_context_data(self, **kwargs):
+		context = super(RetrvHomeView, self).get_context_data(**kwargs)
+		context['request'] = self.request
+		context['year_list'] = self.year_list
+		context['type_list'] = self.type_list
+		context['patent_year_count'] = self.get_patent_count_by_year(self.year_list, self.type_list)
+		return context
+
+	def get_patent_count_by_year(self, year_list, type_list):
+		year_count = {}
+		for year in year_list:
+			patent_count = []
+			for type in type_list:
+				q_apply = Patent.objects.filter(type=type, apply_date__startswith=year)
+				q_authorize = Patent.objects.filter(type=type, authorize_date__startswith=year)
+				patent_count.append([q_apply.count(), q_authorize.count()])
+			year_count[year] = patent_count
+		return year_count
 
 class RetrvListView(ListView, FormMixin):
 	field_display_width = {}
