@@ -1,0 +1,83 @@
+{% extends "common/mgrbase.html" %}
+{% load staticfiles %}
+
+{% block csslink %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static "css/jquery.dataTables.css" %}" type="text/css" media="screen" />
+{% endblock %}
+
+
+{% block scripts %}
+{{ block.super }}
+<script type="text/javascript" src="{% static "scripts/jquery.jeditable.mini.js" %}"></script>
+<script type="text/javascript" src="{% static "scripts/jquery.dataTables.min.js" %}"></script>
+<script type="text/javascript" src="{% static "scripts/simpla.dataTables.configuration.js" %}"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	var queryTable = $('#patent-package-list').dataTable({
+		"bProcessing": true,
+		"bServerSide": true,
+		"sAjaxSource": "{% url "patent-package-list-json" %}",
+		"bSort": false,
+		"sPaginationType": "full_numbers",
+		"oLanguage": oLanguage,
+		// Column Design
+		"bAutoWidth": false,
+		"aoColumns": [
+			{ "mData": "name",			"sWidth": "45%" },
+			{ "mData": "state", 		"sWidth": "10%" },
+			{ "mData": "submit_date",	"sWidth": "15%" },
+			{ "mData": "finish_date",	"sWidth": "15%"  },
+			{ "mData": "pk",			"sWidth": "15%"  },
+		],
+		"fnDrawCallback": function () {
+			// MouseOver high-light
+			$(".datatable tr").not(':first').hover(
+				function () { $(this).addClass('selected-row'); }, 
+				function () { $(this).removeClass('selected-row'); }
+			);
+		},
+	});
+});
+</script>
+{% endblock %}
+
+{% block main_content %}
+			
+			<!-- Page Head -->
+			<h2>专利评价包</h2>
+			<p id="page-intro">专利评价包列表，检查未完成评价包状态，并导出已完成评价包的数据</p>
+
+			<div class="content-box">
+				
+				<div class="content-box-header">
+					<h3>专利评价包列表</h3>
+					<div class="clear"></div>
+				</div>
+				
+				<div class="content-box-content">
+					
+					<div class="tab-content default-tab" id="tab1">
+
+						<table id="patent-package-list" class="datatable">
+							<thead>
+							<tr>
+								<th>评价包名称</th>
+								<th>状态</th>
+								<th>提交时间</th>
+								<th>完成时间</th>
+								<th>操作</th>
+							</tr>
+							</thead>
+						</table>
+
+						<div class="clear"></div>
+					
+					</div>
+					
+				</div>
+				
+			</div>
+{% endblock %}
+

@@ -1,0 +1,125 @@
+{% extends "common/mgrbase.html" %}
+{% load staticfiles %}
+
+
+{% block csslink %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static "css/jquery.dataTables.css" %}" type="text/css" media="screen" />
+<style type="text/css">
+.expanded-group{
+	background: url("{% static "images/minus.jpg" %}") no-repeat scroll left center transparent;
+	padding-left: 15px !important
+}
+
+.collapsed-group{
+	background: url("{% static "images/plus.jpg" %}") no-repeat scroll left center transparent;
+	padding-left: 15px !important
+}
+td.group {
+    background-color: #D1CFD0;
+    border-bottom: 2px solid #A19B9E;
+    border-top: 2px solid #A19B9E;
+}
+</style>
+{% endblock %}
+
+
+{% block scripts %}
+{{ block.super }}
+<script type="text/javascript" src="{% static "scripts/jquery.jeditable.mini.js" %}"></script>
+<script type="text/javascript" src="{% static "scripts/jquery.dataTables.min.js" %}"></script>
+<script type="text/javascript" src="{% static "scripts/jquery.dataTables.rowGrouping.js" %}"></script>
+<script type="text/javascript" src="{% static "scripts/simpla.dataTables.configuration.js" %}"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	var queryTable = $('#patent-package-list').dataTable({
+		"bProcessing": true,
+		"bServerSide": true,
+		"sAjaxSource": "{% url "patent-package-detail-json" patpkg.pk %}",
+		"bSort": false,
+        "bLengthChange": false,
+        "bPaginate": false,
+		"oLanguage": oLanguage,
+		// Column Design
+		"bAutoWidth": false,
+		"aoColumns": [
+			{ "mData": "name",			"sWidth": "15%" },
+			{ "mData": "state", 		"sWidth": "30%" },
+			{ "mData": "submit_date",	"sWidth": "15%" },
+			{ "mData": "finish_date",	"sWidth": "15%"  },
+			{ "mData": "pk",			"sWidth": "15%"  },
+		],
+		"fnDrawCallback": function () {
+			// MouseOver high-light
+			$(".datatable tr").not(':first').hover(
+				function () { $(this).addClass('selected-row'); }, 
+				function () { $(this).removeClass('selected-row'); }
+			);
+		},
+	}).rowGrouping({
+		iGroupingColumnIndex:1,
+		bExpandableGrouping: true,
+		asExpandedGroups: []
+	});;
+});
+</script>
+{% endblock %}
+
+{% block main_content %}
+			
+			<!-- Page Head -->
+			<h2>专利评价包详情</h2>
+			<p id="page-intro">查看专利评价包信息详情</p>
+
+			{% include 'common/notifymsg.html' %}
+
+			<div class="content-box">
+				
+				<div class="content-box-header">
+					<h3>专利评价包信息</h3>
+					<div class="clear"></div>
+				</div>
+				
+				<div class="content-box-content">
+					<div class="tab-content default-tab" id="tab1" >
+						<p>名称：{{ patpkg.name }}</p>
+						<p>提交时间：{{ patpkg.submit_date }}</p>
+						<p>完成时间：{% if patpkg.finish_date %}{{patpkg.finish_date}}{% else %}进行中{% endif %}</p>
+					</div>
+				</div>
+
+			</div>
+
+
+			<div class="content-box">
+				
+				<div class="content-box-header">
+					<h3>专利列表</h3>
+					<div class="clear"></div>
+				</div>
+				
+				<div class="content-box-content">
+
+					<div class="tab-content{% if not extmode %} default-tab{% endif %}" id="tab1" >
+
+						<table id="patent-package-list" class="datatable">
+							<thead>
+							<tr>
+								<th>专利名称</th>
+								<th>评审专家</th>
+								<th>专利评分</th>
+								<th>专利评价</th>
+								<th>操作</th>
+							</tr>
+							</thead>
+						</table>
+
+						<div class="clear"></div>
+
+					</div>
+				</div>
+			</div>
+						
+{% endblock %}
+

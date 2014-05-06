@@ -4,6 +4,31 @@ from django.contrib.auth.models import User
 
 from patmgr.models import Patent
 
+class PatentPackage(models.Model):
+	name = models.CharField(verbose_name='名称', max_length=100, unique=True)
+	submit_date = models.DateField(verbose_name='提交时间', null=True, blank=True)
+	finish_date = models.DateField(verbose_name='完成时间', null=True, blank=True)
+	def __unicode__(self):
+		return self.name;
+	class Meta:
+		app_label = 'patmgr'
+		verbose_name = u'专利包'
+		verbose_name_plural = u'专利包'
+
+class PatentRatingReport(models.Model):
+	package = models.ForeignKey(PatentPackage, verbose_name='专利包')
+	patent = models.ForeignKey(Patent, verbose_name='专利')
+	rating = models.IntegerField(verbose_name='等级', null=True, blank=True)
+	report = models.TextField(verbose_name='评级报告', null=True, blank=True)
+	experts = models.ManyToManyField(User, verbose_name='评分专家', null=True, blank=True)
+	finish_date = models.DateField(verbose_name='完成时间', null=True, blank=True)
+	def __unicode__(self):
+		return u"[%s]%s" % (self.package.name, self.patent.name)
+	class Meta:
+		app_label = 'patmgr'
+		verbose_name = u'专利评级报告'
+		verbose_name_plural = u'专利评级报告'
+
 class PatentRank(models.Model):
 	patent = models.ForeignKey(Patent, verbose_name='专利')
 	expert = models.ForeignKey(User, verbose_name='评分专家')
@@ -12,7 +37,6 @@ class PatentRank(models.Model):
 	
 	def __unicode__(self):
 		return self.expert.last_name + self.expert.first_name
-
 	class Meta:
 		app_label = 'patmgr'
 		unique_together=(("patent", "expert"),)
