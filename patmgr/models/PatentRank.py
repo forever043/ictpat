@@ -29,6 +29,21 @@ class PatentRatingReport(models.Model):
 		verbose_name = u'专利评级报告'
 		verbose_name_plural = u'专利评级报告'
 
+class PatentExpertRating(models.Model):
+	package = models.ForeignKey(PatentPackage, verbose_name='专利包')
+	patent = models.ForeignKey(PatentRatingReport, verbose_name='专利')
+	expert = models.ForeignKey(User, verbose_name='评分专家')
+	rank = models.IntegerField(verbose_name='专家评分', null=True, blank=True)
+	remark = models.TextField(verbose_name='专家评语', null=True, blank=True)
+	submit_date = models.DateField(verbose_name='提交时间', null=True, blank=True)
+	def __unicode__(self):
+		return u"[%s][%s]%s" % (self.package.name, self.patent.patent.name, self.expert.last_name + self.expert.first_name)
+	class Meta:
+		app_label = 'patmgr'
+		verbose_name = u'专家评分'
+		verbose_name_plural = u'专家评分'
+		unique_together=(("package", "patent", "expert"),)
+
 class PatentRank(models.Model):
 	patent = models.ForeignKey(Patent, verbose_name='专利')
 	expert = models.ForeignKey(User, verbose_name='评分专家')

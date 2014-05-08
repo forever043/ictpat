@@ -134,20 +134,15 @@ urlpatterns = patterns('',
 		name='patent-package-detail'),
     url(r'^package/(?P<pk>\d+)/data/$',
         login_required(DashMgrListJson.as_view(
-            model = PatentPackage,
-            retrieve_list = [],
-            columns = [ 'name', 'state', 'submit_date', 'finish_date' ],
+            model = PatentExpertRating,
+            retrieve_list = ["package"],
+            columns = [ 'patent', 'expert', 'rank', 'remark', 'state', 'submit_date' ],
             column_template = { 
-                "name":             lambda o: u'<a href="%(url)s">%(name)s</a>' % {
-                                                    "url":  reverse_lazy('patent-package-detail', args=[o.pk]),
-                                                    "name": o.name},
-                "state":			lambda o: u'%s' % u'已完成' if o.finish_date else u'进行中',
-                "pk":               lambda o: u'<a href="%(detail_url)s" title="查看"><img src="/resources/images/icons/pencil.png" alt="查看" />查看</a>&nbsp;&nbsp;' \
-						                      u'<a href="%(export_url)s" title="导出"><img src="/resources/images/icons/hammer_screwdriver.png" alt="导出" />导出</a>'
-                                              % {
-                                                    "detail_url":  reverse_lazy('patent-package-detail', args=[o.pk]),
-                                                    "export_url":  reverse_lazy('patent-package-detail', args=[o.pk]),
-                                              }
+				"patent":			lambda o: u'%s<span style="float:right;"><a href="#">撰写评级报告</a></span>' % o.patent.patent.name,
+                "expert":           lambda o: u'%s' % o.expert.last_name + o.expert.first_name,
+                "state":			lambda o: u'%s' % u'已完成' if o.submit_date else u'进行中',
+                "pk":               lambda o: u'<a href="%(url)s" title="更换专家"><img src="/resources/images/icons/hammer_screwdriver.png" alt="更换专家" />更换专家</a>'
+                                              % { "url":  reverse_lazy('patent-package-detail', args=[o.pk]) } if not o.submit_date else u''
             })), 
         name='patent-package-detail-json'),
 

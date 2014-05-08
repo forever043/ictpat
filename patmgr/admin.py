@@ -32,8 +32,12 @@ class PatentPackageAdmin(admin.ModelAdmin):
 class PatentRatingReportAdmin(admin.ModelAdmin):
 	list_display = ('package', 'patent', 'rating', 'report', 'finish_date')
 	choise_display = 'patent'
+class PatentExpertRatingAdmin(admin.ModelAdmin):
+	list_display = ('package', 'patent', 'expert', 'rank', 'remark', 'submit_date')
+	choise_display = 'expert'
 admin.site.register(PatentPackage, PatentPackageAdmin)
 admin.site.register(PatentRatingReport, PatentRatingReportAdmin)
+admin.site.register(PatentExpertRating, PatentExpertRatingAdmin)
 
 
 class RetrvSchemeAdmin(admin.ModelAdmin):

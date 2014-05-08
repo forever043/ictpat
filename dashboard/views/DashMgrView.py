@@ -62,10 +62,10 @@ class DashMgrListView(ListView, FormMixin):
 		messages.warning(self.request, patent_filter_list)
 		object_filter = {}
 		for (filter_name, filter_value) in patent_filter_list.items():
-                        if 'pk' in filter_value:
-                                object_filter[filter_name] = filter_value['pk']
-                        elif 'str' in filter_value:
-                                object_filter[filter_name + '__icontains'] = filter_value['str']
+						if 'pk' in filter_value:
+								object_filter[filter_name] = filter_value['pk']
+						elif 'str' in filter_value:
+								object_filter[filter_name + '__icontains'] = filter_value['str']
 		object_list = self.model.objects.filter(**object_filter)
 		if not object_list:
 			messages.warning(self.request, "没有找到符合条件的专利")
@@ -88,34 +88,36 @@ class DashMgrListView(ListView, FormMixin):
 		return super(DashMgrListView, self).form_invalid(form)
 
 class DashMgrListJson(BaseDatatableView):
-    model = None
-    retrieve_list = []
-    columns = []
-    column_template = {}
+	model = None
+	retrieve_list = []
+	columns = []
+	column_template = {}
 
-    def __init__(self, *args, **kwargs):
-        super(DashMgrListJson, self).__init__(*args, **kwargs)
-        if 'pk' not in self.columns:
-            self.columns.append('pk')
-            self.columns.append('DT_RowId')
+	def __init__(self, *args, **kwargs):
+		super(DashMgrListJson, self).__init__(*args, **kwargs)
+		if 'pk' not in self.columns:
+			self.columns.append('pk')
+			self.columns.append('DT_RowId')
+		print args
+		print kwargs
 
-    def filter_queryset(self, qs):
-        q = Q()
-        for field_name in self.retrieve_list:
-            if field_name in self.request.GET:
-                #q &= Q(("%s__icontains"%field_name, self.request.GET.get(field_name)))
-                q &= Q(("%s"%field_name, self.request.GET.get(field_name)))
-        sSearch = self.request.GET.get('sSearch', None)
-        if sSearch:
-            q &= Q(name__icontains=sSearch)
-        return qs.filter(q)
+	def filter_queryset(self, qs):
+		q = Q()
+		for field_name in self.retrieve_list:
+			if field_name in self.request.GET:
+				#q &= Q(("%s__icontains"%field_name, self.request.GET.get(field_name)))
+				q &= Q(("%s"%field_name, self.request.GET.get(field_name)))
+		sSearch = self.request.GET.get('sSearch', None)
+		if sSearch:
+			q &= Q(name__icontains=sSearch)
+		return qs.filter(q)
 
-    def render_column(self, row, column):
-        if column in self.column_template:
-            return self.column_template[column](row)
-        elif column == 'DT_RowId':
-            return '%d' % (row.pk)
-        return super(DashMgrListJson, self).render_column(row, column)
+	def render_column(self, row, column):
+		if column in self.column_template:
+			return self.column_template[column](row)
+		elif column == 'DT_RowId':
+			return '%d' % (row.pk)
+		return super(DashMgrListJson, self).render_column(row, column)
 
 
 class DashMgrDetailView(DetailView):

@@ -15,11 +15,22 @@
 	background: url("{% static "images/plus.jpg" %}") no-repeat scroll left center transparent;
 	padding-left: 15px !important
 }
+
+tr:hover td {
+    background-color:#e0e0e0;
+}
+
 td.group {
-    background-color: #D1CFD0;
+    background-color: #d5eafd !important;
+    border-bottom: 1px solid #94bafd;
+    border-top: 1px solid #94bafd;
+/*
+    background-color: #C0E1FF;
     border-bottom: 2px solid #A19B9E;
     border-top: 2px solid #A19B9E;
+*/
 }
+
 </style>
 {% endblock %}
 
@@ -33,36 +44,52 @@ td.group {
 
 <script type="text/javascript">
 $(document).ready(function() {
-	var queryTable = $('#patent-package-list').dataTable({
+	var queryTable = $('#patent_package_detail').dataTable({
 		"bProcessing": true,
 		"bServerSide": true,
-		"sAjaxSource": "{% url "patent-package-detail-json" patpkg.pk %}",
+		"sAjaxSource": "{% url "patent-package-detail-json" patpkg.pk %}?package={{patpkg.pk}}",
 		"bSort": false,
         "bLengthChange": false,
         "bPaginate": false,
+		"bFilter": false,
 		"oLanguage": oLanguage,
 		// Column Design
 		"bAutoWidth": false,
 		"aoColumns": [
-			{ "mData": "name",			"sWidth": "15%" },
-			{ "mData": "state", 		"sWidth": "30%" },
+			{ "mData": "patent",		"sWidth": "0" },
+			{ "mData": "expert",		"sWidth": "15%" },
+			{ "mData": "state", 		"sWidth": "10%" },
+			{ "mData": "rank",			"sWidth": "10%" },
+			{ "mData": "remark",		"sWidth": "35%" },
 			{ "mData": "submit_date",	"sWidth": "15%" },
-			{ "mData": "finish_date",	"sWidth": "15%"  },
+			//{ "mData": "finish_date",	"sWidth": "15%"  },
 			{ "mData": "pk",			"sWidth": "15%"  },
-		],
-		"fnDrawCallback": function () {
-			// MouseOver high-light
-			$(".datatable tr").not(':first').hover(
-				function () { $(this).addClass('selected-row'); }, 
-				function () { $(this).removeClass('selected-row'); }
-			);
-		},
+		]
 	}).rowGrouping({
-		iGroupingColumnIndex:1,
+		iGroupingColumnIndex:0,
 		bExpandableGrouping: true,
-		asExpandedGroups: []
+        bExpandSingleGroup: false,
+		asExpandedGroups: [""]
 	});;
 });
+
+/*
+// Add collapsed/expanded all button
+$('#patent_package_detail_wrapper').find('.datatables_filter').prepend($('<input />', {
+    'type': 'button',
+    'class': 'expandedOrCollapsedGroup collapsed',
+    'value': 'Expand All'
+}));
+
+$('.expandedOrCollapsedGroup').live('click', function() {
+    if ($(this).hasClass('collapsed')) {
+        $(this).addClass('expanded').removeClass('collapsed').val('Collapse All').parents('.dataTables_wrapper').find('.collapsed-group').trigger('click');
+    }
+    else {
+        $(this).addClass('collapsed').removeClass('expanded').val('Expand All').parents('.dataTables_wrapper').find('.expanded-group').trigger('click');
+    }
+});
+*/
 </script>
 {% endblock %}
 
@@ -103,13 +130,15 @@ $(document).ready(function() {
 
 					<div class="tab-content{% if not extmode %} default-tab{% endif %}" id="tab1" >
 
-						<table id="patent-package-list" class="datatable">
+						<table id="patent_package_detail" class="datatable">
 							<thead>
 							<tr>
 								<th>专利名称</th>
 								<th>评审专家</th>
+								<th>状态</th>
 								<th>专利评分</th>
 								<th>专利评价</th>
+								<th>提交时间</th>
 								<th>操作</th>
 							</tr>
 							</thead>
