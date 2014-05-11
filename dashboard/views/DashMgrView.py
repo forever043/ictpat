@@ -98,8 +98,6 @@ class DashMgrListJson(BaseDatatableView):
 		if 'pk' not in self.columns:
 			self.columns.append('pk')
 			self.columns.append('DT_RowId')
-		print args
-		print kwargs
 
 	def filter_queryset(self, qs):
 		q = Q()
