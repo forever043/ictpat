@@ -1,0 +1,150 @@
+{% extends "common/mgrbase.html" %}
+{% load staticfiles %}
+
+
+{% block csslink %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static "css/jquery.dataTables.css" %}" type="text/css" media="screen" />
+<link rel="stylesheet" href="{% static "css/bootstrap.btn.css" %}">
+<style type="text/css">
+.row_selected {
+    background-color:#ff0000;
+}
+tr:hover td {
+    background-color:#e0e0e0;
+}
+</style>
+{% endblock %}
+
+
+{% block scripts %}
+{{ block.super }}
+<script type="text/javascript" src="{% static "scripts/jquery.jeditable.mini.js" %}"></script>
+<script type="text/javascript" src="{% static "scripts/jquery.dataTables.min.js" %}"></script>
+<script type="text/javascript" src="{% static "scripts/jquery.dataTables.rowGrouping.js" %}"></script>
+<script type="text/javascript" src="{% static "scripts/simpla.dataTables.configuration.js" %}"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	var selectedTable = $('#patent_list_selected').dataTable({
+		"sPaginationType": "full_numbers",
+		"oLanguage": oLanguage,
+		"aoColumns": [
+			{ "mData": "name", 			"sWidth": "40%" },
+			{ "mData": "department",	"sWidth": "29%" },
+			{ "mData": "apply_date",	"sWidth": "13%" }
+		]
+	});
+
+	var queryTable = $('#patent_list_all').dataTable({
+		"bProcessing": true,
+		"bServerSide": true,
+		"sAjaxSource": "{% url "patent-list-json" %}",
+		"bSort": false,
+		"sPaginationType": "full_numbers",
+		"oLanguage": oLanguage,
+		// Column Design
+		"bAutoWidth": false,
+		"aoColumns": [
+			{ "mData": "DT_RowId",		"sWidth": "8%" },
+			{ "mData": "name", 			"sWidth": "40%" },
+			{ "mData": "department",	"sWidth": "29%" },
+			{ "mData": "apply_date",	"sWidth": "13%" }
+		],
+        "fnDrawCallback": function () {
+            // MouseOver high-light
+            $("#patent_list_all tr").not(':first').click( function() {
+				var id = $(this).attr('id');
+				if ($(this).find("td:first").text() != id)
+					$(this).find("td:first").text(id);
+				else {
+					$(this).find("td:first").html('<i class="glyphicon glyphicon-ok"></i>');
+					selectedTable.fnAddData({
+						"name":			$(this).find("td:eq(1)").text(),
+						"department":	$(this).find("td:eq(2)").text(),
+						"apply_date":	$(this).find("td:eq(3)").text(),
+						"pk":			id,
+						"DT_RowId":		id
+					});
+				}
+				$(this).toggleClass('row_selected');
+            });
+        }
+	});
+});
+</script>
+{% endblock %}
+
+{% block main_content %}
+			
+			<!-- Page Head -->
+			<h2>新建专利评价包</h2>
+			<p id="page-intro">创建专利评价包，并选择要评价的专利</p>
+
+			{% include 'common/notifymsg.html' %}
+
+			<div class="content-box">
+				
+				<div class="content-box-header">
+					<h3>专利评价包信息</h3>
+					<div class="clear"></div>
+				</div>
+				
+				<div class="content-box-content">
+					<div class="tab-content default-tab" id="tab1" >
+						<p>名称：{{ patpkg.name }}</p>
+						<p>提交时间：{{ patpkg.submit_date }}</p>
+						<p>完成时间：{% if patpkg.finish_date %}{{patpkg.finish_date}}{% else %}进行中{% endif %}</p>
+					</div>
+				</div>
+
+			</div>
+
+
+			<div class="content-box column-left">
+				<div class="content-box-header">
+					<h3>所有专利</h3>
+					<div class="clear"></div>
+				</div>
+				
+				<div class="content-box-content">
+					<div class="tab-content default-tab" id="tab_all" >
+						<table id="patent_list_all" class="datatable">
+							<thead>
+							<tr>
+								<th>序号</th>
+								<th>专利名称</th>
+								<th>所属部门</th>
+								<th>申请时间</th>
+							</tr>
+							</thead>
+						</table>
+						<div class="clear"></div>
+					</div>
+				</div>
+			</div>
+
+			<div class="content-box column-right">
+				<div class="content-box-header">
+					<h3>专利包</h3>
+					<div class="clear"></div>
+				</div>
+				
+				<div class="content-box-content">
+					<div class="tab-content default-tab" id="tab_selected" >
+						<table id="patent_list_selected" class="datatable">
+							<thead>
+							<tr>
+								<th>专利名称</th>
+								<th>所属部门</th>
+								<th>申请时间</th>
+							</tr>
+							</thead>
+						</table>
+						<div class="clear"></div>
+					</div>
+				</div>
+			</div>
+						
+{% endblock %}
+

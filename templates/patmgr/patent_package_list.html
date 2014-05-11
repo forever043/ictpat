@@ -4,6 +4,12 @@
 {% block csslink %}
 {{ block.super }}
 <link rel="stylesheet" href="{% static "css/jquery.dataTables.css" %}" type="text/css" media="screen" />
+<link rel="stylesheet" href="{% static "css/bootstrap.btn.css" %}">
+<style type="text/css">
+tr:hover td {
+    background-color:#e0e0e0;
+}
+</style>
 {% endblock %}
 
 
@@ -30,14 +36,7 @@ $(document).ready(function() {
 			{ "mData": "submit_date",	"sWidth": "15%" },
 			{ "mData": "finish_date",	"sWidth": "15%"  },
 			{ "mData": "pk",			"sWidth": "15%"  },
-		],
-		"fnDrawCallback": function () {
-			// MouseOver high-light
-			$(".datatable tr").not(':first').hover(
-				function () { $(this).addClass('selected-row'); }, 
-				function () { $(this).removeClass('selected-row'); }
-			);
-		},
+		]
 	});
 });
 </script>
@@ -48,6 +47,11 @@ $(document).ready(function() {
 			<!-- Page Head -->
 			<h2>专利评价包</h2>
 			<p id="page-intro">专利评价包列表，检查未完成评价包状态，并导出已完成评价包的数据</p>
+
+			<span class="btn btn-success" onclick="window.location.href='{% url "patent-package-add" %}'" style="margin-bottom:18px;"> 
+				<i class="glyphicon glyphicon-plus"></i>
+				<span>添加专利包</span>
+			</span>
 
 			<div class="content-box">
 				

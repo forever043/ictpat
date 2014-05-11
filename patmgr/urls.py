@@ -125,6 +125,18 @@ urlpatterns = patterns('',
                                               }
             })), 
         name='patent-package-list-json'),
+
+	url(r'^package/add/$',
+		login_required(DashMgrCreateView.as_view(
+				model = PatentPackage,
+				form_class = PatentExtForm,
+				context_object_name = 'patpkg',
+				template_name='patmgr/patent_package_add.html',
+				success_url = reverse_lazy('patent-package-list'),
+				success_message = u'专利包 "%(name)s" 添加成功',
+				error_message = u'专利包失败')),
+		name='patent-package-add'),
+
     url(r'^package/(?P<pk>\d+)/$',
 		login_required(DashMgrDetailView.as_view(
 				model = PatentPackage,
