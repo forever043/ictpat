@@ -104,16 +104,19 @@ $('.expandedOrCollapsedGroup').live('click', function() {
 
 			<span class="btn btn-info" onclick="window.location.href='{% url "patent-package-list" %}'" style="margin-bottom:18px;"> 
 				<i class="glyphicon glyphicon-backward"></i>
-				<span>返回</span>
+				<span>返回列表</span>
 			</span>
-			<span class="btn btn-success" onclick="window.location.href='{% url "patent-package-list" %}'" style="margin-bottom:18px;"> 
-				<i class="glyphicon glyphicon-ok"></i>
-				<span>完成</span>
-			</span>
+			{% if patpkg.finish_date %}
 			<span class="btn btn-success" onclick="window.location.href='{% url "patent-package-list" %}'" style="margin-bottom:18px;"> 
 				<i class="glyphicon glyphicon-download"></i>
-				<span>导出</span>
+				<span>导出专利包</span>
 			</span>
+			{% else %}
+			<span class="btn btn-success" onclick="window.location.href='{% url "patent-package-list" %}'" style="margin-bottom:18px;"> 
+				<i class="glyphicon glyphicon-ok"></i>
+				<span>完成专利包</span>
+			</span>
+			{% endif %}
 
 			<div class="clear"></div>
 
@@ -151,7 +154,7 @@ $('.expandedOrCollapsedGroup').live('click', function() {
 							<p>专利数：10</p>
 						</fieldset>
 						<fieldset class="column-right">
-							<p>专家数：20</p>
+							<p>专家评分数：20</p>
 						</fieldset>
 						<fieldset>
 							<p>专家评分完成度：10/20</p>
