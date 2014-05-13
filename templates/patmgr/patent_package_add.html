@@ -30,10 +30,20 @@ $(document).ready(function() {
 		"sPaginationType": "full_numbers",
 		"oLanguage": oLanguage,
 		"aoColumns": [
+			{ "mData": "DT_RowId",		"sWidth": "10%" },
 			{ "mData": "name", 			"sWidth": "40%" },
-			{ "mData": "department",	"sWidth": "29%" },
-			{ "mData": "apply_date",	"sWidth": "13%" }
-		]
+			{ "mData": "department",	"sWidth": "30%" },
+			{ "mData": "apply_date",	"sWidth": "20%" }
+		],
+		"fnCreatedRow": function(nRow, aData, iDataIndex) {
+			$(nRow).click( function() {
+				id = $(this).attr("id");
+				queryTable.find('tr[id="' + id + '"]').find("td:first").text(id);
+				queryTable.find('tr[id="' + id + '"]').removeClass("row_selected");
+				selectedTable.fnDeleteRow(nRow);
+				selectedTable.draw();
+			});
+		}
 	});
 
 	var queryTable = $('#patent_list_all').dataTable({
@@ -46,17 +56,19 @@ $(document).ready(function() {
 		// Column Design
 		"bAutoWidth": false,
 		"aoColumns": [
-			{ "mData": "DT_RowId",		"sWidth": "8%" },
+			{ "mData": "DT_RowId",		"sWidth": "10%" },
 			{ "mData": "name", 			"sWidth": "40%" },
-			{ "mData": "department",	"sWidth": "29%" },
-			{ "mData": "apply_date",	"sWidth": "13%" }
+			{ "mData": "department",	"sWidth": "30%" },
+			{ "mData": "apply_date",	"sWidth": "20%" }
 		],
+        // set click handler for each row
         "fnDrawCallback": function () {
-            // MouseOver high-light
-            $("#patent_list_all tr").not(':first').click( function() {
+            $(this).find("tr").not(':first').click( function() {
 				var id = $(this).attr('id');
-				if ($(this).find("td:first").text() != id)
+				if ($(this).hasClass('row_selected')) {
+					selectedTable.fnDeleteRow(selectedTable.$('tr[id="' + id + '"]').get(0));
 					$(this).find("td:first").text(id);
+				}
 				else {
 					$(this).find("td:first").html('<i class="glyphicon glyphicon-ok"></i>');
 					selectedTable.fnAddData({
@@ -69,7 +81,13 @@ $(document).ready(function() {
 				}
 				$(this).toggleClass('row_selected');
             });
-        }
+        },
+		"fnCreatedRow": function(nRow, aData, iDataIndex) {
+			if (selectedTable.$('tr[id="' + aData["DT_RowId"] + '"]').length > 0) {
+				$(nRow).addClass('row_selected');
+				$('td:first', nRow).html('<i class="glyphicon glyphicon-ok"></i>');
+			}
+		}
 	});
 });
 </script>
@@ -135,6 +153,7 @@ $(document).ready(function() {
 						<table id="patent_list_selected" class="datatable">
 							<thead>
 							<tr>
+								<th>序号</th>
 								<th>专利名称</th>
 								<th>所属部门</th>
 								<th>申请时间</th>
