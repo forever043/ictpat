@@ -116,7 +116,7 @@ urlpatterns = patterns('',
                 "name":             lambda o: u'<a href="%(url)s">%(name)s</a>' % {
                                                     "url":  reverse_lazy('patent-package-detail', args=[o.pk]),
                                                     "name": o.name},
-                "state":			lambda o: u'%s' % u'已完成' if o.finish_date else u'进行中',
+                "state":			lambda o: u'%s' % u'已完成' if o.finish_date else u'专家评分：8/20，评级报告：4/10',
                 "pk":               lambda o: u'<a href="%(detail_url)s" title="查看"><img src="/resources/images/icons/pencil.png" alt="查看" />查看</a>&nbsp;&nbsp;' \
 						                      u'<a href="%(export_url)s" title="导出"><img src="/resources/images/icons/hammer_screwdriver.png" alt="导出" />导出</a>'
                                               % {

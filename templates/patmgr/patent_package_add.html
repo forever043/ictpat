@@ -29,6 +29,7 @@ $(document).ready(function() {
 	var selectedTable = $('#patent_list_selected').dataTable({
 		"sPaginationType": "full_numbers",
 		"oLanguage": oLanguage,
+		"bAutoWidth": false,
 		"aoColumns": [
 			{ "mData": "DT_RowId",		"sWidth": "10%" },
 			{ "mData": "name", 			"sWidth": "40%" },
