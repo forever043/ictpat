@@ -31,7 +31,8 @@ $(document).ready(function() {
 		// Column Design
 		"bAutoWidth": false,
 		"aoColumns": [
-			{ "mData": "name",			"sWidth": "45%" },
+			{ "mData": "DT_RowId",		"sWidth": "5%" },
+			{ "mData": "name",			"sWidth": "40%" },
 			{ "mData": "state", 		"sWidth": "10%" },
 			{ "mData": "submit_date",	"sWidth": "15%" },
 			{ "mData": "finish_date",	"sWidth": "15%"  },
@@ -67,6 +68,7 @@ $(document).ready(function() {
 						<table id="patent-package-list" class="datatable">
 							<thead>
 							<tr>
+								<th>序号</th>
 								<th>评价包名称</th>
 								<th>状态</th>
 								<th>提交时间</th>
