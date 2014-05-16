@@ -1,0 +1,143 @@
+{% extends "common/mgrbase.html" %}
+{% load staticfiles %}
+
+
+{% block csslink %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static "css/jquery.dataTables.css" %}" type="text/css" media="screen" />
+<link rel="stylesheet" href="{% static "css/bootstrap.btn.css" %}">
+<style type="text/css">
+tr:hover td {
+    background-color:#e0e0e0;
+}
+</style>
+{% endblock %}
+
+
+{% block scripts %}
+{{ block.super }}
+<script type="text/javascript" src="{% static "scripts/jquery.jeditable.mini.js" %}"></script>
+<script type="text/javascript" src="{% static "scripts/jquery.dataTables.min.js" %}"></script>
+<script type="text/javascript" src="{% static "scripts/jquery.dataTables.rowGrouping.js" %}"></script>
+<script type="text/javascript" src="{% static "scripts/simpla.dataTables.configuration.js" %}"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    var queryTable = $('#patent_package_list').dataTable({
+        "bProcessing": true,
+        "bServerSide": true,
+        "sAjaxSource": "{% url "patent-package-edit-json" patpkg.pk %}?package={{patpkg.pk}}",
+        "bSort": false,
+        "sPaginationType": "full_numbers",
+        "oLanguage": oLanguage,
+        // Column Design
+        "bAutoWidth": false,
+        "aoColumns": [
+            { "mData": "DT_RowId",    "sWidth": "10%" },
+            { "mData": "name",        "sWidth": "45%" },
+            { "mData": "department",  "sWidth": "35%" },
+            { "mData": "count",       "sWidth": "10%" }
+        ]
+	});
+
+    var expertTable = $('#expert_list').dataTable({
+        "bProcessing": true,
+        "bServerSide": true,
+        "sAjaxSource": "{% url "user-list-json" %}",
+        "bSort": false,
+        "sPaginationType": "full_numbers",
+        "oLanguage": oLanguage,
+        // Column Design
+        "bAutoWidth": false,
+        "aoColumns": [
+            { "mData": "DT_RowId",   "sWidth": "10%" },
+            { "mData": "department", "sWidth": "35%" },
+            { "mData": "name",       "sWidth": "20%" },
+            { "mData": "email",      "sWidth": "35%" }
+        ]
+	});
+});
+</script>
+{% endblock %}
+
+{% block main_content %}
+			
+			<!-- Page Head -->
+			<h2>专利评价包提交</h2>
+			<p id="page-intro">为专利指定评审专家，并提交专利评价包，同时并向评审专家发送通知邮件</p>
+
+			{% include 'common/notifymsg.html' %}
+
+			<span class="btn btn-info" onclick="window.location.href='{% url "patent-package-list" %}'" style="margin-bottom:18px;"> 
+				<i class="glyphicon glyphicon-backward"></i>
+				<span>返回列表</span>
+			</span>
+			<span class="btn btn-success" onclick="window.location.href='{% url "patent-package-list" %}'" style="margin-bottom:18px;"> 
+				<i class="glyphicon glyphicon-ok"></i>
+				<span>提交专利包</span>
+			</span>
+
+			<div class="clear"></div>
+
+			<div class="content-box closed-box">
+				<div class="content-box-header">
+					<h3>通知邮件模板</h3>
+					<div class="clear"></div>
+				</div>
+				<div class="content-box-content">
+					<div class="tab-content{% if not extmode %} default-tab{% endif %}" id="tab1" >
+						<form>
+						<fieldset>
+						<textarea class="text-area" cols="40" id="id_content" name="content" rows="20"></textarea>
+						</fieldset>
+						</form>
+					</div>
+				</div>
+			</div>
+
+			<div class="content-box column-left">
+				<div class="content-box-header">
+					<h3>专利列表</h3>
+					<div class="clear"></div>
+				</div>
+				<div class="content-box-content">
+					<div class="tab-content default-tab" id="tab1" >
+						<table id="patent_package_list" class="datatable">
+							<thead>
+							<tr>
+								<th>序号</th>
+								<th>专利名称</th>
+								<th>所属部门</th>
+								<th>专家</th>
+							</tr>
+							</thead>
+						</table>
+					</div>
+				</div>
+			</div>
+
+			<div class="content-box column-right">
+				<div class="content-box-header">
+					<h3>评审专家列表</h3>
+					<div class="clear"></div>
+				</div>
+				<div class="content-box-content">
+					<div class="tab-content default-tab" id="tab2" >
+						<table id="expert_list" class="datatable">
+							<thead>
+							<tr>
+								<th>序号</th>
+								<th>所属部门</th>
+								<th>姓名</th>
+								<th>E-Mail</th>
+							</tr>
+							</thead>
+						</table>
+					</div>
+				</div>
+			</div>
+
+			<div class="clear"></div>
+
+{% endblock %}
+

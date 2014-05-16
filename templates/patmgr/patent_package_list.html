@@ -32,10 +32,11 @@ $(document).ready(function() {
 		"bAutoWidth": false,
 		"aoColumns": [
 			{ "mData": "DT_RowId",		"sWidth": "5%" },
-			{ "mData": "name",			"sWidth": "30%" },
+			{ "mData": "name",			"sWidth": "26%" },
+			{ "mData": "count",			"sWidth": "7%" },
 			{ "mData": "submit_date",	"sWidth": "12%" },
+			{ "mData": "finish_date",	"sWidth": "12%"  },
 			{ "mData": "state", 		"sWidth": "23%" },
-			{ "mData": "finish_date",	"sWidth": "15%"  },
 			{ "mData": "pk",			"sWidth": "15%"  },
 		]
 	});
@@ -48,6 +49,8 @@ $(document).ready(function() {
 			<!-- Page Head -->
 			<h2>专利评价包</h2>
 			<p id="page-intro">专利评价包列表，检查未完成评价包状态，并导出已完成评价包的数据</p>
+
+			{% include 'common/notifymsg.html' %}
 
 			<span class="btn btn-success" onclick="window.location.href='{% url "patent-package-add" %}'" style="margin-bottom:18px;"> 
 				<i class="glyphicon glyphicon-plus"></i>
@@ -70,9 +73,10 @@ $(document).ready(function() {
 							<tr>
 								<th>序号</th>
 								<th>评价包名称</th>
+								<th>专利数</th>
 								<th>提交时间</th>
-								<th>状态</th>
 								<th>完成时间</th>
+								<th>状态</th>
 								<th>操作</th>
 							</tr>
 							</thead>

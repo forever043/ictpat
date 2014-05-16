@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from patmgr.models import Patent
 
 class PatentPackage(models.Model):
-	name = models.CharField(verbose_name='名称', max_length=100, unique=True)
+	name = models.CharField(verbose_name='专利包名称', max_length=100, unique=True)
 	submit_date = models.DateField(verbose_name='提交时间', null=True, blank=True)
 	finish_date = models.DateField(verbose_name='完成时间', null=True, blank=True)
 	def __unicode__(self):
