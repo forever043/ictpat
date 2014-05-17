@@ -371,7 +371,8 @@ ul.content-box-tabs li a.current {
                 }
 
 #main-content tbody tr.selected-row {
-                background: #e0e0e0;
+                /*background: #e0e0e0;*/
+                background: #d5eafd;
                 }
 
 #main-content tbody tr.creating-row {

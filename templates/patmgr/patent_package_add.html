@@ -7,9 +7,6 @@
 <link rel="stylesheet" href="{% static "css/jquery.dataTables.css" %}" type="text/css" media="screen" />
 <link rel="stylesheet" href="{% static "css/bootstrap.btn.css" %}">
 <style type="text/css">
-.row_selected {
-    background-color:#ff0000;
-}
 tr:hover td {
     background-color:#e0e0e0;
 }
@@ -39,8 +36,7 @@ $(document).ready(function() {
 		"fnCreatedRow": function(nRow, aData, iDataIndex) {
 			$(nRow).click( function() {
 				id = $(this).attr("id");
-				queryTable.find('tr[id="' + id + '"]').find("td:first").text(id);
-				queryTable.find('tr[id="' + id + '"]').removeClass("row_selected");
+				queryTable.find('tr[id="' + id + '"]').removeClass("selected-row");
 				selectedTable.fnDeleteRow(nRow);
 				selectedTable.draw();
 			});
@@ -66,12 +62,10 @@ $(document).ready(function() {
         "fnDrawCallback": function () {
             $(this).find("tr").not(':first').click( function() {
 				var id = $(this).attr('id');
-				if ($(this).hasClass('row_selected')) {
+				if ($(this).hasClass('selected-row')) {
 					selectedTable.fnDeleteRow(selectedTable.$('tr[id="' + id + '"]').get(0));
-					$(this).find("td:first").text(id);
 				}
 				else {
-					$(this).find("td:first").html('<i class="glyphicon glyphicon-ok"></i>');
 					selectedTable.fnAddData({
 						"name":			$(this).find("td:eq(1)").text(),
 						"department":	$(this).find("td:eq(2)").text(),
@@ -80,13 +74,12 @@ $(document).ready(function() {
 						"DT_RowId":		id
 					});
 				}
-				$(this).toggleClass('row_selected');
+				$(this).toggleClass('selected-row');
             });
         },
 		"fnCreatedRow": function(nRow, aData, iDataIndex) {
 			if (selectedTable.$('tr[id="' + aData["DT_RowId"] + '"]').length > 0) {
-				$(nRow).addClass('row_selected');
-				$('td:first', nRow).html('<i class="glyphicon glyphicon-ok"></i>');
+				$(nRow).addClass('selected-row');
 			}
 		}
 	});

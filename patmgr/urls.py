@@ -163,12 +163,12 @@ urlpatterns = patterns('',
 	url(r'^package/(?P<pk>\d+)/data/patent/$',
 		login_required(DashMgrListJson.as_view(
 			model = PatentRatingReport,
-			retrieve_list = ["package"],
+			initial_list = ["package"],
 			columns = [ 'name', 'department', 'count' ],
 			column_template = { 
 				"name":			lambda o: o.patent.name,
 				"department":	lambda o: o.patent.department.name,
-				"count":		lambda o: u"1/3"})),
+				"count":		lambda o: u"%d/3" % PatentExpertRating.objects.filter(patent=o).count() })),
 		name='patent-package-edit-json'),
 
 	## 专利包查看
@@ -187,7 +187,10 @@ urlpatterns = patterns('',
 			column_template = { 
 				"patent": lambda o: u'%s<span style="float:right;"><a href="#">撰写评级报告</a></span>' % o.patent.patent.name,
 				"expert": lambda o: u'%s' % o.expert.last_name + o.expert.first_name,
+				"rank":   lambda o: u'%s' % o.rank if o.rank else "----",
+				"remark": lambda o: u'%s' % o.remark if o.remark else "----",
 				"state":  lambda o: u'%s' % u'已完成' if o.submit_date else u'进行中',
+				"submit_date": lambda o: u'%s' % o.submit_date if o.remark else "----",
 				"pk":	  lambda o: u'<a href="%(url)s" title="更换专家"><img src="/resources/images/icons/hammer_screwdriver.png" alt="更换专家" />更换专家</a>'
 									  % { "url":  reverse_lazy('patent-package-detail', args=[o.pk]) } if not o.submit_date else u'' })), 
 		name='patent-package-detail-json'),

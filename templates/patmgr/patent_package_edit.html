@@ -7,9 +7,8 @@
 <link rel="stylesheet" href="{% static "css/jquery.dataTables.css" %}" type="text/css" media="screen" />
 <link rel="stylesheet" href="{% static "css/bootstrap.btn.css" %}">
 <style type="text/css">
-tr:hover td {
-    background-color:#e0e0e0;
-}
+tr:hover td { background-color:#e0e0e0; }
+/*tr:hover td { background-color:#d5eafd; }*/
 </style>
 {% endblock %}
 
@@ -37,7 +36,15 @@ $(document).ready(function() {
             { "mData": "name",        "sWidth": "45%" },
             { "mData": "department",  "sWidth": "35%" },
             { "mData": "count",       "sWidth": "10%" }
-        ]
+		],
+		// set click handler for each row
+		"fnDrawCallback": function () {
+			$(this).find("tr").not(':first').click( function() {
+				queryTable.$('tr.selected-row').removeClass('selected-row');
+				$(this).addClass('selected-row');
+				expertTable.fnDraw();
+			});
+		}
 	});
 
     var expertTable = $('#expert_list').dataTable({
@@ -54,7 +61,10 @@ $(document).ready(function() {
             { "mData": "department", "sWidth": "35%" },
             { "mData": "name",       "sWidth": "20%" },
             { "mData": "email",      "sWidth": "35%" }
-        ]
+        ],
+		"fnDrawCallback": function () {
+			alert("DRAW");
+		}
 	});
 });
 </script>

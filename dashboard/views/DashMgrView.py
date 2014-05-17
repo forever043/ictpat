@@ -89,7 +89,8 @@ class DashMgrListView(ListView, FormMixin):
 
 class DashMgrListJson(BaseDatatableView):
 	model = None
-	retrieve_list = []
+	initial_list = []		# list of filterd initial column
+	retrieve_list = []		# list of retrievable column, retrieve-data in GET data
 	columns = []
 	column_template = {}
 
@@ -98,6 +99,15 @@ class DashMgrListJson(BaseDatatableView):
 		if 'pk' not in self.columns:
 			self.columns.append('pk')
 			self.columns.append('DT_RowId')
+
+	def get_initial_queryset(self):
+		if not self.model:
+			raise NotImplementedError("Need to provide a model or implement get_initial_queryset!")
+		q = Q()
+		for field_name in self.initial_list:
+			if field_name in self.request.GET:
+				q &= Q(("%s"%field_name, self.request.GET.get(field_name)))
+		return self.model.objects.filter(q);
 
 	def filter_queryset(self, qs):
 		q = Q()
