@@ -8,7 +8,6 @@
 <link rel="stylesheet" href="{% static "css/bootstrap.btn.css" %}">
 <style type="text/css">
 tr:hover td { background-color:#e0e0e0; }
-/*tr:hover td { background-color:#d5eafd; }*/
 </style>
 {% endblock %}
 
@@ -40,8 +39,13 @@ $(document).ready(function() {
 		// set click handler for each row
 		"fnDrawCallback": function () {
 			$(this).find("tr").not(':first').click( function() {
-				queryTable.$('tr.selected-row').removeClass('selected-row');
-				$(this).addClass('selected-row');
+				if ( $(this).hasClass('selected-row') ) {
+					$(this).removeClass('selected-row');
+				}
+				else {
+					queryTable.$('tr.selected-row').removeClass('selected-row');
+					$(this).addClass('selected-row');
+				}
 				expertTable.fnDraw();
 			});
 		}
@@ -63,7 +67,54 @@ $(document).ready(function() {
             { "mData": "email",      "sWidth": "35%" }
         ],
 		"fnDrawCallback": function () {
-			alert("DRAW");
+			var selected_patent_id = queryTable.$('tr.selected-row').attr('id');
+			if (selected_patent_id == undefined) 
+				return;
+
+			// 从服务器获取当前选择专利的评审专家，并在表格中标记
+			$.getJSON(
+				"{% url 'patent-package-patent-experts-json' patpkg.pk %}?patent=" + selected_patent_id
+			).done(function(json) {
+				$.each(json.aaData, function (idx, aaData) {
+					expertTable.find("tr[id=" + aaData.pk + "]").addClass("selected-row");
+				});
+			});
+
+			// 增加点击事件
+			$(this).find("tr").not(':first').click( function() {
+				var selected_expert_id = $(this).attr("id");
+				if (selected_expert_id == undefined)
+					return;
+				// 删除专家
+				if ($(this).hasClass('selected-row')) {
+					$.getJSON("{% url 'patent-package-patent-experts-del' patpkg.pk %}?patent=" + selected_patent_id + "&expert=" + selected_expert_id)
+					.done(function(json) {
+						alert("HHH");
+						if (json.result == "ok") {
+							alert("OK");
+							$(this).removeClass('selected-row');
+						} else {
+							alert("ERROR");
+						}
+					});
+				}
+				// 添加专家
+				else if (expertTable.$('tr.selected-row').length < 3) {
+					$.getJSON("{% url 'patent-package-patent-experts-add' patpkg.pk %}?patent=" + selected_patent_id + "&expert=" + selected_expert_id)
+					.done(function(json) {
+						if (json.result == "ok") {
+							alert("OK");
+							$(this).addClass('selected-row');
+						} else {
+							alert("ERROR");
+						}
+					});
+				}
+				else {
+					alert("同一个专利最多只能有三名评审专家进行评审，请先取消之前选择的专家。");
+					return;
+				}
+			});
 		}
 	});
 });

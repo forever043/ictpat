@@ -171,6 +171,20 @@ urlpatterns = patterns('',
 				"count":		lambda o: u"%d/3" % PatentExpertRating.objects.filter(patent=o).count() })),
 		name='patent-package-edit-json'),
 
+	url(r'package/(?P<pk>\d+)/experts/$',			# 获取某一专利的评审专家列表
+		login_required(DashMgrListJson.as_view(
+			model = PatentExpertRating, initial_list = ["patent"])),
+		name='patent-package-patent-experts-json'),
+	url(r'package/(?P<pk>\d+)/experts/add/$',			# 增加某一专利的评审专家列表 ?patent=%d&expert=%d
+		login_required(DashMgrRatingExpertAdd.as_view(
+			model = PatentExpertRating)),
+		name='patent-package-patent-experts-add'),
+	url(r'package/(?P<pk>\d+)/experts/del/$',			# 删除某一专利的评审专家列表 ?patent=%d&expert=%d
+		login_required(DashMgrRatingExpertAdd.as_view(
+			model = PatentExpertRating)),
+		name='patent-package-patent-experts-del'),
+		
+
 	## 专利包查看
 	url(r'^package/(?P<pk>\d+)/$',
 		login_required(DashMgrDetailView.as_view(
