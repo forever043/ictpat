@@ -6,7 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from patmgr.models import Patent
 from patmgr.models import PatentPackage, PatentRatingReport
 
-class PatentPackageForm(forms.ModelForm):
+class PatentPackageCreateForm(forms.ModelForm):
 	selected_patent_list = forms.CharField(max_length=4096, label='专利列表', widget=forms.HiddenInput())
 	class Meta:
 		model = PatentPackage
@@ -16,7 +16,7 @@ class PatentPackageForm(forms.ModelForm):
 		}
 
 	def save(self, commit=True):
-		instance = super(PatentPackageForm, self).save(commit)
+		instance = super(PatentPackageCreateForm, self).save(commit)
 		for patent_id in self.cleaned_data["selected_patent_list"].split('&'):
 			if not patent_id: continue
 			try:

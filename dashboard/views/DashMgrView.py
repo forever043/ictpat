@@ -90,6 +90,7 @@ class DashMgrListView(ListView, FormMixin):
 class DashMgrListJson(BaseDatatableView):
 	model = None
 	initial_list = []		# list of filterd initial column
+	initial_order = []		# list of filterd initial column
 	retrieve_list = []		# list of retrievable column, retrieve-data in GET data
 	columns = []
 	column_template = {}
@@ -107,7 +108,10 @@ class DashMgrListJson(BaseDatatableView):
 		for field_name in self.initial_list:
 			if field_name in self.request.GET:
 				q &= Q(("%s"%field_name, self.request.GET.get(field_name)))
-		return self.model.objects.filter(q);
+
+		if self.initial_order:
+			return self.model.objects.filter(q).order_by(*self.initial_order)
+		return self.model.objects.filter(q)
 
 	def filter_queryset(self, qs):
 		q = Q()

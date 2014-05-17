@@ -145,7 +145,7 @@ urlpatterns = patterns('',
 	url(r'^package/add/$',
 		login_required(DashMgrCreateView.as_view(
 				model = PatentPackage,
-				form_class = PatentPackageForm,
+				form_class = PatentPackageCreateForm,
 				template_name='patmgr/patent_package_add.html',
 				success_url = reverse_lazy('patent-package-list'),
 				success_message = u'专利包 "%(name)s" 添加成功',
@@ -160,6 +160,10 @@ urlpatterns = patterns('',
 				template_name='patmgr/patent_package_edit.html',
 				default_referer_url = reverse_lazy('patent-package-list'))),
 		name='patent-package-edit'),
+	url(r'package/(?P<pk>\d+)/submit/$',	# 提交一个专利包
+		login_required(DashMgrRatingPackageSubmit.as_view(
+			return_url = reverse_lazy('patent-package-list'))),
+		name='patent-package-submit'),
 	url(r'^package/(?P<pk>\d+)/data/patent/$',
 		login_required(DashMgrListJson.as_view(
 			model = PatentRatingReport,
@@ -173,14 +177,16 @@ urlpatterns = patterns('',
 
 	url(r'package/(?P<pk>\d+)/experts/$',			# 获取某一专利的评审专家列表
 		login_required(DashMgrListJson.as_view(
-			model = PatentExpertRating, initial_list = ["patent"])),
+			model = PatentExpertRating, initial_list = ["patent"],
+			columns = [ 'expert' ],
+			column_template = { "expert":	lambda o: o.expert.pk})),
 		name='patent-package-patent-experts-json'),
 	url(r'package/(?P<pk>\d+)/experts/add/$',			# 增加某一专利的评审专家列表 ?patent=%d&expert=%d
 		login_required(DashMgrRatingExpertAdd.as_view(
 			model = PatentExpertRating)),
 		name='patent-package-patent-experts-add'),
 	url(r'package/(?P<pk>\d+)/experts/del/$',			# 删除某一专利的评审专家列表 ?patent=%d&expert=%d
-		login_required(DashMgrRatingExpertAdd.as_view(
+		login_required(DashMgrRatingExpertDel.as_view(
 			model = PatentExpertRating)),
 		name='patent-package-patent-experts-del'),
 		
@@ -196,10 +202,15 @@ urlpatterns = patterns('',
 	url(r'^package/(?P<pk>\d+)/data/$',
 		login_required(DashMgrListJson.as_view(
 			model = PatentExpertRating,
-			retrieve_list = ["package"],
+			#retrieve_list = ["package"],
+			initial_list = ["package"],
+			initial_order = ["patent"],
 			columns = [ 'patent', 'expert', 'rank', 'remark', 'state', 'submit_date' ],
 			column_template = { 
-				"patent": lambda o: u'%s<span style="float:right;"><a href="#">撰写评级报告</a></span>' % o.patent.patent.name,
+				"patent": lambda o: u'&nbsp;(%d/%d)&nbsp;&nbsp;%s<span style="float:right;"><a href="#">撰写评级报告</a></span>' % (
+											PatentExpertRating.objects.filter(patent=o.patent).filter(submit_date__gt="1900-01-01").count(),
+											PatentExpertRating.objects.filter(patent=o.patent).count(),
+											o.patent.patent.name),
 				"expert": lambda o: u'%s' % o.expert.last_name + o.expert.first_name,
 				"rank":   lambda o: u'%s' % o.rank if o.rank else "----",
 				"remark": lambda o: u'%s' % o.remark if o.remark else "----",
