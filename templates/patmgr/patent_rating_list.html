@@ -4,10 +4,7 @@
 {% block csslink %}
 {{ block.super }}
 <link rel="stylesheet" href="{% static "css/jquery.dataTables.css" %}" type="text/css" media="screen" />
-<link rel="stylesheet" href="{% static "css/bootstrap.btn.css" %}">
-<style type="text/css">
-tr:hover td { background-color:#e0e0e0; }
-</style>
+<style type="text/css"> tr:hover td { background-color:#e0e0e0; } </style>
 {% endblock %}
 
 
@@ -19,23 +16,21 @@ tr:hover td { background-color:#e0e0e0; }
 
 <script type="text/javascript">
 $(document).ready(function() {
-	var queryTable = $('#patent-package-list').dataTable({
+	var queryTable = $('#patent-list').dataTable({
 		"bProcessing": true,
 		"bServerSide": true,
-		"sAjaxSource": "{% url "patent-package-list-json" %}",
+		"sAjaxSource": "{% url "patent-rating-list-json" %}",
 		"bSort": false,
 		"sPaginationType": "full_numbers",
 		"oLanguage": oLanguage,
 		// Column Design
 		"bAutoWidth": false,
 		"aoColumns": [
-			{ "mData": "DT_RowId",		"sWidth": "5%" },
-			{ "mData": "name",			"sWidth": "26%" },
-			{ "mData": "count",			"sWidth": "7%" },
-			{ "mData": "submit_date",	"sWidth": "12%" },
-			{ "mData": "finish_date",	"sWidth": "12%"  },
-			{ "mData": "state", 		"sWidth": "23%" },
-			{ "mData": "pk",			"sWidth": "15%"  },
+			{ "mData": "department",	"sWidth": "15%" },
+			{ "mData": "name",			"sWidth": "25%" },
+			{ "mData": "inventors",		"sWidth": "20%" },
+			{ "mData": "submit_date",	"sWidth": "15%" },
+			{ "mData": "pk",			"sWidth": "8%"  }
 		]
 	});
 });
@@ -45,20 +40,13 @@ $(document).ready(function() {
 {% block main_content %}
 			
 			<!-- Page Head -->
-			<h2>专利评价包</h2>
-			<p id="page-intro">专利评价包列表，检查未完成评价包状态，并导出已完成评价包的数据</p>
-
-			{% include 'common/notifymsg.html' %}
-
-			<span class="btn btn-success" onclick="window.location.href='{% url "patent-package-add" %}'" style="margin-bottom:18px;"> 
-				<i class="glyphicon glyphicon-plus"></i>
-				<span>添加专利包</span>
-			</span>
+			<h2>待评价专利管理</h2>
+			<p id="page-intro">选择专利进行评价</p>
 
 			<div class="content-box">
 				
 				<div class="content-box-header">
-					<h3>专利评价包列表</h3>
+					<h3>专利列表</h3>
 					<div class="clear"></div>
 				</div>
 				
@@ -66,15 +54,15 @@ $(document).ready(function() {
 					
 					<div class="tab-content default-tab" id="tab1">
 
-						<table id="patent-package-list" class="datatable">
+						{% include "common/notifymsg.html" %}
+
+						<table id="patent-list" class="datatable">
 							<thead>
 							<tr>
-								<th>序号</th>
-								<th>评价包名称</th>
-								<th>专利数</th>
-								<th>提交时间</th>
-								<th>完成时间</th>
-								<th>状态</th>
+								<th>申请部门</th>
+								<th>专利名称</th>
+								<th>发明人</th>
+								<th>申请评价时间</th>
 								<th>操作</th>
 							</tr>
 							</thead>
