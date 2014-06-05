@@ -25,7 +25,7 @@ class PatentPackageCreateForm(forms.ModelForm):
 				report.save();
 				print u"SUCCESS create report for: %s\n" % report.__unicode__()
 			except:
-				print u"ERR create report for: %s, %s\n" % (instance.__unicode__(), patent_id)
+				#print u"ERR create report for: %s, %s\n" % (instance.__unicode__(), patent_id)
 				continue
 		return instance
 

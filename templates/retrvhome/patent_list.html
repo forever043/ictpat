@@ -14,11 +14,7 @@
 <script type="text/javascript">
 var retrieve_fields = {
 	{% for field in retrieve_list %}
-	{% if field.type == "OP" %}
-	'{{ field.field_name }}': 'select',
-	{% else %}
-	'{{ field.field_name }}': 'input',
-	{% endif %}
+	'{{ field.field_name }}': {% if field.type == "OP" %}'select'{% else %}'input'{% endif %}{% if not forloop.last %},{%endif%}
 	{% endfor %}
 };
 
@@ -63,9 +59,9 @@ $(document).ready(function() {
 				}},
 			{% for field in field_list %}
 			{% if field.width %}
-			{ "mData": "{{ field.field_name }}", "sWidth": "{{field.width}}%" },
+			{ "mData": "{{ field.field_name }}", "sWidth": "{{field.width}}%" }{% if not forloop.last %},{%endif%}
 			{% else %}
-			{ "mData": "{{ field.field_name }}" },
+			{ "mData": "{{ field.field_name }}" }{% if not forloop.last %},{%endif%}
 			{% endif %}
 			{% endfor %}
 		],

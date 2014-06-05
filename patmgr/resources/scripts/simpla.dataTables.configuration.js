@@ -29,6 +29,6 @@ var oLanguage = {
 		"sPrevious": "&laquo; Prev",
 		"sNext": "Next &raquo;",
 		"sLast": "Last &raquo;"
-	},
+	}
 };
 
