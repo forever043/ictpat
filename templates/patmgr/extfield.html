@@ -159,7 +159,7 @@ $(document).ready(function() {
 			{ "mData": "pk",   "sWidth": "15%" },
 			{ "mData": "name", "sWidth": "40%", "sClass": "edititem" },
 			{ "mData": "sort", "sWidth": "15%" },
-			{ "mData": "pk",   "sWidth": "15%" },
+			{ "mData": "pk",   "sWidth": "15%" }
 		],
 
 		// Editable, RowCreating, MouseOver Highlight
@@ -180,7 +180,7 @@ $(document).ready(function() {
 			{ "mData": "pk",   "sWidth": "15%" },
 			{ "mData": "name", "sWidth": "40%", "sClass": "edititem" },
 			{ "mData": "sort", "sWidth": "15%" },
-			{ "mData": "pk",   "sWidth": "15%" },
+			{ "mData": "pk",   "sWidth": "15%" }
 		],
 		// Editable, RowCreating, MouseOver Highlight
 		"fnDrawCallback": function () { return fnRowInit("{% url 'patent-state-json' %}", stateTable); },
@@ -223,7 +223,7 @@ $(document).ready(function() {
 					else {
 						return '<a id="submitrow" href="{% url "patent-extfield-json" %}">保存</a>&nbsp;|&nbsp;<a id="cancelrow" href="{% url "patent-extfield-json" %}">取消</a>';
 					}
-				} },
+				} }
 		],
 	});
 
