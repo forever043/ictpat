@@ -25,7 +25,7 @@ urlpatterns = patterns('',
 				model = Patent,
 				form_class = PatentFilterForm,
 				context_object_name = 'patent_list',
-				template_name = 'patmgr/list_patent.html',
+				template_name = 'patmgr/patent_list.html',
 				success_url = reverse_lazy('patent-list'))),
 		name='patent-list'),
 	#url(r'^list/data/$', 	login_required(PatentListJson.as_view()), name='patent-list-json'),
@@ -82,7 +82,7 @@ urlpatterns = patterns('',
 				extfield_model = PatentExtField,
 				extfield_ref = 'patent',
 				form_class = PatentExtForm,
-				template_name = 'patmgr/edit_patent.html',
+				template_name = 'patmgr/patent_edit.html',
 				success_message = u'专利 "%(name)s" 信息更新成功',
 				error_message = u'专利 "%(name)s" 信息更新失败')),
 		name='patent-edit'),
@@ -219,6 +219,31 @@ urlpatterns = patterns('',
 				"pk":	  lambda o: u'<a href="%(url)s" title="更换专家"><img src="/resources/images/icons/hammer_screwdriver.png" alt="更换专家" />更换专家</a>'
 									  % { "url":  reverse_lazy('patent-package-detail', args=[o.pk]) } if not o.submit_date else u'' })), 
 		name='patent-package-detail-json'),
+
+	########## 专家评价界面 ########
+	# 待评专利列表
+	url(r'^rating/list/$', login_required(TemplateView.as_view(template_name = 'patmgr/patent_rating_list.html')), name='patent-rating-list'),
+	url(r'^rating/list/data/$',
+		login_required(DashMgrListJson.as_view(
+			model = PatentExpertRating,
+			columns = [ 'department', 'name', 'inventors', 'submit_date' ],
+			column_template = { 
+				"department": lambda o: u'%s' % o.patent.patent.department,
+				"name":       lambda o: u'%s' % o.patent.patent.name,
+				"inventors":  lambda o: u'%s' % o.patent.patent.inventors,
+				"submit_date":lambda o: u'%s' % o.patent.package.submit_date,
+				"pk":         lambda o: u'<a href="%(rank_url)s" title="评级"><img src="/resources/images/icons/hammer_screwdriver.png"/>评级</a>'
+										  % { "rank_url":  reverse_lazy('patent-rank', args=[o.pk]) }})),
+		name='patent-rating-list-json'),
+	url(r'^rating/(?P<pk>\d+)/$',
+		login_required(DashMgrListView.as_view(
+				model = Patent,
+				form_class = PatentFilterForm,
+				context_object_name = 'patent_list',
+				template_name = 'patmgr/patent_list.html',
+				success_url = reverse_lazy('patent-list'))),
+		name='patent-rating-detail'),
+
 
 	# Patent MetaField Manager
 	url(r'^meta/$',

@@ -19,6 +19,10 @@ class PATPackageOption(NavOption):
 	name = '专利评价包管理'
 	view = 'patent-package-list'
 
+class PATRatingOption(NavOption):
+	name = '待评专利列表'
+	view = 'patent-rating-list'
+
 class PATRetvMgrOption(NavOption):
 	name = '检索方案管理'
 	view = 'patent-retrvscheme'
@@ -39,7 +43,7 @@ class PATMgrNav(Nav):
 	name = '专利信息维护'
 	view = 'patent'
 	nav_group = 'main'
-	options = [PATApplyOption, PATListOption, PATPackageOption, PATImportOption, PATFileUploadOption, PATExtFieldMgrOption, PATRetvMgrOption]
+	options = [PATApplyOption, PATListOption, PATPackageOption, PATRatingOption, PATImportOption, PATFileUploadOption, PATExtFieldMgrOption, PATRetvMgrOption]
 
 nav_groups.register(PATMgrNav)
 
