@@ -1,0 +1,1 @@
+from PatentRatingForm import *

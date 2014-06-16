@@ -16,7 +16,12 @@ $(document).ready(function() {
 			window.location.href='{{ i__next__ }}';
 			return false;
 		})
-	})
+	});
+    $('input[type="submit"]').each(function() {
+        $(this).click(function() {
+            $("#id_action").val($(this).attr('name'));
+        });
+    });
 })
 </script>
 {% endblock %}
@@ -43,6 +48,7 @@ $(document).ready(function() {
 
 					{% csrf_token %}
 
+					{{ form.action }}
 					<input type="hidden" name="__next__" value="{{ i__next__ }}">
 				
 					<div class="content-box-content">
@@ -124,8 +130,9 @@ $(document).ready(function() {
 								</p>
 
 								<p>
-									<input class="button" type="submit" name="save" value="保存" />
-									<input class="button" type="submit" name="cancel" value="取消" />
+									<input class="button" type="submit" id="save"   name="save" value="保存草稿" />
+									<input class="button" type="submit" id="submit" name="submit" value="提交" />
+									<input class="button" type="submit" id="cancel" name="cancel" value="取消" />
 								</p>
 
 							</fieldset>

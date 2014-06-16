@@ -13,7 +13,7 @@ from datetime import datetime
 import json
 
 from django.contrib.auth.models import User
-from patmgr.models import PatentPackage, PatentRatingReport, PatentExpertRating
+from rankmgr.models import PatentPackage, PatentRatingReport, PatentExpertRating
 
 class DashMgrRatingExpertAdd(View):
 	model = None

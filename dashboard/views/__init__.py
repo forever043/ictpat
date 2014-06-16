@@ -6,4 +6,3 @@ from metafield import *
 from file import *
 from ImportWizardView import *
 from RetrvScheme import *
-from DashMgrRating import *
