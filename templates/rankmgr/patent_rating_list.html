@@ -7,31 +7,26 @@
 <style type="text/css"> tr:hover td { background-color:#e0e0e0; } </style>
 {% endblock %}
 
-
 {% block scripts %}
 {{ block.super }}
-<script type="text/javascript" src="{% static "scripts/jquery.jeditable.mini.js" %}"></script>
 <script type="text/javascript" src="{% static "scripts/jquery.dataTables.min.js" %}"></script>
 <script type="text/javascript" src="{% static "scripts/simpla.dataTables.configuration.js" %}"></script>
-
 <script type="text/javascript">
 $(document).ready(function() {
-	var queryTable = $('#patent-list').dataTable({
-		"bProcessing": true,
-		"bServerSide": true,
-		"sAjaxSource": "{% url "patent-rating-list-json" %}",
+	$('#pending-list').dataTable({
 		"bSort": false,
 		"sPaginationType": "full_numbers",
-		"oLanguage": oLanguage,
-		// Column Design
-		"bAutoWidth": false,
-		"aoColumns": [
-			{ "mData": "department",	"sWidth": "15%" },
-			{ "mData": "name",			"sWidth": "25%" },
-			{ "mData": "inventors",		"sWidth": "20%" },
-			{ "mData": "submit_date",	"sWidth": "15%" },
-			{ "mData": "pk",			"sWidth": "8%"  }
-		]
+		"oLanguage": oLanguage
+	});
+	$('#submit-list').dataTable({
+		"bSort": false,
+		"sPaginationType": "full_numbers",
+		"oLanguage": oLanguage
+	});
+	$('#reject-list').dataTable({
+		"bSort": false,
+		"sPaginationType": "full_numbers",
+		"oLanguage": oLanguage
 	});
 });
 </script>
@@ -47,16 +42,19 @@ $(document).ready(function() {
 				
 				<div class="content-box-header">
 					<h3>专利列表</h3>
+					<ul class="content-box-tabs">
+						<li><a href="#tab_pending" class="default-tab">待评价</a></li>
+						<li><a href="#tab_submit">已提交</a></li>
+						<li><a href="#tab_reject">已拒绝</a></li>
+					</ul>
 					<div class="clear"></div>
 				</div>
 				
 				<div class="content-box-content">
 					
-					<div class="tab-content default-tab" id="tab1">
-
+					<div class="tab-content default-tab" id="tab_pending">
 						{% include "common/notifymsg.html" %}
-
-						<table id="patent-list" class="datatable">
+						<table id="pending-list" class="datatable">
 							<thead>
 							<tr>
 								<th>申请部门</th>
@@ -66,10 +64,81 @@ $(document).ready(function() {
 								<th>操作</th>
 							</tr>
 							</thead>
+							<tbody>
+							{% for rating in rating_list %}
+							<tr>
+								<td>{{ rating.patent.patent.department }}</td>
+								<td>{{ rating.patent.patent.name }}</td>
+								<td>{{ rating.patent.patent.inventors }}</td>
+								<td>{{ rating.package.submit_date }}</td>
+								<td>
+									<a href="{% url 'patent-rating-detail' rating.pk %}" title="评级">
+										<img src="{% static "images/icons/hammer_screwdriver.png" %}"/>评级
+									</a>
+								</td>
+							</tr>
+							{% endfor %}
+							</tbody>
 						</table>
-
 						<div class="clear"></div>
-					
+					</div>
+
+					<div class="tab-content" id="tab_submit">
+						<table id="submit-list" class="datatable">
+							<thead>
+							<tr>
+								<th>申请部门</th>
+								<th>专利名称</th>
+								<th>发明人</th>
+								<th>申请评价时间</th>
+								<th>提交时间</th>
+								<th>操作</th>
+							</tr>
+							</thead>
+							<tbody>
+							{% for rating in submit_list %}
+							<tr>
+								<td>{{ rating.patent.patent.department }}</td>
+								<td>{{ rating.patent.patent.name }}</td>
+								<td>{{ rating.patent.patent.inventors }}</td>
+								<td>{{ rating.package.submit_date }}</td>
+								<td>{{ rating.submit_date }}</td>
+								<td>
+									<a href="{% url 'patent-rating-detail' rating.pk %}" title="查看">
+										<img src="{% static "images/icons/hammer_screwdriver.png" %}"/>查看
+									</a>
+								</td>
+							</tr>
+							{% endfor %}
+							</tbody>
+						</table>
+						<div class="clear"></div>
+					</div>
+
+					<div class="tab-content" id="tab_reject">
+						<table id="reject-list" class="datatable">
+							<thead>
+							<tr>
+								<th>申请部门</th>
+								<th>专利名称</th>
+								<th>发明人</th>
+								<th>申请评价时间</th>
+								<th>拒绝时间</th>
+							</tr>
+							</thead>
+							<tbody>
+							{% for rating in reject_list %}
+							<tr>
+								<td>{{ rating.patent.patent.department }}</td>
+								<td>{{ rating.patent.patent.name }}</td>
+								<td>{{ rating.patent.patent.inventors }}</td>
+								<td>{{ rating.package.submit_date }}</td>
+								<td>{{ rating.submit_date }}</td>
+							</tr>
+							{% endfor %}
+							</tbody>
+						</table>
+						<div class="clear"></div>
 					</div>
 					
 				</div>

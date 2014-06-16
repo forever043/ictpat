@@ -134,19 +134,11 @@ urlpatterns = patterns('',
 
 	########## 专家评价界面 ########
 	# 待评专利列表
-	url(r'^rating/list/$', login_required(TemplateView.as_view(template_name = 'rankmgr/patent_rating_list.html')), name='patent-rating-list'),
-	url(r'^rating/list/data/$',
-		login_required(DashMgrListJson.as_view(
-			model = PatentExpertRating,
-			columns = [ 'department', 'name', 'inventors', 'submit_date' ],
-			column_template = { 
-				"department": lambda o: u'%s' % o.patent.patent.department,
-				"name":       lambda o: u'%s' % o.patent.patent.name,
-				"inventors":  lambda o: u'%s' % o.patent.patent.inventors,
-				"submit_date":lambda o: u'%s' % o.patent.package.submit_date,
-				"pk":         lambda o: u'<a href="%(rank_url)s" title="评级"><img src="/resources/images/icons/hammer_screwdriver.png"/>评级</a>'
-										  % { "rank_url":  reverse_lazy('patent-rating-detail', args=[o.pk]) }})),
-		name='patent-rating-list-json'),
+	url(r'^rating/list/$',
+		login_required(PatentRatingListView.as_view(
+			context_object_name = 'rating_list',
+			template_name = 'rankmgr/patent_rating_list.html')),
+			name='patent-rating-list'),
 	url(r'^rating/(?P<pk>\d+)/$',
 		login_required(PatentRatingDetailView.as_view(
 				model = PatentExpertRating,
