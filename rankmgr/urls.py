@@ -18,40 +18,10 @@ urlpatterns = patterns('',
 	# Patent Rating Manager
 	## 专利包列表
 	url(r'^package/$',
-		login_required(TemplateView.as_view(template_name='rankmgr/patent_package_list.html')),
+		login_required(PatentPackageListView.as_view(
+			context_object_name = 'package_list',
+			template_name='rankmgr/patent_package_list.html')),
 		name='patent-package-list'),
-	url(r'^package/list/data/$', 
-		login_required(DashMgrListJson.as_view(
-			model = PatentPackage,
-			retrieve_list = [],
-			columns = [ 'name', 'count', 'state', 'submit_date', 'finish_date' ],
-			column_template = { 
-				"name":		lambda o: u'<a href="%(url)s">%(name)s</a>' % {
-											"url":  reverse_lazy('patent-package-detail', args=[o.pk]) if o.submit_date else
-													reverse_lazy('patent-package-edit', args=[o.pk]),
-											"name": o.name },
-				"count":		lambda o: u'%d' % PatentRatingReport.objects.filter(package=o).count(),
-				"submit_date":	lambda o: u'%s' % o.submit_date if o.submit_date else '----',
-				"finish_date":	lambda o: u'%s' % o.finish_date if o.finish_date else '----',
-				"state":	lambda o: u'%s' % u'已完成' if o.finish_date else
-											  u'等待提交' if not o.submit_date else
-									          u'专家评分：%d/%d，评级报告：%d/%d' % (
-													PatentExpertRating.objects.filter(package=o).filter(submit_date__gt="1900-01-01").count(),
-													PatentExpertRating.objects.filter(package=o).count(),
-													PatentRatingReport.objects.filter(package=o).filter(finish_date__gt="1900-01-01").count(),
-													PatentRatingReport.objects.filter(package=o).count(),
-											  ),
-				"pk":		lambda o: u'%(view)s%(edit)s%(export)s' % {
-										"del":   u'<a href="%s" title="删除"><img src="/resources/images/icons/cross.png" />删除</a>&nbsp;&nbsp;'
-													% reverse_lazy('patent-package-detail', args=[o.pk]),
-										"view":   u'<a href="%s" title="查看"><img src="/resources/images/icons/pencil.png" />查看</a>&nbsp;&nbsp;'
-													% reverse_lazy('patent-package-detail', args=[o.pk]) if o.submit_date else "",
-										"edit":   u'<a href="%s" title="提交"><img src="/resources/images/icons/information.png" />提交</a>&nbsp;&nbsp;'
-													% reverse_lazy('patent-package-edit', args=[o.pk]) if not o.submit_date else "",
-										"export": u'<a href="%s" title="导出"><img src="/resources/images/icons/hammer_screwdriver.png" />导出</a>&nbsp;&nbsp;'
-													% reverse_lazy('patent-package-detail', args=[o.pk]) if o.finish_date else ""},
-			})), 
-		name='patent-package-list-json'),
 
 	## 专利包创建
 	url(r'^package/add/$',

@@ -13,30 +13,15 @@ tr:hover td { background-color:#e0e0e0; }
 
 {% block scripts %}
 {{ block.super }}
-<script type="text/javascript" src="{% static "scripts/jquery.jeditable.mini.js" %}"></script>
 <script type="text/javascript" src="{% static "scripts/jquery.dataTables.min.js" %}"></script>
 <script type="text/javascript" src="{% static "scripts/simpla.dataTables.configuration.js" %}"></script>
 
 <script type="text/javascript">
 $(document).ready(function() {
-	var queryTable = $('#patent-package-list').dataTable({
-		"bProcessing": true,
-		"bServerSide": true,
-		"sAjaxSource": "{% url "patent-package-list-json" %}",
-		"bSort": false,
+	$('#patent-package-list').dataTable({
 		"sPaginationType": "full_numbers",
 		"oLanguage": oLanguage,
-		// Column Design
-		"bAutoWidth": false,
-		"aoColumns": [
-			{ "mData": "DT_RowId",		"sWidth": "5%" },
-			{ "mData": "name",			"sWidth": "26%" },
-			{ "mData": "count",			"sWidth": "7%" },
-			{ "mData": "submit_date",	"sWidth": "12%" },
-			{ "mData": "finish_date",	"sWidth": "12%"  },
-			{ "mData": "state", 		"sWidth": "23%" },
-			{ "mData": "pk",			"sWidth": "15%"  }
-		]
+		"bAutoWidth": false
 	});
 });
 </script>
@@ -78,6 +63,37 @@ $(document).ready(function() {
 								<th>操作</th>
 							</tr>
 							</thead>
+							<tbody>
+							{% for package,info in package_list %}
+							<tr>
+								<td>{{ package.pk }}</td>
+								<td>
+									{% if package.submit_date %}<a href="{% url 'patent-package-detail' package.pk %}">{{ package.name }}</a>
+									{% else %}<a href="{% url 'patent-package-edit' package.pk %}">{{ package.name }}</a>{% endif %}
+								</td>
+								<td>{{ info.count }}</td>
+								<td>{% if package.submit_date %}{{ package.submit_date }}{% else %}{{ "----" }}{% endif %}</td>
+								<td>{% if package.finish_date %}{{ package.finish_date }}{% else %}{{ "----" }}{% endif %}</td>
+								<td>
+									{% if package.finish_date %}已完成{% else %}
+									{% if not package.submit_date %}等待提交{% else %}
+ 									专家评分：{{ info.rating_finish }}/{{ info.rating_total }}，评级报告：{{ info.report_finish }}/{{ info.report_total }}
+									{% endif %} {% endif %}
+								</td>
+								<td>
+									{% if package.submit_date %}
+									<a href="{% url 'patent-package-detail' package.pk %}" title="查看"><img src="/resources/images/icons/pencil.png" />查看</a>&nbsp;&nbsp;
+									{% endif %}
+									{% if not package.submit_date %}
+									<a href="{% url 'patent-package-edit' package.pk %}" title="编辑"><img src="/resources/images/icons/pencil.png" />编辑</a>&nbsp;&nbsp;
+									{% endif %}
+									{% if package.finish_date %}
+									<a href="{% url 'patent-package-detail' package.pk%}" title="导出"><img src="/resources/images/icons/hammer_screwdriver.png" />导出</a>&nbsp;&nbsp;'
+									{% endif %}
+								</td>
+							</tr>
+							{% endfor %}
+							</tbody>
 						</table>
 
 						<div class="clear"></div>
