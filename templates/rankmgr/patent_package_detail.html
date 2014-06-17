@@ -41,26 +41,11 @@ td.group {
 <script type="text/javascript">
 $(document).ready(function() {
 	var queryTable = $('#patent_package_detail').dataTable({
-		"bProcessing": true,
-		"bServerSide": true,
-		"sAjaxSource": "{% url "patent-package-detail-json" patpkg.pk %}?package={{patpkg.pk}}",
 		"bSort": false,
         "bLengthChange": false,
         "bPaginate": false,
 		"bFilter": false,
-		"oLanguage": oLanguage,
-		// Column Design
-		"bAutoWidth": false,
-		"aoColumns": [
-			{ "mData": "patent",		"sWidth": "0" },
-			{ "mData": "expert",		"sWidth": "15%" },
-			{ "mData": "state", 		"sWidth": "10%" },
-			{ "mData": "rank",			"sWidth": "10%" },
-			{ "mData": "remark",		"sWidth": "35%" },
-			{ "mData": "submit_date",	"sWidth": "15%" },
-			//{ "mData": "finish_date",	"sWidth": "15%"  },
-			{ "mData": "pk",			"sWidth": "15%"  },
-		]
+		"oLanguage": oLanguage
 	}).rowGrouping({
 		iGroupingColumnIndex:0,
 		bExpandableGrouping: true,
@@ -68,24 +53,6 @@ $(document).ready(function() {
 		asExpandedGroups: [""]
 	});;
 });
-
-/*
-// Add collapsed/expanded all button
-$('#patent_package_detail_wrapper').find('.datatables_filter').prepend($('<input />', {
-    'type': 'button',
-    'class': 'expandedOrCollapsedGroup collapsed',
-    'value': 'Expand All'
-}));
-
-$('.expandedOrCollapsedGroup').live('click', function() {
-    if ($(this).hasClass('collapsed')) {
-        $(this).addClass('expanded').removeClass('collapsed').val('Collapse All').parents('.dataTables_wrapper').find('.collapsed-group').trigger('click');
-    }
-    else {
-        $(this).addClass('collapsed').removeClass('expanded').val('Expand All').parents('.dataTables_wrapper').find('.expanded-group').trigger('click');
-    }
-});
-*/
 </script>
 {% endblock %}
 
@@ -132,7 +99,7 @@ $('.expandedOrCollapsedGroup').live('click', function() {
 							<p>完成时间：{% if patpkg.finish_date %}{{patpkg.finish_date}}{% else %}进行中{% endif %}</p>
 						</fieldset>
 						<fieldset>
-							<p>专家列表：</p>
+							<p>专家列表：{% for expert in patpkg.expert_list %}{{ expert.last_name }}{{ expert.first_name }}&nbsp;&nbsp;{% endfor %}</p>
 						</fieldset>
 					</div>
 				</div>
@@ -146,14 +113,14 @@ $('.expandedOrCollapsedGroup').live('click', function() {
 				<div class="content-box-content">
 					<div class="tab-content default-tab" id="tab1" >
 						<fieldset class="column-left">
-							<p>专利数：10</p>
+							<p>专利数：{{ patpkg.patent_count }}</p>
 						</fieldset>
 						<fieldset class="column-right">
-							<p>专家评分数：20</p>
+							<p>专家评分数：{{ patpkg.rating_total }}</p>
 						</fieldset>
 						<fieldset>
-							<p>专家评分完成度：10/20</p>
-							<p>评级报告完成度：10/20</p>
+							<p>专家评分完成度：{{ patpkg.rating_finish }}/{{ patpkg.rating_total }}</p>
+							<p>评级报告完成度：{{ patpkg.report_finish }}/{{ patpkg.report_total }}</p>
 						</fieldset>
 					</div>
 				</div>
@@ -175,15 +142,31 @@ $('.expandedOrCollapsedGroup').live('click', function() {
 						<table id="patent_package_detail" class="datatable">
 							<thead>
 							<tr>
-								<th>专利名称</th>
-								<th>评审专家</th>
-								<th>状态</th>
-								<th>专利评分</th>
-								<th>专利评价</th>
-								<th>提交时间</th>
-								<th>操作</th>
+								<th width="0">专利名称</th>
+								<th width="15%">评审专家</th>
+								<th width="10%">状态</th>
+								<th width="10%">专利评分</th>
+								<th width="35%">专利评价</th>
+								<th width="10%">提交时间</th>
+								<th width="10%">操作</th>
 							</tr>
 							</thead>
+							<tbody>
+							{% for o in rating_list %}
+							<tr>
+								<td>
+									&nbsp;({{ o.patent.rating_finish }}/{{ o.patent.rating_total }})&nbsp;&nbsp;{{ o.patent.patent.name }}
+									<span style="float:right;"><a href="#">撰写评级报告</a></span>
+								</td>
+								<td>{{ o.expert.last_name }}{{ o.expert.first_name}}</td>
+								<td>{% if o.submit_date %}已完成{% else %}进行中{% endif %}</td>
+								<td>{% if o.rank %}{{ o.rank }}{% else %}----{% endif %}</td>
+								<td>{% if o.remark %}{{ o.remark }}{% else %}----{% endif %}</td>
+								<td>{% if o.submit_date %}{{ o.submit_date }}{% else %}----{% endif %}</td>
+								<td><a href="{% url 'patent-package-detail' o.pk %}" title="更换专家"><img src="/resources/images/icons/hammer_screwdriver.png" alt="更换专家" />更换专家</a></td>
+							</tr>
+							{% endfor %}
+							</tbody>
 						</table>
 
 						<br />

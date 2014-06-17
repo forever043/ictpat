@@ -75,32 +75,11 @@ urlpatterns = patterns('',
 
 	## 专利包查看
 	url(r'^package/(?P<pk>\d+)/$',
-		login_required(DashMgrDetailView.as_view(
-				model = PatentPackage,
+		login_required(PatentPackageDetailView.as_view(
 				context_object_name = 'patpkg',
 				template_name='rankmgr/patent_package_detail.html',
 				default_referer_url = reverse_lazy('patent-package-list'))),
 		name='patent-package-detail'),
-	url(r'^package/(?P<pk>\d+)/data/$',
-		login_required(DashMgrListJson.as_view(
-			model = PatentExpertRating,
-			#retrieve_list = ["package"],
-			initial_list = ["package"],
-			initial_order = ["patent"],
-			columns = [ 'patent', 'expert', 'rank', 'remark', 'state', 'submit_date' ],
-			column_template = { 
-				"patent": lambda o: u'&nbsp;(%d/%d)&nbsp;&nbsp;%s<span style="float:right;"><a href="#">撰写评级报告</a></span>' % (
-											PatentExpertRating.objects.filter(patent=o.patent).filter(submit_date__gt="1900-01-01").count(),
-											PatentExpertRating.objects.filter(patent=o.patent).count(),
-											o.patent.patent.name),
-				"expert": lambda o: u'%s' % o.expert.last_name + o.expert.first_name,
-				"rank":   lambda o: u'%s' % o.rank if o.rank else "----",
-				"remark": lambda o: u'%s' % o.remark if o.remark else "----",
-				"state":  lambda o: u'%s' % u'已完成' if o.submit_date else u'进行中',
-				"submit_date": lambda o: u'%s' % o.submit_date if o.remark else "----",
-				"pk":	  lambda o: u'<a href="%(url)s" title="更换专家"><img src="/resources/images/icons/hammer_screwdriver.png" alt="更换专家" />更换专家</a>'
-									  % { "url":  reverse_lazy('patent-package-detail', args=[o.pk]) } if not o.submit_date else u'' })), 
-		name='patent-package-detail-json'),
 
 	########## 专家评价界面 ########
 	# 待评专利列表
