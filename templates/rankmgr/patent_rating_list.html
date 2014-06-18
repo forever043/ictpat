@@ -57,9 +57,10 @@ $(document).ready(function() {
 						<table id="pending-list" class="datatable">
 							<thead>
 							<tr>
-								<th>申请部门</th>
-								<th>专利名称</th>
-								<th>发明人</th>
+								<th width="15%">专利评价包</th>
+								<th width="20%">申请部门</th>
+								<th width="30%">专利名称</th>
+								<th width="15%">发明人</th>
 								<th>申请评价时间</th>
 								<th>操作</th>
 							</tr>
@@ -67,6 +68,7 @@ $(document).ready(function() {
 							<tbody>
 							{% for rating in rating_list %}
 							<tr>
+								<td>{{ rating.patent.package.name }}</td>
 								<td>{{ rating.patent.patent.department }}</td>
 								<td>{{ rating.patent.patent.name }}</td>
 								<td>{{ rating.patent.patent.inventors }}</td>
@@ -87,6 +89,7 @@ $(document).ready(function() {
 						<table id="submit-list" class="datatable">
 							<thead>
 							<tr>
+								<th>专利评价包</th>
 								<th>申请部门</th>
 								<th>专利名称</th>
 								<th>发明人</th>
@@ -98,6 +101,7 @@ $(document).ready(function() {
 							<tbody>
 							{% for rating in submit_list %}
 							<tr>
+								<td>{{ rating.patent.package.name }}</td>
 								<td>{{ rating.patent.patent.department }}</td>
 								<td>{{ rating.patent.patent.name }}</td>
 								<td>{{ rating.patent.patent.inventors }}</td>
@@ -119,6 +123,7 @@ $(document).ready(function() {
 						<table id="reject-list" class="datatable">
 							<thead>
 							<tr>
+								<th>专利评价包</th>
 								<th>申请部门</th>
 								<th>专利名称</th>
 								<th>发明人</th>
@@ -129,6 +134,7 @@ $(document).ready(function() {
 							<tbody>
 							{% for rating in reject_list %}
 							<tr>
+								<td>{{ rating.patent.package.name }}</td>
 								<td>{{ rating.patent.patent.department }}</td>
 								<td>{{ rating.patent.patent.name }}</td>
 								<td>{{ rating.patent.patent.inventors }}</td>

@@ -26,7 +26,7 @@ class PatentPackageDetailView(DetailView):
 			else:
 				context['i__next__'] = self.default_referer_url
 		# Fill extra attributes
-		self.object.expert_list   = [o.expert for o in PatentExpertRating.objects.filter(patent__package = self.object)]
+		self.object.expert_list   = {}.fromkeys([o.expert for o in PatentExpertRating.objects.filter(patent__package = self.object).order_by('expert')]).keys()
 		self.object.patent_count  = PatentRatingReport.objects.filter(package=self.object).count()
 		self.object.rating_finish = PatentExpertRating.objects.filter(package=self.object).filter(submit_date__gt="1900-01-01").count()
  		self.object.rating_total  = PatentExpertRating.objects.filter(package=self.object).count()

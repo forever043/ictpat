@@ -97,5 +97,8 @@ urlpatterns = patterns('',
 				success_message = u'专利 "%(name)s" 评价成功',
 				error_message = u'专利 "%(name)s" 评价失败')),
 		name='patent-rating-detail'),
+
+	url(r'^export/(?P<pk>\d+)/$',
+		login_required(PatentPackageExportView.as_view()), name='patent-package-export'),
 )
 

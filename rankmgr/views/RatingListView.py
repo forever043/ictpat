@@ -19,11 +19,11 @@ class PatentRatingListView(ListView):
 	def get_context_data(self, **kwargs):
 		context = super(PatentRatingListView, self).get_context_data(**kwargs)
 		context['request'] = self.request
-		context['submit_list'] = self.model.objects.filter(expert=self.request.user).exclude(submit_date=None)
-		context['reject_list'] = self.model.objects.filter(expert=self.request.user).exclude(submit_date=None).filter(rank=-1)
+		context['submit_list'] = self.model.objects.filter(expert=self.request.user).exclude(submit_date=None).exclude(rank=-1).order_by("patent__package")
+		context['reject_list'] = self.model.objects.filter(expert=self.request.user).exclude(submit_date=None).filter(rank=-1).order_by("patent__package")
 		return context
 
 	def get_queryset(self):
-		object_list = self.model.objects.filter(expert=self.request.user, submit_date=None)
+		object_list = self.model.objects.filter(expert=self.request.user, submit_date=None).order_by("patent__package")
 		return object_list
 

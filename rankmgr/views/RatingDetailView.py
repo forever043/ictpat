@@ -18,7 +18,7 @@ class PatentRatingDetailView(SuccessMessageMixin, UpdateView):
 		context = super(PatentRatingDetailView, self).get_context_data(**kwargs)
 		context['request'] = self.request
 		context['patent'] = self.object.patent.patent
-
+		context['history_rating'] = self.model.objects.filter(patent__patent=self.object.patent.patent).exclude(patent=self.object.patent).exclude(submit_date=None).exclude(rank=-1).order_by("submit_date")
 		if '__next__' in self.request.POST:
 			context['i__next__'] = self.request.POST['__next__']
 		else:

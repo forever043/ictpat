@@ -159,11 +159,14 @@ $(document).ready(function() {
 									<span style="float:right;"><a href="#">撰写评级报告</a></span>
 								</td>
 								<td>{{ o.expert.last_name }}{{ o.expert.first_name}}</td>
-								<td>{% if o.submit_date %}已完成{% else %}进行中{% endif %}</td>
-								<td>{% if o.rank %}{{ o.rank }}{% else %}----{% endif %}</td>
+								<td>{% if o.submit_date %}{% ifequal o.rank -1 %}已拒绝{% else %}已完成{% endifequal %}{% else %}进行中{% endif %}</td>
+								<td>{% if o.rank %}{% ifequal o.rank -1 %}----{% else %}{{ o.rank }}{% endifequal %}{% else %}----{% endif %}</td>
 								<td>{% if o.remark %}{{ o.remark }}{% else %}----{% endif %}</td>
 								<td>{% if o.submit_date %}{{ o.submit_date }}{% else %}----{% endif %}</td>
-								<td><a href="{% url 'patent-package-detail' o.pk %}" title="更换专家"><img src="/resources/images/icons/hammer_screwdriver.png" alt="更换专家" />更换专家</a></td>
+								<td>
+									{% if not o.submit_date %}<a href="{% url 'patent-package-detail' o.pk %}" title="更换专家"><img src="/resources/images/icons/hammer_screwdriver.png" alt="更换专家" />更换专家</a>{% endif %}
+									{% ifequal o.rank -1 %} <a href="{% url 'patent-package-detail' o.pk %}" title="更换专家"><img src="/resources/images/icons/hammer_screwdriver.png" alt="更换专家" />更换专家</a>{% endifequal %}
+								</td>
 							</tr>
 							{% endfor %}
 							</tbody>

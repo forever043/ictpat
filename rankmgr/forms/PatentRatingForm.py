@@ -40,6 +40,13 @@ class PatentExpertRatingForm(forms.ModelForm):
 			'rank': forms.RadioSelect(attrs={'class':'star'}, choices=RATING_CHOICES),
 			'remark': forms.Textarea(attrs={'class':'text-input large-input'}),
 		}
+	def __init__(self, *args, **kwargs):
+		super(PatentExpertRatingForm, self).__init__(*args, **kwargs)
+		instance = getattr(self, 'instance', None)
+		if instance and instance.submit_date:
+			self.fields['rank'].widget.attrs['disabled'] = 'disabled'
+			self.fields['remark'].widget.attrs['readonly'] = True
+
 	def save(self, commit=True):
 		if self.cleaned_data["action"] == "submit":
 			self.instance.submit_date = datetime.now()
