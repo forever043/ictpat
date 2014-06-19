@@ -1,4 +1,5 @@
 *.pyc
 .DS_Store
 *to-be-del*
-
+files
+resources
