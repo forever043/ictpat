@@ -14,13 +14,14 @@ class PatentPackage(models.Model):
 		app_label = 'rankmgr'
 		verbose_name = u'专利包'
 		verbose_name_plural = u'专利包'
+		permissions = (("can_operate_package", u"可以操作专利包"),)
 
 class PatentRatingReport(models.Model):
 	package = models.ForeignKey(PatentPackage, verbose_name='专利包')
 	patent = models.ForeignKey(Patent, verbose_name='专利')
 	rating = models.IntegerField(verbose_name='等级', null=True, blank=True)
 	report = models.TextField(verbose_name='评级报告', null=True, blank=True)
-	experts = models.ManyToManyField(User, verbose_name='评分专家', null=True, blank=True)
+	experts = models.ManyToManyField(User, verbose_name='评分专家', null=True, blank=True)	# Should be removed
 	finish_date = models.DateField(verbose_name='完成时间', null=True, blank=True)
 	def __unicode__(self):
 		return u"[%s]%s" % (self.package.name, self.patent.name)
@@ -43,4 +44,5 @@ class PatentExpertRating(models.Model):
 		verbose_name = u'专家评分'
 		verbose_name_plural = u'专家评分'
 		unique_together=(("package", "patent", "expert"),)
+		permissions = (("can_operate_rating", u"可以操作专利评价"),)
 
