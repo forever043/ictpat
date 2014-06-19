@@ -64,7 +64,7 @@
 {% block main_content %}
 			
 			<!-- Page Head -->
-			<h2>Welcome 管理员</h2>
+			<h2>Welcome {{ user.last_name }}{{ user.first_name }}（{{ user.groups.all.0.name }}）</h2>
 			<p id="page-intro">快捷任务列表</p>
 
 			{% load nav %} {% get_nav "shortcut" as shortcut %}

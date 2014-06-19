@@ -49,7 +49,7 @@ class LicenseFileMgrShortcut(Nav):
 
 class RankMgrShortcut(Nav):
 	name = '知识产权评级管理'
-	view = 'patent-import'
+	view = 'patent-package-list'
 	nav_group = 'shortcut'
 	template = 'dashboard/shortcut.html'
 	icon = 'images/icons/clock_48.png'

@@ -13,7 +13,10 @@ from rankmgr.forms import *
 urlpatterns = patterns('',
     url(r'^$', login_required(RedirectView.as_view(pattern_name='patent-list')), name='rank'),
     url(r'^summary/$', login_required(RankSummaryView.as_view()), name='rank-summary'),
-    url(r'^expert/$', login_required(RankExpertListView.as_view()), name='rank-expert-list'),
+    url(r'^expert/$',
+		login_required(RankExpertListView.as_view(
+			context_object_name = 'expert_list')),
+		name='rank-expert-list'),
 
 	# Patent Rating Manager
 	## 专利包列表
