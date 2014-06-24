@@ -1,11 +1,12 @@
 # coding=utf-8
 from django_nav import nav_groups, Nav, NavOption
 from django.core.urlresolvers import reverse
+from django_nav.conditionals import *
 import re
 
 class SCRApplyOption(NavOption):
-    name = '登记申请'
-    view = 'scr-add'
+	name = '登记申请'
+	view = 'scr-add'
 
 class SCRListOption(NavOption):
 	name = '列表查询'
@@ -27,14 +28,19 @@ class SCRExtFieldMgrOption(NavOption):
 	view = 'scr-extfield'
 
 class SCRRetrvMgrOption(NavOption):
-    name = '检索方案管理'
-    view = 'scr-retrvscheme'
+	name = '检索方案管理'
+	view = 'scr-retrvscheme'
 
 class SCRMgrNav(Nav):
-    name = '软件著作权登记管理'
-    view = 'scrmgr.views.scrmgr'
-    nav_group = 'main'
-    options = [SCRApplyOption, SCRListOption, SCRImportOption, SCRFileUploadOption, SCRExtFieldMgrOption, SCRRetrvMgrOption]
+	name = '软件著作权登记管理'
+	view = 'scrmgr.views.scrmgr'
+	nav_group = 'main'
+	options = [SCRApplyOption, SCRListOption, SCRImportOption, SCRFileUploadOption, SCRExtFieldMgrOption, SCRRetrvMgrOption]
+	conditional = {
+		'function': user_has_perm,
+		'args': [],
+		'kwargs': { 'perm': 'rankmgr.can_operate_package' },
+	}
 
 nav_groups.register(SCRMgrNav)
 

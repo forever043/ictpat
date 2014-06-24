@@ -1,6 +1,7 @@
 # coding=utf-8
 from django_nav import nav_groups, Nav, NavOption
 from django.core.urlresolvers import reverse
+from django_nav.conditionals import *
 import re
 
 class PATApplyOption(NavOption):
@@ -36,6 +37,11 @@ class PATMgrNav(Nav):
 	view = 'patent'
 	nav_group = 'main'
 	options = [PATApplyOption, PATListOption, PATImportOption, PATFileUploadOption, PATExtFieldMgrOption, PATRetvMgrOption]
+	conditional = {
+		'function': user_has_perm,
+		'args': [],
+		'kwargs': { 'perm': 'rankmgr.can_operate_package' },
+	}
 
 nav_groups.register(PATMgrNav)
 
