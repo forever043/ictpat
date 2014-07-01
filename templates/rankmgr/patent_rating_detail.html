@@ -4,11 +4,13 @@
 {% block csslink %}
 {{ block.super }}
 <link href='{% static "css/jquery.rating.css" %}' type="text/css" rel="stylesheet"/>
+<link rel="stylesheet" href="{% static "jquery.raty/jquery.raty.css" %}" type="text/css" media="screen" />
 {% endblock %}
 
 {% block scripts %}
 {{ block.super }}
 <script type="text/javascript" src="{% static "scripts/jquery.rating.js" %}"></script>
+<script type="text/javascript" src="{% static "jquery.raty/jquery.raty.js" %}"></script>
 <script type="text/javascript">
 $(document).ready(function() {
 	$('input[name="cancel"]').each(function () {
@@ -22,7 +24,15 @@ $(document).ready(function() {
             $("#id_action").val($(this).attr('name'));
         });
     });
-})
+
+	$.fn.raty.defaults.path = '{% static "jquery.raty/images" %}';
+	$('.rating_detail_raty').raty({
+		half: true,
+		number: 5,
+		score: function() { return $(this).attr('rating')/2; },
+		readOnly: function() { return $(this).attr('readonly'); }
+	});
+});
 </script>
 {% endblock %}
 
@@ -62,8 +72,6 @@ $(document).ready(function() {
 					
 							<fieldset class="column-left">
 								<p><b>专利名称：</b>{{ patent.name }}</p>
-								<p><b>发明人：</b>{{ patent.inventors }}</p>
-								<p><b>所属部门：</b>{{ patent.department }}</p>
 								<p><b>专利状态：</b>{{ patent.state }}</p>
 								<p><b>专利类型：</b>{{ patent.type }}</p>
 								<p>
@@ -106,6 +114,7 @@ $(document).ready(function() {
 							<fieldset class="column-right">
 
 								{{ form.patent }} {{ form.expert }}
+<!--
 								<p>
 									<label>
 										{{ form.rank.label }}*
@@ -123,10 +132,40 @@ $(document).ready(function() {
 									{% endfor %}
 									<br />
 								</p>
+-->
+
+								<h4>综合分 <span style="font-size:24px;">(5.3)</span>&nbsp;&nbsp;<span class="rating_detail_raty" readonly=true /></h4><hr/><br/>
 								
-								<p>
+								<fieldset class="column-left">
+								<fieldset>
+									<label>法律价值</label>
+									<div style="text-align:right; width:200px;">
+										<p>依赖性<span style="padding-left:10px;" class="rating_detail_raty" /></p>
+										<p>侵权可判定性<span style="padding-left:10px;" class="rating_detail_raty" /></p>
+									</div>
+									<br/>
+								</fieldset>
+								<fieldset>
+									<label>技术价值</label>
+									<div style="text-align:right; width:200px;">
+										<p>先进性<span style="padding-left:10px;" class="rating_detail_raty" /></p>
+									</div>
+									<br/>
+								</fieldset>
+								</fieldset>
+								<fieldset class="column-right">
+									<label>经济价值</label>
+									<div style="text-align:right; width:290px;">
+										<p>市场规模前景<span style="padding-left:10px;" class="rating_detail_raty" /></p>
+										<p>政策适应性（与标准相关性）<span style="padding-left:10px;" class="rating_detail_raty" /></p>
+									</div>
+									<br/>
+								</fieldset>
+								<div class="clear" />
+								
+								<fieldset>
 									<label>
-										{{ form.remark.label }}*
+										<h4>{{ form.remark.label }}*</h4>
 										{% if form.remark.errors %}
 										<span class="input-notification error png_bg">
 											{% for error in form.remark.errors %}
@@ -136,14 +175,14 @@ $(document).ready(function() {
 										{% endif %}
 									</label>
 									{{ form.remark }}
-								</p>
+								</fieldset>
 
-								<p>
+								<fieldset>
 									<input class="button" type="submit" id="save"   name="save" value="保存草稿" />
 									<input class="button" type="submit" id="submit" name="submit" value="提交" />
 									<input class="button" type="submit" id="reject" name="reject" value="拒绝" />
 									<input class="button" type="submit" id="cancel" name="cancel" value="取消" />
-								</p>
+								</fieldset>
 
 							</fieldset>
 							<div class="clear"></div><!-- End .clear -->

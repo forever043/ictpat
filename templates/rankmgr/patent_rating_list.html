@@ -4,6 +4,7 @@
 {% block csslink %}
 {{ block.super }}
 <link rel="stylesheet" href="{% static "css/jquery.dataTables.css" %}" type="text/css" media="screen" />
+<link rel="stylesheet" href="{% static "jquery.raty/jquery.raty.css" %}" type="text/css" media="screen" />
 <style type="text/css"> tr:hover td { background-color:#e0e0e0; } </style>
 {% endblock %}
 
@@ -11,6 +12,7 @@
 {{ block.super }}
 <script type="text/javascript" src="{% static "scripts/jquery.dataTables.min.js" %}"></script>
 <script type="text/javascript" src="{% static "scripts/simpla.dataTables.configuration.js" %}"></script>
+<script type="text/javascript" src="{% static "jquery.raty/jquery.raty.js" %}"></script>
 <script type="text/javascript">
 $(document).ready(function() {
 	$('#pending-list').dataTable({
@@ -27,6 +29,14 @@ $(document).ready(function() {
 		"bSort": false,
 		"sPaginationType": "full_numbers",
 		"oLanguage": oLanguage
+	});
+
+	$.fn.raty.defaults.path = '{% static "jquery.raty/images" %}';
+	$('.rating_list_raty').raty({
+		readOnly: true,
+		half: true,
+		number: 5,
+		score: function() { return $(this).attr('rating')/2; }
 	});
 });
 </script>
@@ -57,22 +67,20 @@ $(document).ready(function() {
 						<table id="pending-list" class="datatable">
 							<thead>
 							<tr>
-								<th width="15%">专利评价包</th>
-								<th width="20%">申请部门</th>
+								<th>编号</th>
 								<th width="30%">专利名称</th>
-								<th width="15%">发明人</th>
 								<th>申请评价时间</th>
+								<th>历史评级</th>
 								<th>操作</th>
 							</tr>
 							</thead>
 							<tbody>
 							{% for rating in rating_list %}
 							<tr>
-								<td>{{ rating.patent.package.name }}</td>
-								<td>{{ rating.patent.patent.department }}</td>
+								<td>{{ forloop.counter }}</td>
 								<td>{{ rating.patent.patent.name }}</td>
-								<td>{{ rating.patent.patent.inventors }}</td>
 								<td>{{ rating.package.submit_date }}</td>
+								<td><div id='raty' class="rating_list_raty" rating="7" /></td>
 								<td>
 									<a href="{% url 'patent-rating-detail' rating.pk %}" title="评级">
 										<img src="{% static "images/icons/hammer_screwdriver.png" %}"/>评级
@@ -89,10 +97,8 @@ $(document).ready(function() {
 						<table id="submit-list" class="datatable">
 							<thead>
 							<tr>
-								<th>专利评价包</th>
-								<th>申请部门</th>
+								<th>编号</th>
 								<th>专利名称</th>
-								<th>发明人</th>
 								<th>申请评价时间</th>
 								<th>提交时间</th>
 								<th>操作</th>
@@ -101,10 +107,8 @@ $(document).ready(function() {
 							<tbody>
 							{% for rating in submit_list %}
 							<tr>
-								<td>{{ rating.patent.package.name }}</td>
-								<td>{{ rating.patent.patent.department }}</td>
+								<td>{{ forloop.counter }}</td>
 								<td>{{ rating.patent.patent.name }}</td>
-								<td>{{ rating.patent.patent.inventors }}</td>
 								<td>{{ rating.package.submit_date }}</td>
 								<td>{{ rating.submit_date }}</td>
 								<td>
@@ -123,10 +127,8 @@ $(document).ready(function() {
 						<table id="reject-list" class="datatable">
 							<thead>
 							<tr>
-								<th>专利评价包</th>
-								<th>申请部门</th>
+								<th>编号</th>
 								<th>专利名称</th>
-								<th>发明人</th>
 								<th>申请评价时间</th>
 								<th>拒绝时间</th>
 							</tr>
@@ -134,10 +136,8 @@ $(document).ready(function() {
 							<tbody>
 							{% for rating in reject_list %}
 							<tr>
-								<td>{{ rating.patent.package.name }}</td>
-								<td>{{ rating.patent.patent.department }}</td>
+								<td>{{ forloop.counter }}</td>
 								<td>{{ rating.patent.patent.name }}</td>
-								<td>{{ rating.patent.patent.inventors }}</td>
 								<td>{{ rating.package.submit_date }}</td>
 								<td>{{ rating.submit_date }}</td>
 							</tr>
