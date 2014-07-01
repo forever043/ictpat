@@ -12,6 +12,18 @@
 <script type="text/javascript" src="{% static "scripts/jquery.rating.js" %}"></script>
 <script type="text/javascript" src="{% static "jquery.raty/jquery.raty.js" %}"></script>
 <script type="text/javascript">
+function update_summary() {
+	var total = 0;
+	$('.rating_detail_raty').each(function() {
+		if ($(this).raty('score'))
+			total += $(this).raty('score') * 2 * $(this).attr('weight');
+	});
+	$('#rating_summary').text(total.toFixed(1));
+	$('#rating_summary_raty').raty('readOnly', false);
+	$('#rating_summary_raty').raty('score', total/2);
+	$('#rating_summary_raty').raty('readOnly', true);
+}
+
 $(document).ready(function() {
 	$('input[name="cancel"]').each(function () {
 		$(this).click(function() {
@@ -25,13 +37,26 @@ $(document).ready(function() {
         });
     });
 
+
+	// Rating Stars
 	$.fn.raty.defaults.path = '{% static "jquery.raty/images" %}';
+
+	$('#rating_summary_raty').raty({
+		half: true,
+		number: 5,
+		round : { down: 0, full: 1, up: 1 },
+		readOnly: true
+	});
+
 	$('.rating_detail_raty').raty({
 		half: true,
 		number: 5,
 		score: function() { return $(this).attr('rating')/2; },
-		readOnly: function() { return $(this).attr('readonly'); }
+		readOnly: function() { return $(this).attr('readonly'); },
+		click: function(score, evt) { update_summary(); }
 	});
+
+	update_summary();
 });
 </script>
 {% endblock %}
@@ -134,21 +159,21 @@ $(document).ready(function() {
 								</p>
 -->
 
-								<h4>综合分 <span style="font-size:24px;">(5.3)</span>&nbsp;&nbsp;<span class="rating_detail_raty" readonly=true /></h4><hr/><br/>
+								<h4>综合分 <span style="font-size:24px;">(<span id="rating_summary">5.3</span>)</span>&nbsp;&nbsp;<span id="rating_summary_raty" /></h4><hr/><br/>
 								
 								<fieldset class="column-left">
 								<fieldset>
 									<label>法律价值</label>
 									<div style="text-align:right; width:200px;">
-										<p>依赖性<span style="padding-left:10px;" class="rating_detail_raty" /></p>
-										<p>侵权可判定性<span style="padding-left:10px;" class="rating_detail_raty" /></p>
+										<p>依赖性<span style="padding-left:10px;" class="rating_detail_raty" rating="8" weight="0.2" /></p>
+										<p>侵权可判定性<span style="padding-left:10px;" class="rating_detail_raty" rating="6" weight="0.2" /></p>
 									</div>
 									<br/>
 								</fieldset>
 								<fieldset>
 									<label>技术价值</label>
 									<div style="text-align:right; width:200px;">
-										<p>先进性<span style="padding-left:10px;" class="rating_detail_raty" /></p>
+										<p>先进性<span style="padding-left:10px;" class="rating_detail_raty" rating="9" weight="0.2" /></p>
 									</div>
 									<br/>
 								</fieldset>
@@ -156,8 +181,8 @@ $(document).ready(function() {
 								<fieldset class="column-right">
 									<label>经济价值</label>
 									<div style="text-align:right; width:290px;">
-										<p>市场规模前景<span style="padding-left:10px;" class="rating_detail_raty" /></p>
-										<p>政策适应性（与标准相关性）<span style="padding-left:10px;" class="rating_detail_raty" /></p>
+										<p>市场规模前景<span style="padding-left:10px;" class="rating_detail_raty" rating="6" weight="0.2" /></p>
+										<p>政策适应性（与标准相关性）<span style="padding-left:10px;" class="rating_detail_raty" rating="5" weight="0.2" /></p>
 									</div>
 									<br/>
 								</fieldset>
@@ -166,6 +191,7 @@ $(document).ready(function() {
 								<fieldset>
 									<label>
 										<h4>{{ form.remark.label }}*</h4>
+										<small>评语内容不能少于50个汉字</small>
 										{% if form.remark.errors %}
 										<span class="input-notification error png_bg">
 											{% for error in form.remark.errors %}
