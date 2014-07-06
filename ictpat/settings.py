@@ -105,6 +105,7 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'patmgr/resources'),
     os.path.join(BASE_DIR, 'scrmgr/resources'),
     os.path.join(BASE_DIR, 'retrvhome/resources'),
+	os.path.join(BASE_DIR, 'rankmgr/resources'),
 )
 
 TEMPLATE_DIRS = (
@@ -129,6 +130,7 @@ from django.core.urlresolvers import reverse
 LOGIN_REDIRECT_URL = reverse('dashboard')
 LOGIN_URL = reverse('dashboard-login')
 LOGOUT_URL = reverse('dashboard-logout')
+AUTH_PROFILE_MODULE = 'rankmgr.ExpertProfile'
 
 #for filebrowsers
 #FILEBROWSER_DIRECTORY = os.path.join(BASE_DIR, 'uploads')

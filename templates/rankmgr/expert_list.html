@@ -61,9 +61,12 @@ $(document).ready(function() {
 						<table id="active-expert-list">
 							<thead>
 							<tr>
-								<th>姓名</th>
 								<th>帐号</th>
+								<th>姓名</th>
+								<th>工作单位</th>
+								<th>研究领域</th>
 								<th>E-Mail</th>
+								<th>联系电话</th>
 								<th width="20%">评审统计（完成/分配）</th>
 								<th>状态</th>
 								<th width="20%">操作</th>
@@ -74,9 +77,12 @@ $(document).ready(function() {
 								{% for expert in expert_list %}
 								{% if expert.is_active %}
 								<tr>
-									<td>{{ expert.last_name }}{{ expert.first_name }}</td>
 									<td>{{ expert.username }}</td>
+									<td>{{ expert.last_name }}{{ expert.first_name }}</td>
+									<td>{{ expert.profile.organization }}</td>
+									<td>{{ expert.profile.research_field }}</td>
 									<td>{{ expert.email }}</td>
+									<td>{{ expert.profile.phone }}</td>
 									<td>{{ expert.rating_finish }}/{{ expert.rating_total }}</td>
 									<td>{% if expert.is_active %}正常{% else %}已停用{% endif %}
 									<td>
@@ -96,9 +102,12 @@ $(document).ready(function() {
 						<table id="inactive-expert-list">
 							<thead>
 							<tr>
-								<th>姓名</th>
 								<th>帐号</th>
+								<th>姓名</th>
+								<th>工作单位</th>
+								<th>研究领域</th>
 								<th>E-Mail</th>
+								<th>联系电话</th>
 								<th>操作</th>
 							</tr>
 							</thead>
@@ -107,9 +116,12 @@ $(document).ready(function() {
 								{% for expert in expert_list %}
 								{% if not expert.is_active %}
 								<tr>
-									<td>{{ expert.last_name }}{{ expert.first_name }}</td>
 									<td>{{ expert.username }}</td>
+									<td>{{ expert.last_name }}{{ expert.first_name }}</td>
+									<td>{{ expert.profile.organization }}</td>
+									<td>{{ expert.profile.research_field }}</td>
 									<td>{{ expert.email }}</td>
+									<td>{{ expert.profile.phone }}</td>
 									<td>
 										<a href="#">启用帐号</a>
 									</td>
