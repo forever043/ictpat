@@ -84,6 +84,14 @@ urlpatterns = patterns('',
 				default_referer_url = reverse_lazy('patent-package-list'))),
 		name='patent-package-detail'),
 
+	########## 专利评级报告 ########
+	# 撰写评级报告
+	url(r'package/(?P<pkgpk>\d+)/report/(?P<pk>\d+)/$',
+		login_required(PatentReportDetailView.as_view(
+			context_object_name = 'report',
+			template_name='rankmgr/patent_report_detail.html')),
+		name='patent-report-detail'),
+
 	########## 专家评价界面 ########
 	# 待评专利列表
 	url(r'^rating/list/$',

@@ -1,0 +1,166 @@
+{% extends "common/mgrbase.html" %}
+{% load staticfiles %}
+
+{% block csslink %}
+{{ block.super }}
+<link href='{% static "css/jquery.rating.css" %}' type="text/css" rel="stylesheet"/>
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }}
+<script type="text/javascript" src="{% static "scripts/jquery.rating.js" %}"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	$('input[name="cancel"]').each(function () {
+		$(this).click(function() {
+			window.location.href='{{ i__next__ }}';
+			return false;
+		})
+	});
+    $('input[type="submit"]').each(function() {
+        $(this).click(function() {
+            $("#id_action").val($(this).attr('name'));
+        });
+    });
+})
+</script>
+{% endblock %}
+
+{% block main_content %}
+			
+			<!-- Page Head -->
+			<h2>专利评级报告</h2>
+			<p id="page-intro">为专利定级并撰写评级报告</p>
+
+			{% include 'common/notifymsg.html' %}
+
+			<div class="content-box"><!-- Start Content Box -->
+				
+				<div class="content-box-header">
+					
+					<h3>专利信息</h3>
+					<ul class="content-box-tabs">
+						<li><a href="#tab1" class="default-tab">专利信息</a></li>
+						<li><a href="#tab2">技术交底书</a></li>
+						<li><a href="#tab3">权利要求书</a></li>
+					</ul>
+					<div class="clear"></div>
+					
+				</div> <!-- End .content-box-header -->
+
+
+				<form method="post">
+
+					{% csrf_token %}
+
+					{{ form.action }}
+					<input type="hidden" name="__next__" value="{{ i__next__ }}">
+				
+					<div class="content-box-content">
+
+						<div class="tab-content default-tab" id="tab1" >
+					
+							<fieldset class="column-left">
+								<p><b>专利名称：</b>{{ report.patent.name }}</p>
+								<p><b>发明人：</b>{{ report.patent.inventors }}</p>
+								<p><b>所属部门：</b>{{ report.patent.department }}</p>
+								<p><b>专利状态：</b>{{ report.patent.state }}</p>
+								<p><b>专利类型：</b>{{ report.patent.type }}</p>
+								<p>
+									{% if not report.patent.apply_file and not report.patent.authorize_file %}
+									<label>暂无相关证书</label>
+									{% else %}
+									<label>
+										查看证书：
+										{% if report.patent.apply_file %}
+										<a target="_blank" href="{% url 'patent-file-service' report.patent.apply_code %}">申请证书</a>
+										&nbsp;&nbsp;&nbsp;&nbsp;
+										{% endif %}
+										{% if report.patent.authorize_file %}
+										<a target="_blank" href="{% url 'patent-file-service' report.patent.authorize_code %}">授权证书</a>
+										{% endif %}
+									</label>
+									{% endif %}
+								</p>
+								{% if expert_rating %}
+								<p><b>专家评价：</b></p>
+								<div style="padding-left:10px">
+								{% for o in expert_rating %}
+								<p>{{ o.expert.last_name }}{{ o.expert.first_name }}</p>
+								<p>
+									<input class="star" type="radio" name="rating{{ o.pk }}" value="1" disabled="disabled" {% ifequal o.rank 1 %}checked="checked"{% endifequal %}/>
+									<input class="star" type="radio" name="rating{{ o.pk }}" value="2" disabled="disabled" {% ifequal o.rank 2 %}checked="checked"{% endifequal %}/>
+									<input class="star" type="radio" name="rating{{ o.pk }}" value="3" disabled="disabled" {% ifequal o.rank 3 %}checked="checked"{% endifequal %}/>
+									<input class="star" type="radio" name="rating{{ o.pk }}" value="4" disabled="disabled" {% ifequal o.rank 4 %}checked="checked"{% endifequal %}/>
+									<input class="star" type="radio" name="rating{{ o.pk }}" value="5" disabled="disabled" {% ifequal o.rank 5 %}checked="checked"{% endifequal %}/>
+									&nbsp;&nbsp;({{ o.submit_date }})
+									<br/>
+									{% if o.remark %}{{ o.remark }}{% else %}<i>无评价内容</i>{% endif %}
+								</p>
+								{% endfor %}
+								</div>
+								{% else %}
+								<p><b>暂无专家评价</b></p>
+								{% endif %}
+							</fieldset>
+
+							<fieldset class="column-right">
+
+								{{ form.patent }} {{ form.expert }}
+								<p>
+									<label>
+										{{ form.rank.label }}*
+
+										{% if form.rank.errors %}
+										<span class="input-notification error png_bg">
+											{% for error in form.rank.errors %}
+											{{ error }}
+											{% endfor %}
+										</span>
+										{% endif %}
+									</label>
+									{% for radio in form.rank %}
+										{{ radio.tag }}
+									{% endfor %}
+									<br />
+								</p>
+								
+								<p>
+									<label>
+										{{ form.remark.label }}*
+										{% if form.remark.errors %}
+										<span class="input-notification error png_bg">
+											{% for error in form.remark.errors %}
+											{{ error }}
+											{% endfor %}
+										</span>
+										{% endif %}
+									</label>
+									{{ form.remark }}
+								</p>
+
+								<p>
+									<input class="button" type="submit" id="save"   name="save" value="保存草稿" />
+									<input class="button" type="submit" id="submit" name="submit" value="提交" />
+									<input class="button" type="submit" id="reject" name="reject" value="拒绝" />
+									<input class="button" type="submit" id="cancel" name="cancel" value="取消" />
+								</p>
+
+							</fieldset>
+							<div class="clear"></div><!-- End .clear -->
+						</div> <!-- End #tab1 -->
+
+						<div class="tab-content" id="tab2" >
+							<iframe id="viewer" src = "/resources/Viewer.js/index.html#201310138440.9.pdf" width='100%' height='800' allowfullscreen webkitallowfullscreen></iframe>
+						</div>
+
+						<div class="tab-content" id="tab3" >
+							<iframe id="viewer" src = "/resources/Viewer.js/index.html#201310138440.9.pdf" width='100%' height='800' allowfullscreen webkitallowfullscreen></iframe>
+						</div>
+					</div> <!-- End .content-box-content -->
+				</div> <!-- End .content-box -->
+			</form>
+
+						
+{% endblock %}
+

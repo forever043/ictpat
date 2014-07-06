@@ -156,7 +156,7 @@ $(document).ready(function() {
 							<tr>
 								<td>
 									&nbsp;({{ o.patent.rating_finish }}/{{ o.patent.rating_total }})&nbsp;&nbsp;{{ o.patent.patent.name }}
-									<span style="float:right;"><a href="#">撰写评级报告</a></span>
+									<span style="float:right;"><a onclick="window.location.href='{% url 'patent-report-detail' pkgpk=o.patent.package.pk pk=o.patent.pk %}';" href="#">撰写评级报告</a></span>
 								</td>
 								<td>{{ o.expert.last_name }}{{ o.expert.first_name}}</td>
 								<td>{% if o.submit_date %}{% ifequal o.rank -1 %}已拒绝{% else %}已完成{% endifequal %}{% else %}进行中{% endif %}</td>
