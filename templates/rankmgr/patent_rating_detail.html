@@ -4,6 +4,7 @@
 {% block csslink %}
 {{ block.super }}
 <link href='{% static "css/jquery.rating.css" %}' type="text/css" rel="stylesheet"/>
+<link rel="stylesheet" href="{% static "css/bootstrap.btn.css" %}">
 <link rel="stylesheet" href="{% static "jquery.raty/jquery.raty.css" %}" type="text/css" media="screen" />
 {% endblock %}
 
@@ -67,6 +68,23 @@ $(document).ready(function() {
 			<h2>专利等级评定</h2>
 			<p id="page-intro">为专利评级，并填写专利意见</p>
 
+			<span class="btn btn-info" onclick="window.location.href='{% url "patent-rating-list" %}'" style="margin-bottom:18px;"> 
+				<i class="glyphicon glyphicon-backward"></i>
+				<span>返回列表</span>
+			</span>
+			<span id="submit" class="btn btn-success" style="margin-bottom:18px;"> 
+				<i class="glyphicon glyphicon-ok"></i>
+				<span>提交评价</span>
+			</span>
+			<span class="btn btn-warning" onclick="window.location.href='{% url "patent-package-list" %}'" style="margin-bottom:18px;"> 
+				<i class="glyphicon glyphicon-save"></i>
+				<span>保存草稿</span>
+			</span>
+			<span class="btn btn-danger" onclick="window.location.href='{% url "patent-package-list" %}'" style="margin-bottom:18px; float:right;"> 
+				<i class="glyphicon glyphicon-remove"></i>
+				<span>拒绝</span>
+			</span>
+
 			{% include 'common/notifymsg.html' %}
 
 			<div class="content-box"><!-- Start Content Box -->
@@ -94,8 +112,7 @@ $(document).ready(function() {
 					<div class="content-box-content">
 
 						<div class="tab-content{% if not extmode %} default-tab{% endif %}" id="tab1" >
-					
-							<fieldset class="column-left">
+							<fieldset class="column-left-quarter">
 								<p><b>专利名称：</b>{{ patent.name }}</p>
 								<p><b>专利状态：</b>{{ patent.state }}</p>
 								<p><b>专利类型：</b>{{ patent.type }}</p>
@@ -136,7 +153,7 @@ $(document).ready(function() {
 								{% endif %}
 							</fieldset>
 
-							<fieldset class="column-right">
+							<fieldset class="column-right-3quarter">
 
 								{{ form.patent }} {{ form.expert }}
 <!--
@@ -161,7 +178,7 @@ $(document).ready(function() {
 
 								<h4>综合分 <span style="font-size:24px;">(<span id="rating_summary">5.3</span>)</span>&nbsp;&nbsp;<span id="rating_summary_raty" /></h4><hr/><br/>
 								
-								<fieldset class="column-left">
+								<fieldset class="column-left" style="width:40%">
 								<fieldset>
 									<label>法律价值</label>
 									<div style="text-align:right; width:200px;">
@@ -178,7 +195,7 @@ $(document).ready(function() {
 									<br/>
 								</fieldset>
 								</fieldset>
-								<fieldset class="column-right">
+								<fieldset class="column-right" style="width:55%">
 									<label>经济价值</label>
 									<div style="text-align:right; width:290px;">
 										<p>市场规模前景<span style="padding-left:10px;" class="rating_detail_raty" rating="6" weight="0.2" /></p>
@@ -202,17 +219,9 @@ $(document).ready(function() {
 									</label>
 									{{ form.remark }}
 								</fieldset>
-
-								<fieldset>
-									<input class="button" type="submit" id="save"   name="save" value="保存草稿" />
-									<input class="button" type="submit" id="submit" name="submit" value="提交" />
-									<input class="button" type="submit" id="reject" name="reject" value="拒绝" />
-									<input class="button" type="submit" id="cancel" name="cancel" value="取消" />
-								</fieldset>
-
 							</fieldset>
-							<div class="clear"></div><!-- End .clear -->
-						</div> <!-- End #tab1 -->
+							<div class="clear"></div>
+						</div>
 
 						<div class="tab-content" id="tab2" >
 							<iframe id="viewer" src = "/resources/Viewer.js/index.html#201310138440.9.pdf" width='100%' height='800' allowfullscreen webkitallowfullscreen></iframe>

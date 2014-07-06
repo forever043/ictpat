@@ -6,6 +6,7 @@
 {{ block.super }}
 <link rel="stylesheet" href="{% static "css/jquery.dataTables.css" %}" type="text/css" media="screen" />
 <link rel="stylesheet" href="{% static "css/bootstrap.btn.css" %}">
+<link rel="stylesheet" href="{% static "progress/style.css" %}" type="text/css" media="screen" />
 <style type="text/css">
 .expanded-group{
 	background: url("{% static "images/minus.jpg" %}") no-repeat scroll left center transparent;
@@ -93,13 +94,28 @@ $(document).ready(function() {
 							<p>名称：{{ patpkg.name }}</p>
 						</fieldset>
 						<fieldset class="column-left">
+							<p>专利数：{{ patpkg.patent_count }}</p>
+						</fieldset>
+						<fieldset class="column-right">
+							<p>专家评分数：{{ patpkg.rating_total }}</p>
+						</fieldset>
+						<fieldset class="column-left">
 							<p>提交时间：{{ patpkg.submit_date }}</p>
 						</fieldset>
 						<fieldset class="column-right">
 							<p>完成时间：{% if patpkg.finish_date %}{{patpkg.finish_date}}{% else %}进行中{% endif %}</p>
 						</fieldset>
 						<fieldset>
-							<p>专家列表：{% for expert in patpkg.expert_list %}{{ expert.last_name }}{{ expert.first_name }}&nbsp;&nbsp;{% endfor %}</p>
+							<p>专家评分完成度：
+								<div class="progress">
+									<span class="green" style="width: {{ patpkg.rating_percent }}%;"><span>{{ patpkg.rating_finish }}/{{ patpkg.rating_total }}</span></span>
+    							</div>
+							</p>
+							<p>评级报告完成度：
+								<div class="progress">
+									<span class="blue" style="width: {{ patpkg.report_percent }}%;"><span>{{ patpkg.report_finish }}/{{ patpkg.report_total }}</span></span>
+    							</div>
+							</p>
 						</fieldset>
 					</div>
 				</div>
@@ -107,20 +123,31 @@ $(document).ready(function() {
 
 			<div class="content-box column-right">
 				<div class="content-box-header">
-					<h3>专利评价包统计</h3>
+					<h3>专家列表</h3>
 					<div class="clear"></div>
 				</div>
 				<div class="content-box-content">
 					<div class="tab-content default-tab" id="tab1" >
-						<fieldset class="column-left">
-							<p>专利数：{{ patpkg.patent_count }}</p>
-						</fieldset>
-						<fieldset class="column-right">
-							<p>专家评分数：{{ patpkg.rating_total }}</p>
-						</fieldset>
 						<fieldset>
-							<p>专家评分完成度：{{ patpkg.rating_finish }}/{{ patpkg.rating_total }}</p>
-							<p>评级报告完成度：{{ patpkg.report_finish }}/{{ patpkg.report_total }}</p>
+							<table id="expert_list" class="datatable">
+								<thead>
+								<tr>
+									<th>专家姓名</th>
+									<th>单位</th>
+									<th>联系电话</th>
+									<th>E-Mail</th>
+								</tr>
+								<tbody>
+								{% for expert in patpkg.expert_list %}
+								<tr>
+									<td>{{ expert.last_name }}{{ expert.first_name }}</td>
+									<td>{{ expert.profile.organization }}</td>
+									<td>{{ expert.profile.phone }}</td>
+									<td>{{ expert.email }}</td>
+								</tr>
+								{% endfor %}
+								</tbody>
+							</table>
 						</fieldset>
 					</div>
 				</div>
