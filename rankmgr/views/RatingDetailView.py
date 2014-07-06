@@ -17,8 +17,9 @@ class PatentRatingDetailView(SuccessMessageMixin, UpdateView):
 	def get_context_data(self, **kwargs):
 		context = super(PatentRatingDetailView, self).get_context_data(**kwargs)
 		context['request'] = self.request
-		context['patent'] = self.object.patent.patent
-		context['history_rating'] = self.model.objects.filter(patent__patent=self.object.patent.patent).exclude(patent=self.object.patent).exclude(submit_date=None).exclude(rank=-1).order_by("submit_date")
+		context['patent'] = self.object.report.patent
+		context['ratings'] = self.object.ratings.split(',')
+		context['history_rating'] = self.model.objects.filter(report__patent=self.object.report.patent).exclude(report=self.object.report).exclude(submit_date=None).exclude(ratings=-1).order_by("submit_date")
 		if '__next__' in self.request.POST:
 			context['i__next__'] = self.request.POST['__next__']
 		else:
@@ -30,7 +31,7 @@ class PatentRatingDetailView(SuccessMessageMixin, UpdateView):
 		return context
 
 	def get_success_message(self, cleaned_data):
-		return self.success_message % dict(cleaned_data, **{'name':self.object.patent.patent.name})
+		return self.success_message % dict(cleaned_data, **{'name':self.object.report.patent.name})
 
 	def get_success_url(self):
 		return self.request.POST['__next__']

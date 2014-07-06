@@ -57,12 +57,12 @@ urlpatterns = patterns('',
 			column_template = { 
 				"name":			lambda o: o.patent.name,
 				"department":	lambda o: o.patent.department.name,
-				"count":		lambda o: u"%d/3" % PatentExpertRating.objects.filter(patent=o).count() })),
+				"count":		lambda o: u"%d/3" % PatentExpertRating.objects.filter(report=o).count() })),
 		name='patent-package-edit-json'),
 
 	url(r'package/(?P<pk>\d+)/experts/$',			# 获取某一专利的评审专家列表
 		login_required(DashMgrListJson.as_view(
-			model = PatentExpertRating, initial_list = ["patent"],
+			model = PatentExpertRating, initial_list = ["report"],
 			columns = [ 'expert' ],
 			column_template = { "expert":	lambda o: o.expert.pk})),
 		name='patent-package-patent-experts-json'),

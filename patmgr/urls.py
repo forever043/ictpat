@@ -47,12 +47,9 @@ urlpatterns = patterns('',
 												if o.authorize_code  else o.state.name,
 		   
 				"pk":			   lambda o: u'<a href="%(edit_url)s" title="修改"><img src="/resources/images/icons/pencil.png" alt="Edit" />修改</a>' \
-											  u'<!--<a href="#" class="delete" title="删除"><img src="/resources/images/icons/cross.png" alt="Delete" /></a>-->' \
-											  u'&nbsp;&nbsp;<a href="%(rank_url)s" title="评级">' \
-													u'<img src="/resources/images/icons/hammer_screwdriver.png" alt="Edit Meta" />评级</a>'
+											  u'<!--<a href="#" class="delete" title="删除"><img src="/resources/images/icons/cross.png" alt="Delete" /></a>-->'
 											  % {
 													"edit_url":  reverse_lazy('patent-edit', args=[o.pk]),
-													"rank_url":  reverse_lazy('patent-rank', args=[o.pk]),
 											  }
 			})), 
 		name='patent-list-json'),
@@ -90,17 +87,17 @@ urlpatterns = patterns('',
 				model = Patent,
 				success_url = reverse_lazy('patent-list'))),
 		name='patent-delete'),
-	url(r'^(?P<pk>\d+)/rank/$',
-		login_required(DashMgrRankView.as_view(
-				model = PatentRank,
-				ref_model = Patent,
-				ref_name = 'patent',
-				form_class = PatentRankForm,
-				template_name = 'patmgr/patent_rank.html',
-				default_referer_url = reverse_lazy('patent-list'),
-				success_message = u'专利 "%(name)s" 评价成功',
-				error_message = u'专利 "%(name)s" 评价失败')),
-		name='patent-rank'),
+	#url(r'^(?P<pk>\d+)/rank/$',
+	#	login_required(DashMgrRankView.as_view(
+	#			model = PatentRank,
+	#			ref_model = Patent,
+	#			ref_name = 'patent',
+	#			form_class = PatentRankForm,
+	#			template_name = 'patmgr/patent_rank.html',
+	#			default_referer_url = reverse_lazy('patent-list'),
+	#			success_message = u'专利 "%(name)s" 评价成功',
+	#			error_message = u'专利 "%(name)s" 评价失败')),
+	#	name='patent-rank'),
 
 	# Patent MetaField Manager
 	url(r'^meta/$',

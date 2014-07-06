@@ -22,11 +22,11 @@ class PatentPackageListView(ListView):
 		package_list = []
 		for o in self.object_list:
 			package_list.append((o, {
-				'count': PatentRatingReport.objects.filter(package=o).count(),
-				'rating_finish': PatentExpertRating.objects.filter(package=o).filter(submit_date__gt="1900-01-01").count(),
-				'rating_total' : PatentExpertRating.objects.filter(package=o).count(),
+				'count':         PatentRatingReport.objects.filter(package=o).count(),
 				'report_finish': PatentRatingReport.objects.filter(package=o).filter(finish_date__gt="1900-01-01").count(),
 				'report_total' : PatentRatingReport.objects.filter(package=o).count(),
+				'rating_finish': PatentExpertRating.objects.filter(report__package=o).filter(submit_date__gt="1900-01-01").count(),
+				'rating_total' : PatentExpertRating.objects.filter(report__package=o).count(),
 			}))
 		context[self.context_object_name] = package_list
 		return context

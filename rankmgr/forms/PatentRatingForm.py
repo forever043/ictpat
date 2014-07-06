@@ -34,17 +34,16 @@ class PatentExpertRatingForm(forms.ModelForm):
 	action = forms.CharField(widget=forms.HiddenInput(), initial="save")
 	class Meta:
 		model = PatentExpertRating
-		fields = [ 'rank', 'remark', 'submit_date' ]
-		RATING_CHOICES = ((1,1), (2,2), (3,3), (4,4), (5,5),)
+		fields = [ 'ratings', 'remark', 'submit_date' ]
 		widgets = {
-			'rank': forms.RadioSelect(attrs={'class':'star'}, choices=RATING_CHOICES),
+			'ratings':   forms.HiddenInput(),
 			'remark': forms.Textarea(attrs={'class':'text-input large-input'}),
 		}
 	def __init__(self, *args, **kwargs):
 		super(PatentExpertRatingForm, self).__init__(*args, **kwargs)
 		instance = getattr(self, 'instance', None)
 		if instance and instance.submit_date:
-			self.fields['rank'].widget.attrs['disabled'] = 'disabled'
+			self.fields['ratings'].widget.attrs['disabled'] = 'disabled'
 			self.fields['remark'].widget.attrs['readonly'] = True
 
 	def save(self, commit=True):

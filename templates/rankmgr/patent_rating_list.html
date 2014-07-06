@@ -78,8 +78,8 @@ $(document).ready(function() {
 							{% for rating in rating_list %}
 							<tr>
 								<td>{{ forloop.counter }}</td>
-								<td>{{ rating.patent.patent.name }}</td>
-								<td>{{ rating.package.submit_date }}</td>
+								<td>{{ rating.report.patent.name }}</td>
+								<td>{{ rating.report.package.submit_date }}</td>
 								<td><div id='raty' class="rating_list_raty" rating="7" /></td>
 								<td>
 									<a href="{% url 'patent-rating-detail' rating.pk %}" title="评级">
@@ -108,8 +108,8 @@ $(document).ready(function() {
 							{% for rating in submit_list %}
 							<tr>
 								<td>{{ forloop.counter }}</td>
-								<td>{{ rating.patent.patent.name }}</td>
-								<td>{{ rating.package.submit_date }}</td>
+								<td>{{ rating.report.patent.name }}</td>
+								<td>{{ rating.report.package.submit_date }}</td>
 								<td>{{ rating.submit_date }}</td>
 								<td>
 									<a href="{% url 'patent-rating-detail' rating.pk %}" title="查看">
@@ -137,8 +137,8 @@ $(document).ready(function() {
 							{% for rating in reject_list %}
 							<tr>
 								<td>{{ forloop.counter }}</td>
-								<td>{{ rating.patent.patent.name }}</td>
-								<td>{{ rating.package.submit_date }}</td>
+								<td>{{ rating.report.patent.name }}</td>
+								<td>{{ rating.report.package.submit_date }}</td>
 								<td>{{ rating.submit_date }}</td>
 							</tr>
 							{% endfor %}

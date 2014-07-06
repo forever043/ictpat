@@ -22,9 +22,9 @@ class DashMgrRatingExpertAdd(View):
 		if not self.request.is_ajax():
 			raise Http404;
 		try:
-			patent = PatentRatingReport.objects.get(pk=self.request.GET.get("patent"))
+			report = PatentRatingReport.objects.get(pk=self.request.GET.get("patent"))
 			expert = User.objects.get(pk=self.request.GET.get("expert"))
-			PatentExpertRating(package=patent.package, patent=patent, expert=expert).save()
+			PatentExpertRating(report=report, expert=expert).save()
 			response_data = {"result": "ok"}
 		except:
 			response_data = {"result": "err"}
@@ -39,9 +39,9 @@ class DashMgrRatingExpertDel(View):
 		if not self.request.is_ajax():
 			raise Http404;
 		try:
-			patent = PatentRatingReport.objects.get(pk=self.request.GET.get("patent"))
+			report = PatentRatingReport.objects.get(pk=self.request.GET.get("patent"))
 			expert = User.objects.get(pk=self.request.GET.get("expert"))
-			PatentExpertRating.objects.get(package=patent.package, patent=patent, expert=expert).delete()
+			PatentExpertRating.objects.get(report=report, expert=expert).delete()
 			response_data = {"result": "ok"}
 		except:
 			response_data = {"result": "err"}

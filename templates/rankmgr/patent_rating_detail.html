@@ -15,14 +15,23 @@
 <script type="text/javascript">
 function update_summary() {
 	var total = 0;
+	var ratings = '';
 	$('.rating_detail_raty').each(function() {
-		if ($(this).raty('score'))
+		if (ratings != '')
+			ratings += ',';
+
+		if ($(this).raty('score')) {
 			total += $(this).raty('score') * 2 * $(this).attr('weight');
+			ratings += $(this).raty('score') * 2;
+		}
+		else
+			ratings += '0';
 	});
 	$('#rating_summary').text(total.toFixed(1));
 	$('#rating_summary_raty').raty('readOnly', false);
 	$('#rating_summary_raty').raty('score', total/2);
 	$('#rating_summary_raty').raty('readOnly', true);
+	$('#id_{{ form.ratings.name }}').attr('value', ratings);
 }
 
 $(document).ready(function() {
@@ -72,7 +81,7 @@ $(document).ready(function() {
 				<i class="glyphicon glyphicon-backward"></i>
 				<span>返回列表</span>
 			</span>
-			<span id="submit" class="btn btn-success" style="margin-bottom:18px;"> 
+			<span id="submit" class="btn btn-success" onclick="alert($('#id_ratings').attr('value'));" style="margin-bottom:18px;"> 
 				<i class="glyphicon glyphicon-ok"></i>
 				<span>提交评价</span>
 			</span>
@@ -155,26 +164,7 @@ $(document).ready(function() {
 
 							<fieldset class="column-right-3quarter">
 
-								{{ form.patent }} {{ form.expert }}
-<!--
-								<p>
-									<label>
-										{{ form.rank.label }}*
-
-										{% if form.rank.errors %}
-										<span class="input-notification error png_bg">
-											{% for error in form.rank.errors %}
-											{{ error }}
-											{% endfor %}
-										</span>
-										{% endif %}
-									</label>
-									{% for radio in form.rank %}
-										{{ radio.tag }}
-									{% endfor %}
-									<br />
-								</p>
--->
+								{{ form.patent }} {{ form.expert }} {{ form.ratings }}
 
 								<h4>综合分 <span style="font-size:24px;">(<span id="rating_summary">5.3</span>)</span>&nbsp;&nbsp;<span id="rating_summary_raty" /></h4><hr/><br/>
 								
@@ -182,15 +172,15 @@ $(document).ready(function() {
 								<fieldset>
 									<label>法律价值</label>
 									<div style="text-align:right; width:200px;">
-										<p>依赖性<span style="padding-left:10px;" class="rating_detail_raty" rating="8" weight="0.2" /></p>
-										<p>侵权可判定性<span style="padding-left:10px;" class="rating_detail_raty" rating="6" weight="0.2" /></p>
+										<p>依赖性<span style="padding-left:10px;" class="rating_detail_raty" rating="{{ ratings.0 }}" weight="0.2" /></p>
+										<p>侵权可判定性<span style="padding-left:10px;" class="rating_detail_raty" rating="{{ ratings.1 }}" weight="0.2" /></p>
 									</div>
 									<br/>
 								</fieldset>
 								<fieldset>
 									<label>技术价值</label>
 									<div style="text-align:right; width:200px;">
-										<p>先进性<span style="padding-left:10px;" class="rating_detail_raty" rating="9" weight="0.2" /></p>
+										<p>先进性<span style="padding-left:10px;" class="rating_detail_raty" rating="{{ ratings.2 }}" weight="0.2" /></p>
 									</div>
 									<br/>
 								</fieldset>
@@ -198,8 +188,8 @@ $(document).ready(function() {
 								<fieldset class="column-right" style="width:55%">
 									<label>经济价值</label>
 									<div style="text-align:right; width:290px;">
-										<p>市场规模前景<span style="padding-left:10px;" class="rating_detail_raty" rating="6" weight="0.2" /></p>
-										<p>政策适应性（与标准相关性）<span style="padding-left:10px;" class="rating_detail_raty" rating="5" weight="0.2" /></p>
+										<p>市场规模前景<span style="padding-left:10px;" class="rating_detail_raty" rating="{{ ratings.3 }}" weight="0.2" /></p>
+										<p>政策适应性（与标准相关性）<span style="padding-left:10px;" class="rating_detail_raty" rating="{{ ratings.4 }}" weight="0.2" /></p>
 									</div>
 									<br/>
 								</fieldset>
@@ -230,8 +220,8 @@ $(document).ready(function() {
 						<div class="tab-content" id="tab3" >
 							<iframe id="viewer" src = "/resources/Viewer.js/index.html#201310138440.9.pdf" width='100%' height='800' allowfullscreen webkitallowfullscreen></iframe>
 						</div>
-					</div> <!-- End .content-box-content -->
-				</div> <!-- End .content-box -->
+					</div>
+				</div>
 			</form>
 
 						

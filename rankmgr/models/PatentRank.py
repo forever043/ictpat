@@ -19,9 +19,9 @@ class PatentPackage(models.Model):
 class PatentRatingReport(models.Model):
 	package = models.ForeignKey(PatentPackage, verbose_name='专利包')
 	patent = models.ForeignKey(Patent, verbose_name='专利')
-	rating = models.IntegerField(verbose_name='等级', null=True, blank=True)
+	rating = models.IntegerField(verbose_name='综合分', null=True, blank=True)
+	rank = models.IntegerField(verbose_name='等级', null=True, blank=True)
 	report = models.TextField(verbose_name='评级报告', null=True, blank=True)
-	experts = models.ManyToManyField(User, verbose_name='评分专家', null=True, blank=True)	# Should be removed
 	finish_date = models.DateField(verbose_name='完成时间', null=True, blank=True)
 	def __unicode__(self):
 		return u"[%s]%s" % (self.package.name, self.patent.name)
@@ -31,18 +31,17 @@ class PatentRatingReport(models.Model):
 		verbose_name_plural = u'专利评级报告'
 
 class PatentExpertRating(models.Model):
-	package = models.ForeignKey(PatentPackage, verbose_name='专利包')
-	patent = models.ForeignKey(PatentRatingReport, verbose_name='专利')
+	report = models.ForeignKey(PatentRatingReport, verbose_name='所属评级报告')
 	expert = models.ForeignKey(User, verbose_name='评分专家')
-	rank = models.IntegerField(verbose_name='专家评分', null=True, blank=True)
+	ratings = models.CommaSeparatedIntegerField(verbose_name='专家评分', max_length=15, default='0,0,0,0,0')
 	remark = models.TextField(verbose_name='专家评语', null=True, blank=True)
 	submit_date = models.DateField(verbose_name='提交时间', null=True, blank=True)
 	def __unicode__(self):
-		return u"[%s][%s]%s" % (self.package.name, self.patent.patent.name, self.expert.last_name + self.expert.first_name)
+		return u"%s: %s[%s]" % (self.report.package.name, self.report.patent.name, self.expert.last_name + self.expert.first_name)
 	class Meta:
 		app_label = 'rankmgr'
 		verbose_name = u'专家评分'
 		verbose_name_plural = u'专家评分'
-		unique_together=(("package", "patent", "expert"),)
+		unique_together=(("report", "expert"),)
 		permissions = (("can_operate_rating", u"可以操作专利评价"),)
 

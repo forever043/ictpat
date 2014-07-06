@@ -73,7 +73,7 @@ $(document).ready(function() {
 
 			// 从服务器获取当前选择专利的评审专家，并在表格中标记
 			$.getJSON(
-				"{% url 'patent-package-patent-experts-json' patpkg.pk %}?patent=" + selected_patent_id
+				"{% url 'patent-package-patent-experts-json' patpkg.pk %}?report=" + selected_patent_id
 			).done(function(json) {
 				$.each(json.aaData, function (idx, aaData) {
 					expertTable.find("tr[id=" + aaData.expert + "]").addClass("selected-row");
