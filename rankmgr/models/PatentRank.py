@@ -34,7 +34,7 @@ class PatentExpertRating(models.Model):
 	report = models.ForeignKey(PatentRatingReport, verbose_name='所属评级报告')
 	expert = models.ForeignKey(User, verbose_name='评分专家')
 	ratings = models.CommaSeparatedIntegerField(verbose_name='专家评分', max_length=15, default='0,0,0,0,0')
-	remark = models.TextField(verbose_name='专家评语', null=True, blank=True)
+	remark = models.TextField(verbose_name='专家意见', null=True, blank=True)
 	submit_date = models.DateField(verbose_name='提交时间', null=True, blank=True)
 	def __unicode__(self):
 		return u"%s: %s[%s]" % (self.report.package.name, self.report.patent.name, self.expert.last_name + self.expert.first_name)

@@ -20,11 +20,11 @@ class PatentReportDetailView(SuccessMessageMixin, UpdateView):
 	def get_context_data(self, **kwargs):
 		context = super(PatentReportDetailView, self).get_context_data(**kwargs)
 		context['request'] = self.request
-		context['expert_rating'] = PatentExpertRating.objects.filter(patent=self.object)
+		context['expert_rating'] = PatentExpertRating.objects.filter(report=self.object)
 		return context
 
 	def get_success_message(self, cleaned_data):
-		return self.success_message % dict(cleaned_data, **{'name':self.object.patent.name})
+		return self.success_message % dict(cleaned_data, **{'name':self.object.report.name})
 
 	def get_success_url(self):
 		return self.request.POST['__next__']

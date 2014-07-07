@@ -193,12 +193,47 @@ $(document).ready(function() {
 									</div>
 									<br/>
 								</fieldset>
+								<fieldset class="column-right" style="width:400px; padding-left:10px; padding-right:10px; float:left; border:solid 1px; ">
+									<p>
+									<b>法律价值->依赖性</b><br/>
+									<b>说明：</b>一项专利的实施是否依赖于现有授权专利的许可，以及本专利是否作为后续申请专利的基础</p>
+									<table style="width:400px; text-align:center;">
+										<tr><td width="20%">1-2</td><td width="20%">3-4</td><td width="20%">5-6</td><td width="20%">7-8</td><td width="20%">9-10</td></tr>
+										<tr><td>是</td><td></td><td>不好判断</td><td></td><td>否</td></tr>
+									</table>
+									<br/>
+<!--
+									<b>说明：</b>基于一项专利的权利要求，是否容易发现和判断侵权行为的发生，是否容易取证，进而行使诉讼的权利
+									<table style="width:400px; text-align:center;">
+										<tr><td width="20%">1-2</td><td width="20%">3-4</td><td width="20%">5-6</td><td width="20%">7-8</td><td width="20%">9-10</td></tr>
+										<tr><td>非常难于判定</td><td>比较难于判定</td><td>难以确定</td><td>比较易于判定</td><td>非常易于判定</td></tr>
+									</table>
+									<br/>
+									<b>说明：</b>专利技术在当前进行评估的时间点上与本领域的其他技术相比是否处于领先地位
+									<table style="width:400px; text-align:center;">
+										<tr><td width="20%">1-2</td><td width="20%">3-4</td><td width="20%">5-6</td><td width="20%">7-8</td><td width="20%">9-10</td></tr>
+										<tr><td>非常落后</td><td>落后</td><td>一般</td><td>先进</td><td>非常先进</td></tr>
+									</table>
+									<br/>
+									<b>说明：</b>专利技术经过充分的市场推广后，在未来其对应专利产品或工艺总共有可能实现的销售收益
+									<table style="width:400px; text-align:center;">
+										<tr><td width="20%">1-2</td><td width="20%">3-4</td><td width="20%">5-6</td><td width="20%">7-8</td><td width="20%">9-10</td></tr>
+										<tr><td>很小（1千万以下）（1千万以下）</td><td>较小（1千万-1亿）</td><td>中等（1亿-10亿）</td><td>较大（10亿-100亿）</td><td>很大（100亿以上）</td></tr>
+									</table>
+									<br/>
+									<b>说明：</b>国家与地方政策对应用一项专利技术的相关规定，包括专利技术是否是政策所鼓励和扶持的技术，是否在政策有各种优惠政策
+									<table style="width:400px; text-align:center;">
+										<tr><td width="20%">1-2</td><td width="20%">3-4</td><td width="20%">5-6</td><td width="20%">7-8</td><td width="20%">9-10</td></tr>
+										<tr><td>与政策导向不一致</td><td></td><td>无明确要求</td><td></td><td>政策鼓励</td></tr>
+									</table>
+-->
+								</fieldset>
 								<div class="clear" />
 								
 								<fieldset>
 									<label>
 										<h4>{{ form.remark.label }}*</h4>
-										<small>评语内容不能少于50个汉字</small>
+										<small>意见内容不能少于50个汉字</small>
 										{% if form.remark.errors %}
 										<span class="input-notification error png_bg">
 											{% for error in form.remark.errors %}
