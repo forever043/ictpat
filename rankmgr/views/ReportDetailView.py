@@ -9,6 +9,7 @@ from django.db import IntegrityError, DatabaseError
 from django.core.exceptions import ObjectDoesNotExist
 from django.core import exceptions
 import json
+import string
 
 from rankmgr.models import PatentRatingReport, PatentExpertRating
 
@@ -21,6 +22,22 @@ class PatentReportDetailView(SuccessMessageMixin, UpdateView):
 		context = super(PatentReportDetailView, self).get_context_data(**kwargs)
 		context['request'] = self.request
 		context['expert_rating'] = PatentExpertRating.objects.filter(report=self.object)
+		self.object.rating = 0;
+		self.object.rating_finished = 0;
+		for o in context['expert_rating']:
+			o.expert.profile = o.expert.get_profile()
+			if o.ratings != "-1":
+				o.ratings = o.ratings.split(',')
+				o.weights = o.report.package.rating_weight.split(',')
+				o.summary = 0
+				for x in xrange(len(o.weights)):
+					o.summary += string.atof(o.weights[x]) * string.atof(o.ratings[x])
+				if o.submit_date:
+					self.object.rating += o.summary
+					self.object.rating_finished += 1;
+		self.object.rating = self.object.rating/self.object.rating_finished;
+		self.object.rank = self.object.rating/2;
+
 		return context
 
 	def get_success_message(self, cleaned_data):

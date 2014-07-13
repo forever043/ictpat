@@ -13,16 +13,15 @@ class PatentRatingReportForm(forms.ModelForm):
 		model = PatentRatingReport
 		fields = [ 'rating', 'rank', 'report', 'finish_date' ]
 		widgets = {
-			'ratings':   forms.HiddenInput(),
-			'rank':   forms.TextInput(),
+			'rating': forms.HiddenInput(),
+			'rank':   forms.HiddenInput(),
 			'remark': forms.Textarea(attrs={'class':'text-input large-input'}),
 		}
+
 	def __init__(self, *args, **kwargs):
 		super(PatentRatingReportForm, self).__init__(*args, **kwargs)
 		instance = getattr(self, 'instance', None)
 		if instance and instance.finish_date:
-			self.fields['rank'].widget.attrs['disabled'] = 'disabled'
-			self.fields['ratings'].widget.attrs['disabled'] = 'disabled'
 			self.fields['remark'].widget.attrs['readonly'] = True
 
 	def save(self, commit=True):

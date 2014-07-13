@@ -15,30 +15,9 @@
 <script type="text/javascript" src="{% static "jquery.raty/jquery.raty.js" %}"></script>
 <script type="text/javascript" src="{% static "jquery.powerFloat/js/jquery-powerFloat.js" %}"></script>
 <script type="text/javascript">
-function update_summary() {
-	var total = 0;
-	var ratings = '';
-	$('.rating_detail_raty').each(function() {
-		if (ratings != '')
-			ratings += ',';
-
-        var this_rate = 0;
-		if ($(this).raty('score'))
-			this_rate = $(this).raty('score') * 2;
-
-		total += this_rate * $(this).attr('weight');
-		ratings += this_rate;
-	});
-	$('#rating_summary').text(total.toFixed(1));
-	$('#rating_summary_raty').raty('readOnly', false);
-	$('#rating_summary_raty').raty('score', total/2);
-	$('#rating_summary_raty').raty('readOnly', true);
-	$('#id_{{ form.ratings.name }}').attr('value', ratings);
-}
-
 $(document).ready(function() {
 	// 初始化按钮动作
-    $('#return').click(function() { window.location.href='{% url "patent-rating-list" %}'; });
+    $('#return').click(function() { window.location.href='{% url "patent-package-detail" report.package.pk %}'; });
 	$('.submit').each(function() {
 		$(this).click(function() {
 			$("#id_{{ form.action.name }}").val($(this).attr('id'));
@@ -49,10 +28,15 @@ $(document).ready(function() {
 
 	// Rating Stars
 	$.fn.raty.defaults.path = '{% static "jquery.raty/images" %}';
-	$('#rating_summary_raty').raty({
+	$('#patent_rank_raty').raty({
+		number: 5,
+		score: function() { return $(this).attr('rank'); },
+	});
+	$('.rating_summary_raty').raty({
 		half: true,
 		number: 5,
 		round : { down: 0, full: 1, up: 1 },
+		score: function() { return $(this).attr('rating')/2; },
 		readOnly: true
 	});
 	$('.rating_detail_raty').raty({
@@ -60,9 +44,16 @@ $(document).ready(function() {
 		number: 5,
 		score: function() { return $(this).attr('rating')/2; },
 		readOnly: function() { return $(this).attr('readonly'); },
-		click: function(score, evt) { update_summary(); }
 	});
-	update_summary();
+
+	// 评价详细信息
+	$('.rating_summary_raty').powerFloat({
+		eventType: "hover",
+		targetMode: "common",
+		//target: $('#detail_1'),
+		container: "plugin",
+		reverseSharp: "true"
+	});
 });
 </script>
 {% endblock %}
@@ -89,9 +80,42 @@ $(document).ready(function() {
 			{% include 'common/notifymsg.html' %}
 
 			<div class="content-box">
-				
 				<div class="content-box-header">
-					<h3>专利信息</h3>
+					<h3>专利评级</h3>
+					<div class="clear"></div>
+				</div>
+
+				<div class="content-box-content">
+					<div class="tab-content default-tab">
+						<form method="post">
+							{% csrf_token %}
+							<input type="hidden" name="__next__" value="{{ i__next__ }}">
+							{{ form.action }}
+							{{ form.rating }} {{ form.rank }}
+
+							<fieldset class="column-left">
+								<p><b>专利名称：</b>{{ report.patent.name }}
+								</p>
+								<label>专利评级：<span id="patent_rank_raty" style="padding-left:10px;" rank="{{ report.rank }}" /></label>
+							</fieldset>
+							<fieldset class="column-right">
+								<h3 style="float:right;">综合分：<span style="font-size:24px;">{{ report.rating }}</span>（{{ report.rating_finished }}/3）</h3>
+							</fieldset>
+							<div class="clear"></div>
+							<fieldset>
+								<label>{{ form.report.label }}：</label>
+								{{ form.report }}
+							</fieldset>
+							<div class="clear"></div>
+						</form>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="content-box">
+				<div class="content-box-header">
+					<h3>专利信息与专家评价</h3>
 					<ul class="content-box-tabs">
 						<li><a href="#tab1" class="default-tab">专利信息</a></li>
 						<li><a href="#tab2">技术交底书</a></li>
@@ -100,111 +124,106 @@ $(document).ready(function() {
 					<div class="clear"></div>
 				</div>
 
-
-				<form method="post">
-
-					{% csrf_token %}
-
-					{{ form.action }}
-					<input type="hidden" name="__next__" value="{{ i__next__ }}">
-				
-					<div class="content-box-content">
-
-						<div class="tab-content{% if not extmode %} default-tab{% endif %}" id="tab1" >
-							<fieldset class="column-left-quarter">
-								<p><b>专利名称：</b>{{ report.patent.name }}</p>
-								<p><b>发明人：</b>{{ report.patent.inventors }}</p>
-								<p><b>所属部门：</b>{{ report.patent.department }}</p>
-								<p><b>专利状态：</b>{{ report.patent.state }}</p>
-								<p><b>专利类型：</b>{{ report.patent.type }}</p>
-								<p>
-									{% if not report.patent.apply_file and not report.patent.authorize_file %}
-									<label>暂无相关证书</label>
-									{% else %}
-									<label>
-										查看证书：
-										{% if report.patent.apply_file %}
-										<a target="_blank" href="{% url 'patent-file-service' report.patent.apply_code %}">申请证书</a>
-										&nbsp;&nbsp;&nbsp;&nbsp;
-										{% endif %}
-										{% if report.patent.authorize_file %}
-										<a target="_blank" href="{% url 'patent-file-service' report.patent.authorize_code %}">授权证书</a>
-										{% endif %}
-									</label>
-									{% endif %}
-								</p>
-								{% if history_rating %}
-								<p><b>历史评价：</b></p>
-								<div style="padding-left:10px">
-								{% for o in history_rating %}
-								<p>
-									<input class="star" type="radio" name="rating{{ o.pk }}" value="1" disabled="disabled" {% ifequal o.rank 1 %}checked="checked"{% endifequal %}/>
-									<input class="star" type="radio" name="rating{{ o.pk }}" value="2" disabled="disabled" {% ifequal o.rank 2 %}checked="checked"{% endifequal %}/>
-									<input class="star" type="radio" name="rating{{ o.pk }}" value="3" disabled="disabled" {% ifequal o.rank 3 %}checked="checked"{% endifequal %}/>
-									<input class="star" type="radio" name="rating{{ o.pk }}" value="4" disabled="disabled" {% ifequal o.rank 4 %}checked="checked"{% endifequal %}/>
-									<input class="star" type="radio" name="rating{{ o.pk }}" value="5" disabled="disabled" {% ifequal o.rank 5 %}checked="checked"{% endifequal %}/>
-									&nbsp;&nbsp;({{ o.submit_date }})
-									<br/>
-									{% if o.remark %}{{ o.remark }}{% else %}<i>无评价内容</i>{% endif %}
-								</p>
-								{% endfor %}
-								</div>
+				<div class="content-box-content">
+					<div class="tab-content{% if not extmode %} default-tab{% endif %}" id="tab1" >
+						<fieldset class="column-left-quarter">
+							<p><b>专利名称：</b>{{ report.patent.name }}</p>
+							<p><b>发明人：</b>{{ report.patent.inventors }}</p>
+							<p><b>所属部门：</b>{{ report.patent.department }}</p>
+							<p><b>专利状态：</b>{{ report.patent.state }}</p>
+							<p><b>专利类型：</b>{{ report.patent.type }}</p>
+							<p>
+								{% if not report.patent.apply_file and not report.patent.authorize_file %}
+								<label>暂无相关证书</label>
 								{% else %}
-								<p><b>暂无历史评价</b></p>
+								<label>
+									查看证书：
+									{% if report.patent.apply_file %}
+									<a target="_blank" href="{% url 'patent-file-service' report.patent.apply_code %}">申请证书</a>
+									&nbsp;&nbsp;&nbsp;&nbsp;
+									{% endif %}
+									{% if report.patent.authorize_file %}
+									<a target="_blank" href="{% url 'patent-file-service' report.patent.authorize_code %}">授权证书</a>
+									{% endif %}
+								</label>
 								{% endif %}
-							</fieldset>
+							</p>
+							{% if history_rating %}
+							<p><b>历史评价：</b></p>
+							<div style="padding-left:10px">
+							{% for o in history_rating %}
+							<p>
+								<span class="rating_summary_raty" rating={{ o.rating }} rel="无信息" />
+								({{ o.submit_date }})
+								<br/>
+								{% if o.remark %}{{ o.remark }}{% else %}<i>无评价内容</i>{% endif %}
+							</p>
+							{% endfor %}
+							</div>
+							{% else %}
+							<p><b>暂无历史评价</b></p>
+							{% endif %}
+						</fieldset>
 
-							<fieldset class="column-right-3quarter">
-
-								{{ form.ratings }}
-
-								<h4>综合分 <span style="font-size:24px;">(<span id="rating_summary">5.3</span>)</span>&nbsp;&nbsp;<span id="rating_summary_raty" /></h4><hr/><br/>
+						<fieldset class="column-right-3quarter">
+							{% for rating in expert_rating %}
+							<fieldset>
+							{% ifnotequal forloop.counter 1 %}<hr/><br/>{% endifnotequal %}
+								<h4>专家{{ forloop.counter }}：
+									{{ rating.expert.last_name }}{{ rating.expert.first_name }}
+									<span style="font-size:24px;">(<span name="rating_summary">{% if rating.submit_date %}{{ rating.summary }}{% else %}---{% endif %}</span>)</span>
+									&nbsp;&nbsp;<span class="rating_summary_raty" rel="detail_{{ forloop.counter }}" {% if rating.submit_date %}rating={{ rating.summary }}{% endif %} />
+									<span style="float:right;">{% if rating.submit_date %}{{ rating.submit_date }}{% else %}进行中{% endif %}</span>
+								</h4>
+								<p>
+									<span style="padding-right: 20px;"><b>所属单位：</b>{{ rating.expert.profile.organization }}</span>
+									<span style="padding-right: 20px;"><b>电子邮件：</b>{{ rating.expert.email }}</span>
+									<span style="padding-right: 20px;"><b>联系电话：</b>{{ rating.expert.profile.phone }}</span>
+									<br/>
+									<b>研究领域：</b>{{ rating.expert.profile.research_field }}
+								</p>
+								<p><b>专利评价：</b>{% if rating.remark %}<br/>{{ rating.remark }}{% else %}无评价{% endif %}</p>
 								
-								<fieldset class="column-left" style="width:40%">
-								<fieldset>
-									<label>法律价值</label>
-									<div style="text-align:right; width:200px;">
-										<p>依赖性<span style="padding-left:10px;" class="rating_detail_raty" rating="{{ ratings.0 }}" weight="0.2" readonly="true" /></p>
-										<p>侵权可判定性<span style="padding-left:10px;" class="rating_detail_raty" rating="{{ ratings.1 }}" weight="0.2" readonly="true" /></p>
-									</div>
-									<br/>
+								<!-- 评价详情 -->
+								<div id="detail_{{ forloop.counter}}" class="float_remind_box" style="display:none;">
+								<fieldset class="column-left" style="width:40%;">
+									<fieldset>
+										<label>法律价值</label>
+										<div style="text-align:right; width:200px;">
+											<p>依赖性<span style="padding-left:10px;" class="rating_detail_raty" rating="{{ rating.ratings.0 }}" weight="0.2" readonly="true" /></p>
+											<p>侵权可判定性<span style="padding-left:10px;" class="rating_detail_raty" rating="{{ rating.ratings.1 }}" weight="0.2" readonly="true" /></p>
+										</div>
+										<br/>
+									</fieldset>
+									<fieldset>
+										<label>技术价值</label>
+										<div style="text-align:right; width:200px;">
+											<p>先进性<span style="padding-left:10px;" class="rating_detail_raty" rating="{{ rating.ratings.2 }}" weight="0.2" readonly="true" /></p>
+										</div>
+									</fieldset>
 								</fieldset>
-								<fieldset>
-									<label>技术价值</label>
-									<div style="text-align:right; width:200px;">
-										<p>先进性<span style="padding-left:10px;" class="rating_detail_raty" rating="{{ ratings.2 }}" weight="0.2" readonly="true" /></p>
-									</div>
-									<br/>
-								</fieldset>
-								</fieldset>
-								<fieldset class="column-right" style="width:55%">
+								<fieldset class="column-right" style="width:55%;">
 									<label>经济价值</label>
 									<div style="text-align:right; width:290px;">
-										<p>市场规模前景<span style="padding-left:10px;" class="rating_detail_raty" rating="{{ ratings.3 }}" weight="0.2" readonly="true" /></p>
-										<p>政策适应性（与标准相关性）<span style="padding-left:10px;" class="rating_detail_raty" rating="{{ ratings.4 }}" weight="0.2" readonly="true" /></p>
+										<p>市场规模前景<span style="padding-left:10px;" class="rating_detail_raty" rating="{{ rating.ratings.3 }}" weight="0.2" readonly="true" /></p>
+										<p>政策适应性（与标准相关性）<span style="padding-left:10px;" class="rating_detail_raty" rating="{{ rating.ratings.4 }}" weight="0.2" readonly="true" /></p>
 									</div>
-									<br/>
 								</fieldset>
-								<div class="clear" />
+								</div>
+							</fieldset> <!-- 评价详情结束 -->
+							{% endfor %}
+						</fieldset>
+						<div class="clear"></div>
+					</div>
 
-								<fieldset>
-									{{ form.report }}
-								<fieldset>
-							</fieldset>
-							<div class="clear"></div>
-						</div>
+					<div class="tab-content" id="tab2" >
+						<iframe id="viewer" src = "/resources/Viewer.js/index.html#201310138440.9.pdf" width='100%' height='800' allowfullscreen webkitallowfullscreen></iframe>
+					</div>
 
-						<div class="tab-content" id="tab2" >
-							<iframe id="viewer" src = "/resources/Viewer.js/index.html#201310138440.9.pdf" width='100%' height='800' allowfullscreen webkitallowfullscreen></iframe>
-						</div>
-
-						<div class="tab-content" id="tab3" >
-							<iframe id="viewer" src = "/resources/Viewer.js/index.html#201310138440.9.pdf" width='100%' height='800' allowfullscreen webkitallowfullscreen></iframe>
-						</div>
+					<div class="tab-content" id="tab3" >
+						<iframe id="viewer" src = "/resources/Viewer.js/index.html#201310138440.9.pdf" width='100%' height='800' allowfullscreen webkitallowfullscreen></iframe>
 					</div>
 				</div>
-			</form>
-
-						
+			</div>
 {% endblock %}
 
