@@ -71,6 +71,7 @@ $(document).ready(function() {
 								<th width="30%">专利名称</th>
 								<th>申请评价时间</th>
 								<th>历史评级</th>
+								<th>我的评价</th>
 								<th>操作</th>
 							</tr>
 							</thead>
@@ -80,10 +81,11 @@ $(document).ready(function() {
 								<td>{{ forloop.counter }}</td>
 								<td>{{ rating.report.patent.name }}</td>
 								<td>{{ rating.report.package.submit_date }}</td>
-								<td><div id='raty' class="rating_list_raty" rating="7" /></td>
+								<td>{% if rating.current_rating %}<div id='raty' class="rating_list_raty" rating="{{ rating.current_rating }}" />{% else %}----{% endif %}</td>
+								<td>{% if rating.my_rating %}<div id='raty' class="rating_list_raty" rating="{{ rating.my_rating }}" />{% else %}----{% endif %}</td>
 								<td>
-									<a href="{% url 'patent-rating-detail' rating.pk %}" title="评级">
-										<img src="{% static "images/icons/hammer_screwdriver.png" %}"/>评级
+									<a href="{% url 'patent-rating-detail' rating.pk %}" title="评价">
+										<img src="{% static "images/icons/hammer_screwdriver.png" %}"/>评价
 									</a>
 								</td>
 							</tr>
@@ -100,6 +102,7 @@ $(document).ready(function() {
 								<th>编号</th>
 								<th>专利名称</th>
 								<th>申请评价时间</th>
+								<th>我的评价</th>
 								<th>提交时间</th>
 								<th>操作</th>
 							</tr>
@@ -110,6 +113,7 @@ $(document).ready(function() {
 								<td>{{ forloop.counter }}</td>
 								<td>{{ rating.report.patent.name }}</td>
 								<td>{{ rating.report.package.submit_date }}</td>
+								<td><div id='raty' class="rating_list_raty" rating="{{ rating.my_rating }}" /></td>
 								<td>{{ rating.submit_date }}</td>
 								<td>
 									<a href="{% url 'patent-rating-detail' rating.pk %}" title="查看">

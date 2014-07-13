@@ -88,7 +88,9 @@ urlpatterns = patterns('',
 	# 撰写评级报告
 	url(r'package/(?P<pkgpk>\d+)/report/(?P<pk>\d+)/$',
 		login_required(PatentReportDetailView.as_view(
+			model = PatentRatingReport,
 			context_object_name = 'report',
+			form_class = PatentRatingReportForm,
 			template_name='rankmgr/patent_report_detail.html')),
 		name='patent-report-detail'),
 

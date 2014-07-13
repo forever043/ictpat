@@ -186,8 +186,8 @@ $(document).ready(function() {
 									<span style="float:right;"><a onclick="window.location.href='{% url 'patent-report-detail' pkgpk=o.report.package.pk pk=o.report.pk %}';" href="#">撰写评级报告</a></span>
 								</td>
 								<td>{{ o.expert.last_name }}{{ o.expert.first_name}}</td>
-								<td>{% if o.submit_date %}{% ifequal o.rank -1 %}已拒绝{% else %}已完成{% endifequal %}{% else %}进行中{% endif %}</td>
-								<td>{% if o.rank %}{% ifequal o.rank -1 %}----{% else %}{{ o.rank }}{% endifequal %}{% else %}----{% endif %}</td>
+								<td>{% if o.submit_date %}{% ifequal o.ratings "-1" %}已拒绝{% else %}已完成{% endifequal %}{% else %}进行中{% endif %}</td>
+								<td>{% if o.submit_date %}{% ifequal o.ratings "-1" %}----{% else %}{{ o.ratings }}{% endifequal %}{% else %}----{% endif %}</td>
 								<td>{% if o.remark %}{{ o.remark }}{% else %}----{% endif %}</td>
 								<td>{% if o.submit_date %}{{ o.submit_date }}{% else %}----{% endif %}</td>
 								<td>

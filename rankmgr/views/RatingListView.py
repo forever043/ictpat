@@ -10,8 +10,9 @@ from django.db import IntegrityError, DatabaseError
 from django.core.exceptions import ObjectDoesNotExist
 from django.core import exceptions
 import json
+import string
 
-from rankmgr.models import PatentExpertRating
+from rankmgr.models import *
 
 class PatentRatingListView(ListView):
 	model = PatentExpertRating
@@ -19,11 +20,33 @@ class PatentRatingListView(ListView):
 	def get_context_data(self, **kwargs):
 		context = super(PatentRatingListView, self).get_context_data(**kwargs)
 		context['request'] = self.request
-		context['submit_list'] = self.model.objects.filter(expert=self.request.user).exclude(submit_date=None).exclude(ratings="-1").order_by("report__package")
 		context['reject_list'] = self.model.objects.filter(expert=self.request.user).exclude(submit_date=None).filter(ratings="-1").order_by("report__package")
+		context['submit_list'] = self.model.objects.filter(expert=self.request.user).exclude(submit_date=None).exclude(ratings="-1").order_by("report__package")
+		for o in context['submit_list']:
+			ratings = o.ratings.split(',')
+			weights = o.report.package.rating_weight.split(',')
+			o.my_rating = 0
+			for x in xrange(len(weights)):
+				o.my_rating += string.atof(weights[x]) * string.atof(ratings[x])
+		
 		return context
 
 	def get_queryset(self):
 		object_list = self.model.objects.filter(expert=self.request.user, submit_date=None).exclude(report__package__submit_date=None).order_by("report__package")
+		# 历史评级 和 用户当前评级
+		for o in object_list:
+			# 历史评级
+			history_reports = PatentRatingReport.objects.filter(patent=o.report.patent).exclude(rating=None).exclude(rank=None).order_by("finish_date");
+			if history_reports:
+				o.current_rating = history_reports[0].rating
+			else:
+				o.current_rating = 0
+
+			# 用户当前评级
+			ratings = o.ratings.split(',')
+			weights = o.report.package.rating_weight.split(',')
+			o.my_rating = 0
+			for x in xrange(len(weights)):
+				o.my_rating += string.atof(weights[x]) * string.atof(ratings[x])
 		return object_list
 

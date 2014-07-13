@@ -51,7 +51,7 @@ class PatentExpertRatingForm(forms.ModelForm):
 			self.instance.submit_date = datetime.now()
 		elif self.cleaned_data["action"] == "reject":
 			self.instance.submit_date = datetime.now()
-			self.instance.rank = -1
+			self.instance.ratings = "-1"
 		else:
 			self.instance.submit_date = None
 		instance = super(PatentExpertRatingForm, self).save(commit)

@@ -10,7 +10,7 @@ admin.site.register(ExpertProfile, ExpertProfileAdmin)
 
 # 专利评价管理
 class PatentPackageAdmin(admin.ModelAdmin):
-	list_display = ('name', 'submit_date', 'finish_date')
+	list_display = ('name', 'rating_weight', 'submit_date', 'finish_date')
 	choise_display = 'name'
 class PatentRatingReportAdmin(admin.ModelAdmin):
 	list_display = ('package', 'patent', 'rating', 'rank', 'report', 'finish_date')

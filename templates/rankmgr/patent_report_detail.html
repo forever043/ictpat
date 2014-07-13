@@ -4,25 +4,66 @@
 {% block csslink %}
 {{ block.super }}
 <link href='{% static "css/jquery.rating.css" %}' type="text/css" rel="stylesheet"/>
+<link rel="stylesheet" href="{% static "css/bootstrap.btn.css" %}">
+<link rel="stylesheet" href="{% static "jquery.raty/jquery.raty.css" %}" type="text/css" media="screen" />
+<link rel="stylesheet" href="{% static "jquery.powerFloat/css/powerFloat.css" %}" type="text/css" media="screen" />
 {% endblock %}
 
 {% block scripts %}
 {{ block.super }}
 <script type="text/javascript" src="{% static "scripts/jquery.rating.js" %}"></script>
+<script type="text/javascript" src="{% static "jquery.raty/jquery.raty.js" %}"></script>
+<script type="text/javascript" src="{% static "jquery.powerFloat/js/jquery-powerFloat.js" %}"></script>
 <script type="text/javascript">
-$(document).ready(function() {
-	$('input[name="cancel"]').each(function () {
-		$(this).click(function() {
-			window.location.href='{{ i__next__ }}';
-			return false;
-		})
+function update_summary() {
+	var total = 0;
+	var ratings = '';
+	$('.rating_detail_raty').each(function() {
+		if (ratings != '')
+			ratings += ',';
+
+        var this_rate = 0;
+		if ($(this).raty('score'))
+			this_rate = $(this).raty('score') * 2;
+
+		total += this_rate * $(this).attr('weight');
+		ratings += this_rate;
 	});
-    $('input[type="submit"]').each(function() {
-        $(this).click(function() {
-            $("#id_action").val($(this).attr('name'));
-        });
-    });
-})
+	$('#rating_summary').text(total.toFixed(1));
+	$('#rating_summary_raty').raty('readOnly', false);
+	$('#rating_summary_raty').raty('score', total/2);
+	$('#rating_summary_raty').raty('readOnly', true);
+	$('#id_{{ form.ratings.name }}').attr('value', ratings);
+}
+
+$(document).ready(function() {
+	// 初始化按钮动作
+    $('#return').click(function() { window.location.href='{% url "patent-rating-list" %}'; });
+	$('.submit').each(function() {
+		$(this).click(function() {
+			$("#id_{{ form.action.name }}").val($(this).attr('id'));
+			$("form:first").submit();
+		});
+	});
+	$('#reject').click(function() { alert("该操作无法撤销，请确认是否要拒绝评价该专利"); return false; });
+
+	// Rating Stars
+	$.fn.raty.defaults.path = '{% static "jquery.raty/images" %}';
+	$('#rating_summary_raty').raty({
+		half: true,
+		number: 5,
+		round : { down: 0, full: 1, up: 1 },
+		readOnly: true
+	});
+	$('.rating_detail_raty').raty({
+		half: true,
+		number: 5,
+		score: function() { return $(this).attr('rating')/2; },
+		readOnly: function() { return $(this).attr('readonly'); },
+		click: function(score, evt) { update_summary(); }
+	});
+	update_summary();
+});
 </script>
 {% endblock %}
 
@@ -30,14 +71,26 @@ $(document).ready(function() {
 			
 			<!-- Page Head -->
 			<h2>专利评级报告</h2>
-			<p id="page-intro">为专利定级并撰写评级报告</p>
+			<p id="page-intro">为专利定级，并撰写专利评级报告</p>
+
+			<span id="return" class="btn btn-info" style="margin-bottom:18px;"> 
+				<i class="glyphicon glyphicon-backward"></i>
+				<span>返回列表</span>
+			</span>
+			<span id="submit" class="btn btn-success submit" style="margin-bottom:18px;"> 
+				<i class="glyphicon glyphicon-ok"></i>
+				<span>提交评级</span>
+			</span>
+			<span id="save" class="btn btn-warning submit" style="margin-bottom:18px;"> 
+				<i class="glyphicon glyphicon-save"></i>
+				<span>保存草稿</span>
+			</span>
 
 			{% include 'common/notifymsg.html' %}
 
-			<div class="content-box"><!-- Start Content Box -->
+			<div class="content-box">
 				
 				<div class="content-box-header">
-					
 					<h3>专利信息</h3>
 					<ul class="content-box-tabs">
 						<li><a href="#tab1" class="default-tab">专利信息</a></li>
@@ -45,8 +98,7 @@ $(document).ready(function() {
 						<li><a href="#tab3">权利要求书</a></li>
 					</ul>
 					<div class="clear"></div>
-					
-				</div> <!-- End .content-box-header -->
+				</div>
 
 
 				<form method="post">
@@ -58,9 +110,8 @@ $(document).ready(function() {
 				
 					<div class="content-box-content">
 
-						<div class="tab-content default-tab" id="tab1" >
-					
-							<fieldset class="column-left">
+						<div class="tab-content{% if not extmode %} default-tab{% endif %}" id="tab1" >
+							<fieldset class="column-left-quarter">
 								<p><b>专利名称：</b>{{ report.patent.name }}</p>
 								<p><b>发明人：</b>{{ report.patent.inventors }}</p>
 								<p><b>所属部门：</b>{{ report.patent.department }}</p>
@@ -82,11 +133,10 @@ $(document).ready(function() {
 									</label>
 									{% endif %}
 								</p>
-								{% if expert_rating %}
-								<p><b>专家评价：</b></p>
+								{% if history_rating %}
+								<p><b>历史评价：</b></p>
 								<div style="padding-left:10px">
-								{% for o in expert_rating %}
-								<p>{{ o.expert.last_name }}{{ o.expert.first_name }}</p>
+								{% for o in history_rating %}
 								<p>
 									<input class="star" type="radio" name="rating{{ o.pk }}" value="1" disabled="disabled" {% ifequal o.rank 1 %}checked="checked"{% endifequal %}/>
 									<input class="star" type="radio" name="rating{{ o.pk }}" value="2" disabled="disabled" {% ifequal o.rank 2 %}checked="checked"{% endifequal %}/>
@@ -100,55 +150,49 @@ $(document).ready(function() {
 								{% endfor %}
 								</div>
 								{% else %}
-								<p><b>暂无专家评价</b></p>
+								<p><b>暂无历史评价</b></p>
 								{% endif %}
 							</fieldset>
 
-							<fieldset class="column-right">
+							<fieldset class="column-right-3quarter">
 
-								{{ form.patent }} {{ form.expert }}
-								<p>
-									<label>
-										{{ form.rank.label }}*
+								{{ form.ratings }}
 
-										{% if form.rank.errors %}
-										<span class="input-notification error png_bg">
-											{% for error in form.rank.errors %}
-											{{ error }}
-											{% endfor %}
-										</span>
-										{% endif %}
-									</label>
-									{% for radio in form.rank %}
-										{{ radio.tag }}
-									{% endfor %}
-									<br />
-								</p>
+								<h4>综合分 <span style="font-size:24px;">(<span id="rating_summary">5.3</span>)</span>&nbsp;&nbsp;<span id="rating_summary_raty" /></h4><hr/><br/>
 								
-								<p>
-									<label>
-										{{ form.remark.label }}*
-										{% if form.remark.errors %}
-										<span class="input-notification error png_bg">
-											{% for error in form.remark.errors %}
-											{{ error }}
-											{% endfor %}
-										</span>
-										{% endif %}
-									</label>
-									{{ form.remark }}
-								</p>
+								<fieldset class="column-left" style="width:40%">
+								<fieldset>
+									<label>法律价值</label>
+									<div style="text-align:right; width:200px;">
+										<p>依赖性<span style="padding-left:10px;" class="rating_detail_raty" rating="{{ ratings.0 }}" weight="0.2" readonly="true" /></p>
+										<p>侵权可判定性<span style="padding-left:10px;" class="rating_detail_raty" rating="{{ ratings.1 }}" weight="0.2" readonly="true" /></p>
+									</div>
+									<br/>
+								</fieldset>
+								<fieldset>
+									<label>技术价值</label>
+									<div style="text-align:right; width:200px;">
+										<p>先进性<span style="padding-left:10px;" class="rating_detail_raty" rating="{{ ratings.2 }}" weight="0.2" readonly="true" /></p>
+									</div>
+									<br/>
+								</fieldset>
+								</fieldset>
+								<fieldset class="column-right" style="width:55%">
+									<label>经济价值</label>
+									<div style="text-align:right; width:290px;">
+										<p>市场规模前景<span style="padding-left:10px;" class="rating_detail_raty" rating="{{ ratings.3 }}" weight="0.2" readonly="true" /></p>
+										<p>政策适应性（与标准相关性）<span style="padding-left:10px;" class="rating_detail_raty" rating="{{ ratings.4 }}" weight="0.2" readonly="true" /></p>
+									</div>
+									<br/>
+								</fieldset>
+								<div class="clear" />
 
-								<p>
-									<input class="button" type="submit" id="save"   name="save" value="保存草稿" />
-									<input class="button" type="submit" id="submit" name="submit" value="提交" />
-									<input class="button" type="submit" id="reject" name="reject" value="拒绝" />
-									<input class="button" type="submit" id="cancel" name="cancel" value="取消" />
-								</p>
-
+								<fieldset>
+									{{ form.report }}
+								<fieldset>
 							</fieldset>
-							<div class="clear"></div><!-- End .clear -->
-						</div> <!-- End #tab1 -->
+							<div class="clear"></div>
+						</div>
 
 						<div class="tab-content" id="tab2" >
 							<iframe id="viewer" src = "/resources/Viewer.js/index.html#201310138440.9.pdf" width='100%' height='800' allowfullscreen webkitallowfullscreen></iframe>
@@ -157,8 +201,8 @@ $(document).ready(function() {
 						<div class="tab-content" id="tab3" >
 							<iframe id="viewer" src = "/resources/Viewer.js/index.html#201310138440.9.pdf" width='100%' height='800' allowfullscreen webkitallowfullscreen></iframe>
 						</div>
-					</div> <!-- End .content-box-content -->
-				</div> <!-- End .content-box -->
+					</div>
+				</div>
 			</form>
 
 						
