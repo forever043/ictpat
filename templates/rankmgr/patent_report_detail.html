@@ -31,13 +31,18 @@ $(document).ready(function() {
 	$('#patent_rank_raty').raty({
 		number: 5,
 		score: function() { return $(this).attr('rank'); },
+		readOnly: function() { return $(this).attr('readonly'); },
+		target: '#id_{{ form.rank.name }}',
+		targetType: 'score',
+		targetKeep: true
 	});
 	$('.rating_summary_raty').raty({
 		half: true,
 		number: 5,
 		round : { down: 0, full: 1, up: 1 },
 		score: function() { return $(this).attr('rating')/2; },
-		readOnly: true
+		readOnly: true,
+		hints: ['', '', '', '', '']
 	});
 	$('.rating_detail_raty').raty({
 		half: true,
@@ -68,6 +73,7 @@ $(document).ready(function() {
 				<i class="glyphicon glyphicon-backward"></i>
 				<span>返回列表</span>
 			</span>
+			{% if not report.finish_date %}
 			<span id="submit" class="btn btn-success submit" style="margin-bottom:18px;"> 
 				<i class="glyphicon glyphicon-ok"></i>
 				<span>提交评级</span>
@@ -76,6 +82,7 @@ $(document).ready(function() {
 				<i class="glyphicon glyphicon-save"></i>
 				<span>保存草稿</span>
 			</span>
+			{% endif %}
 
 			{% include 'common/notifymsg.html' %}
 
@@ -94,12 +101,16 @@ $(document).ready(function() {
 							{{ form.rating }} {{ form.rank }}
 
 							<fieldset class="column-left">
-								<p><b>专利名称：</b>{{ report.patent.name }}
-								</p>
-								<label>专利评级：<span id="patent_rank_raty" style="padding-left:10px;" rank="{{ report.rank }}" /></label>
+								<p><b>专利名称：</b>{{ report.patent.name }}</p>
+								<label>专利评级：
+									<span id="patent_rank_raty" style="padding-left:10px;" {% if report.finish_date %}readonly=true{%endif%} rank="{{ report.rank }}" />
+								</label>
 							</fieldset>
 							<fieldset class="column-right">
-								<h3 style="float:right;">综合分：<span style="font-size:24px;">{{ report.rating }}</span>（{{ report.rating_finished }}/3）</h3>
+								<h3 style="float:right;">综合分：
+									<span style="font-size:24px;">{{ report.rating|floatformat:1 }}</span>
+									（{{ report.rating_finished }}/3）
+								</h3>
 							</fieldset>
 							<div class="clear"></div>
 							<fieldset>
@@ -171,9 +182,12 @@ $(document).ready(function() {
 							{% ifnotequal forloop.counter 1 %}<hr/><br/>{% endifnotequal %}
 								<h4>专家{{ forloop.counter }}：
 									{{ rating.expert.last_name }}{{ rating.expert.first_name }}
-									<span style="font-size:24px;">(<span name="rating_summary">{% if rating.submit_date %}{{ rating.summary }}{% else %}---{% endif %}</span>)</span>
-									&nbsp;&nbsp;<span class="rating_summary_raty" rel="detail_{{ forloop.counter }}" {% if rating.submit_date %}rating={{ rating.summary }}{% endif %} />
-									<span style="float:right;">{% if rating.submit_date %}{{ rating.submit_date }}{% else %}进行中{% endif %}</span>
+									<span style="font-size:24px;">(<span name="rating_summary">{% if rating.submit_date  and rating.summary %}{{ rating.summary|floatformat:1 }}{% else %}---{% endif %}</span>)</span>
+									&nbsp;&nbsp;<span class="rating_summary_raty" {% if rating.submit_date and rating.summary %}rel="detail_{{ forloop.counter }}" rating={{ rating.summary }}{% endif %} />
+									<span style="float:right;">
+									{% if rating.submit_date %}{% ifequal rating.ratings "-1" %}<a style="font-size:12px" href="#">（更换专家）</a>已拒绝{% else %}{{ rating.submit_date }}{% endifequal %}
+									{% else %}进行中{% endif %}
+									</span>
 								</h4>
 								<p>
 									<span style="padding-right: 20px;"><b>所属单位：</b>{{ rating.expert.profile.organization }}</span>

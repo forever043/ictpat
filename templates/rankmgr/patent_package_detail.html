@@ -63,8 +63,6 @@ $(document).ready(function() {
 			<h2>专利评价包详情</h2>
 			<p id="page-intro">查看专利评价包信息详情</p>
 
-			{% include 'common/notifymsg.html' %}
-
 			<span class="btn btn-info" onclick="window.location.href='{% url "patent-package-list" %}'" style="margin-bottom:18px;"> 
 				<i class="glyphicon glyphicon-backward"></i>
 				<span>返回列表</span>
@@ -82,6 +80,8 @@ $(document).ready(function() {
 			{% endif %}
 
 			<div class="clear"></div>
+
+			{% include 'common/notifymsg.html' %}
 
 			<div class="content-box column-left">
 				<div class="content-box-header">
