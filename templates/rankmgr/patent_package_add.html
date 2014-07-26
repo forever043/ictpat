@@ -113,6 +113,15 @@ $(document).ready(function() {
 
 			{% include 'common/notifymsg.html' %}
 
+			<span id="submit" class="btn btn-success" style="margin-bottom:18px;"> 
+				<i class="glyphicon glyphicon-ok"></i>
+				<span>创建专利包</span>
+			</span>
+			<span class="btn btn-info" onclick="window.location.href='{% url "patent-package-list" %}'" style="margin-bottom:18px;"> 
+				<i class="glyphicon glyphicon-remove"></i>
+				<span>取消</span>
+			</span>
+
 			<div class="content-box">
 				
 				<div class="content-box-header">
@@ -140,6 +149,11 @@ $(document).ready(function() {
 									{{ form.name }}
 								</p>
 							</fieldset>
+
+							<fieldset>
+								评分权重
+							</fieldset>
+<!--
 							<fieldset style="text-align:right; padding-right:30px;">
 								<span id="submit" class="btn btn-success" style="margin-bottom:18px;"> 
 									<i class="glyphicon glyphicon-ok"></i>
@@ -150,6 +164,7 @@ $(document).ready(function() {
 									<span>取消</span>
 								</span>
 							</fieldset>
+-->
 						</form>
 					</div>
 				</div>

@@ -99,8 +99,19 @@ urlpatterns = patterns('',
 	url(r'^rating/list/$',
 		login_required(PatentRatingListView.as_view(
 			context_object_name = 'rating_list',
-			template_name = 'rankmgr/patent_rating_list.html')),
+			template_name = 'rankmgr/patent_rating_pending_list.html')),
 			name='patent-rating-list'),
+	url(r'^rating/list/submit/$',
+		login_required(PatentRatingListView.as_view(
+			context_object_name = 'rating_list',
+			template_name = 'rankmgr/patent_rating_submit_list.html')),
+			name='submit-patent-rating-list'),
+	url(r'^rating/list/reject/$',
+		login_required(PatentRatingListView.as_view(
+			context_object_name = 'rating_list',
+			template_name = 'rankmgr/patent_rating_reject_list.html')),
+			name='reject-patent-rating-list'),
+
 	url(r'^rating/(?P<pk>\d+)/$',
 		login_required(PatentRatingDetailView.as_view(
 				model = PatentExpertRating,
@@ -111,6 +122,8 @@ urlpatterns = patterns('',
 				error_message = u'专利 "%(name)s" 评价失败')),
 		name='patent-rating-detail'),
 
+    ########### 评价导出 #############
+    # 专利评价导出
 	url(r'^export/(?P<pk>\d+)/$',
 		login_required(PatentPackageExportView.as_view()), name='patent-package-export'),
 )

@@ -20,13 +20,38 @@ class PATRatingOption(NavOption):
 		'args': [],
 		'kwargs': { 'perm': 'rankmgr.can_operate_rating' },
 	}
-	regex = re.compile(r'^/dashboard/rank/rating/(?:list|(\d+))/')
+	regex = re.compile(r'^/dashboard/rank/rating/(?:list|(\d+))/$')
+	def active_if(self, url, path):
+		return self.regex.match(path)
+
+class PATSubmittedRatingOption(NavOption):
+	name = '已评价专利列表'
+	view = 'submit-patent-rating-list'
+	conditional = {
+		'function': user_has_perm,
+		'args': [],
+		'kwargs': { 'perm': 'rankmgr.can_operate_rating' },
+	}
+	regex = re.compile(r'^/dashboard/rank/rating/(?:list/submit|(\d+))/')
+	def active_if(self, url, path):
+		return self.regex.match(path)
+
+class PATRejectedRatingOption(NavOption):
+	name = '已拒绝专利列表'
+	view = 'reject-patent-rating-list'
+	conditional = {
+		'function': user_has_perm,
+		'args': [],
+		'kwargs': { 'perm': 'rankmgr.can_operate_rating' },
+	}
+	regex = re.compile(r'^/dashboard/rank/rating/(?:list/reject|(\d+))/')
 	def active_if(self, url, path):
 		return self.regex.match(path)
 
 class SummaryOption(NavOption):
 	name = '知识产权评级统计'
 	view = 'rank-summary'
+	conditional = { 'function': user_is_staff, 'args': [], 'kwargs': {} }
 
 class ExpertMgrOption(NavOption):
 	name = '专家管理'
@@ -41,7 +66,7 @@ class RankMgrNav(Nav):
 	name = '知识产权等级评定'
 	view = 'rank'
 	nav_group = 'main'
-	options = [PATPackageOption, PATRatingOption, SummaryOption, ExpertMgrOption]
+	options = [PATPackageOption, PATRatingOption, PATSubmittedRatingOption, PATRejectedRatingOption, SummaryOption, ExpertMgrOption]
 
 nav_groups.register(RankMgrNav)
 

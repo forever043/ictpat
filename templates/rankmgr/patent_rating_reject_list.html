@@ -1,0 +1,80 @@
+{% extends "common/mgrbase.html" %}
+{% load staticfiles %}
+
+{% block csslink %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static "css/jquery.dataTables.css" %}" type="text/css" media="screen" />
+<link rel="stylesheet" href="{% static "jquery.raty/jquery.raty.css" %}" type="text/css" media="screen" />
+<style type="text/css"> tr:hover td { background-color:#e0e0e0; } </style>
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }}
+<script type="text/javascript" src="{% static "scripts/jquery.dataTables.min.js" %}"></script>
+<script type="text/javascript" src="{% static "scripts/simpla.dataTables.configuration.js" %}"></script>
+<script type="text/javascript" src="{% static "jquery.raty/jquery.raty.js" %}"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#reject-list').dataTable({
+		"bSort": false,
+		"sPaginationType": "full_numbers",
+		"oLanguage": oLanguage
+	});
+
+	$.fn.raty.defaults.path = '{% static "jquery.raty/images" %}';
+	$('.rating_list_raty').raty({
+		readOnly: true,
+		half: true,
+		number: 5,
+		score: function() { return $(this).attr('rating')/2; }
+	});
+});
+</script>
+{% endblock %}
+
+{% block main_content %}
+			
+			<!-- Page Head -->
+			<h2>已拒绝评专利价列表</h2>
+			<p id="page-intro">查看已拒绝评价的专利列表，如需重新评价，请与系统管理员联系</p>
+
+			<div class="content-box">
+				
+				<div class="content-box-header">
+					<h3>专利列表</h3>
+					<ul class="content-box-tabs">
+						<li><a href="#tab_reject" class="default-tab">已拒绝</a></li>
+					</ul>
+					<div class="clear"></div>
+				</div>
+				
+				<div class="content-box-content">
+					<div class="tab-content default-tab" id="tab_reject">
+						<table id="reject-list" class="datatable">
+							<thead>
+							<tr>
+								<th>编号</th>
+								<th>专利名称</th>
+								<th>申请评价时间</th>
+								<th>拒绝时间</th>
+							</tr>
+							</thead>
+							<tbody>
+							{% for rating in reject_list %}
+							<tr>
+								<td>{{ forloop.counter }}</td>
+								<td>{{ rating.report.patent.name }}</td>
+								<td>{{ rating.report.package.submit_date }}</td>
+								<td>{{ rating.submit_date }}</td>
+							</tr>
+							{% endfor %}
+							</tbody>
+						</table>
+						<div class="clear"></div>
+					</div>
+					
+				</div>
+				
+			</div>
+{% endblock %}
+
