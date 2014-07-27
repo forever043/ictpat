@@ -40,11 +40,11 @@ class FTPOption(NavOption):
 
 class ProfileOption(NavOption):
 	name = '个人信息维护'
-	view = 'scrmgr.views.scrmgr'
+	view = 'sysmgr-profile'
 
 class LoginMgrOption(NavOption):
 	name = '修改密码'
-	view = 'scrmgr.views.scrmgr'
+	view = 'sysmgr-profile'
 
 class SysMgrNav(Nav):
 	name = '系统信息维护'

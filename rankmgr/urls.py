@@ -116,6 +116,7 @@ urlpatterns = patterns('',
 		login_required(PatentRatingDetailView.as_view(
 				model = PatentExpertRating,
 				form_class = PatentExpertRatingForm,
+                context_object_name = 'rating',
 				template_name = 'rankmgr/patent_rating_detail.html',
 				default_referer_url = reverse_lazy('patent-rating-list'),
 				success_message = u'专利 "%(name)s" 评价成功',
