@@ -13,12 +13,12 @@ tr:hover td { background-color:#e0e0e0; }
 <h2>专利检索管理</h2>
 <p id="page-intro">管理专利检索方案，并向检索系统导出数据</p>
 
-{% include 'common/notifymsg.html' %}
-
 <span class="btn btn-success" onclick="window.location.href='{% url 'patent-retrvscheme-export' %}'" style="margin-bottom:18px;">
 	<i class="glyphicon glyphicon-upload"></i>
 	<span>导出到检索系统</span>
 </span>
+
+{% include 'common/notifymsg.html' %}
 
 <div class="content-box">
 
@@ -49,7 +49,7 @@ tr:hover td { background-color:#e0e0e0; }
 							<option value="{{ scheme.pk }}">{{ scheme.name }}</option>
 						{% endfor %}
 						</select> 
-						<input class="button" type="button" value="新建" />
+						<!--<input class="button" type="button" value="新建" />-->
 					</p>
 
 				</fieldset>

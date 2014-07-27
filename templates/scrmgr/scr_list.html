@@ -242,14 +242,13 @@
 									<td>
 										<!-- Icons -->
 										<a href="{% url 'scr-edit' software.id %}" title="编辑">
-											<img src="{% static "images/icons/pencil.png" %}" alt="Edit" />
+											<img src="{% static "images/icons/pencil.png" %}" alt="Edit" />编辑
 										</a>
-										<a href="{% url 'scr-delete' software.id %}" class="delete" title="删除">
+										<!--
+                                        <a href="{% url 'scr-delete' software.id %}" class="delete" title="删除">
 											<img src="{% static "images/icons/cross.png" %}" alt="Delete" />
 										</a>
-										<a href="{% url 'scr-rank' software.id %}" title="评级">
-											<img src="{% static "images/icons/hammer_screwdriver.png" %}" alt="Edit Meta" />
-										</a>
+										-->
 									</td>
 								</tr>
 								{% endfor %}

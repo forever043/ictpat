@@ -130,7 +130,7 @@ from django.core.urlresolvers import reverse
 LOGIN_REDIRECT_URL = reverse('dashboard')
 LOGIN_URL = reverse('dashboard-login')
 LOGOUT_URL = reverse('dashboard-logout')
-AUTH_PROFILE_MODULE = 'rankmgr.ExpertProfile'
+#AUTH_PROFILE_MODULE = 'rankmgr.ExpertProfile'
 
 #for filebrowsers
 #FILEBROWSER_DIRECTORY = os.path.join(BASE_DIR, 'uploads')

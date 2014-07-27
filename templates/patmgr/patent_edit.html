@@ -1,18 +1,9 @@
 {% extends "common/mgrbase.html" %}
 {% load staticfiles %}
 
-{% block scripts %}
+{% block csslink %}
 {{ block.super }}
-<script type="text/javascript">
-$(document).ready(function() {
-	$('input[name="cancel"]').each(function () {
-		$(this).click(function() {
-			window.location.href='{{ i__next__ }}';
-			return false;
-		})
-	})
-})
-</script>
+<link rel="stylesheet" href="{% static "css/bootstrap.btn.css" %}">
 {% endblock %}
 
 {% block main_content %}
@@ -20,6 +11,15 @@ $(document).ready(function() {
 			<!-- Page Head -->
 			<h2>专利信息更新</h2>
 			<p id="page-intro">分别更新基本信息和扩展信息</p>
+
+    		<span class="btn btn-info" onclick="window.location.href='{{ i__next__ }}'" style="margin-bottom:18px;">
+				<i class="glyphicon glyphicon-backward"></i>
+				<span>返回列表</span>
+			</span>
+			<span class="btn btn-success" onclick="$('form:first').submit();" style="margin-bottom:18px;">
+				<i class="glyphicon glyphicon-ok"></i>
+				<span>提交修改</span>
+			</span>
 
 			{% include 'common/notifymsg.html' %}
 
@@ -216,11 +216,6 @@ $(document).ready(function() {
 							</fieldset>
 
 							<div class="clear"></div><!-- End .clear -->
-
-							<p>
-								<input class="button" type="submit" name="save" value="保存" />
-								<input class="button" type="submit" name="cancel" value="取消" />
-							</p>
 					
 						</div> <!-- End #tab1 -->
 
@@ -248,12 +243,6 @@ $(document).ready(function() {
 
 							<div class="clear"></div><!-- End .clear -->
 
-							<p>
-								<input class="button" type="submit" name="save" value="保存" />
-								<input class="button" type="submit" name="cancel" value="取消" />
-							</p>
-
-						
 						</div> <!-- End #tab2 -->	
 					
 					</div> <!-- End .content-box-content -->

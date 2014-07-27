@@ -32,6 +32,5 @@ class RankExpertListView(ListView):
 		for expert in expert_list:
 			expert.rating_finish = PatentExpertRating.objects.filter(expert=expert).filter(submit_date__gt="1900-01-01").count()
 			expert.rating_total  = PatentExpertRating.objects.filter(expert=expert).count()
-			expert.profile = expert.get_profile()
 		return expert_list
 

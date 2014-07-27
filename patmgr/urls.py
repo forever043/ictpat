@@ -34,9 +34,10 @@ urlpatterns = patterns('',
 			retrieve_list = [ 'department', 'state', 'type', 'name', 'inventors', 'apply_code', 'authorize_code' ],
 			columns = [ 'department', 'name', 'inventors', 'apply_code', 'apply_date', 'authorize_code' ],
 			column_template = { 
-				"name":			 lambda o: u'<a href="%(url)s">%(name)s</a>' % {
-													"url":  reverse_lazy('patent-detail', args=[o.pk]),
-													"name": o.name},
+				#"name":			 lambda o: u'<a href="%(url)s">%(name)s</a>' % {
+				#									"url":  reverse_lazy('patent-detail', args=[o.pk]),
+				#									"name": o.name},
+                "name": lambda o: u'%s' % o.name,
 				"department":		lambda o: u'%s' % o.department.name,
 				"apply_code":	   lambda o: u'<a href="%(url)s" target="_blank">%(name)s</a>' % { 
 													"url":  reverse_lazy('patent-file-service', args=[o.apply_code]),

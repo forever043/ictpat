@@ -27,8 +27,6 @@ class PatentReportDetailView(SuccessMessageMixin, UpdateView):
 
 		# 遍历每一个专家评分
 		for o in context['expert_rating']:
-			# 获取专家profile信息
-			o.expert.profile = o.expert.get_profile()
 			# 如果不是拒绝评价，则计算综合分
 			if o.ratings != "-1":
 				# 分项分值

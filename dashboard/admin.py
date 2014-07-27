@@ -7,3 +7,7 @@ class DashboardConfigAdmin(admin.ModelAdmin):
 	choise_display = 'pk'
 admin.site.register(DashboardConfig, DashboardConfigAdmin)
 
+class ExpertProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'phone', 'organization', 'research_field')
+    choise_display = ('user')
+admin.site.register(ExpertProfile, ExpertProfileAdmin)

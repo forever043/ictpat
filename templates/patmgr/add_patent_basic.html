@@ -12,12 +12,16 @@
 			<h2>专利申请登记</h2>
 			<p id="page-intro">使用普通模式登记单个专利申请，或使用高级模式批量登记专利申请</p>
 
-			{% include 'common/notifymsg.html' %}
-
 			<span class="btn btn-success" onclick="$('form:first').submit();" style="margin-bottom:18px;">
 				<i class="glyphicon glyphicon-ok"></i>
 				<span>提交专利</span>
 			</span>
+            <span class="btn btn-info" onclick="window.location.href='{% url 'patent-add' %}';" style="margin-bottom:18px;">
+				<i class="glyphicon glyphicon-remove"></i>
+				<span>清空</span>
+			</span>
+
+			{% include 'common/notifymsg.html' %}
 
 			<div class="content-box"><!-- Start Content Box -->
 				
@@ -221,10 +225,6 @@
 								{% endfor %}
 
 							</fieldset>
-
-							<p>
-								<input class="button" type="submit" value="提交" />
-							</p>
 					
 						</form>
 					</div> <!-- End #tab_basic -->

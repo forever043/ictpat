@@ -141,8 +141,8 @@ $(document).ready(function() {
 								{% for expert in patpkg.expert_list %}
 								<tr>
 									<td>{{ expert.last_name }}{{ expert.first_name }}</td>
-									<td>{{ expert.profile.organization }}</td>
-									<td>{{ expert.profile.phone }}</td>
+									<td>{{ expert.expertprofile.organization }}</td>
+									<td>{{ expert.expertprofile.phone }}</td>
 									<td>{{ expert.email }}</td>
 								</tr>
 								{% endfor %}

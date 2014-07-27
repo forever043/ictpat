@@ -190,11 +190,11 @@ $(document).ready(function() {
 									</span>
 								</h4>
 								<p>
-									<span style="padding-right: 20px;"><b>所属单位：</b>{{ rating.expert.profile.organization }}</span>
+									<span style="padding-right: 20px;"><b>所属单位：</b>{{ rating.expert.expertprofile.organization }}</span>
 									<span style="padding-right: 20px;"><b>电子邮件：</b>{{ rating.expert.email }}</span>
-									<span style="padding-right: 20px;"><b>联系电话：</b>{{ rating.expert.profile.phone }}</span>
+									<span style="padding-right: 20px;"><b>联系电话：</b>{{ rating.expert.expertprofile.phone }}</span>
 									<br/>
-									<b>研究领域：</b>{{ rating.expert.profile.research_field }}
+									<b>研究领域：</b>{{ rating.expert.expertprofile.research_field }}
 								</p>
 								<p><b>专利评价：</b>{% if rating.remark %}<br/>{{ rating.remark }}{% else %}无评价{% endif %}</p>
 								

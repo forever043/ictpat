@@ -79,10 +79,10 @@ $(document).ready(function() {
 								<tr>
 									<td>{{ expert.username }}</td>
 									<td>{{ expert.last_name }}{{ expert.first_name }}</td>
-									<td>{{ expert.profile.organization }}</td>
-									<td>{{ expert.profile.research_field }}</td>
+									<td>{{ expert.expertprofile.organization }}</td>
+									<td>{{ expert.expertprofile.research_field }}</td>
 									<td>{{ expert.email }}</td>
-									<td>{{ expert.profile.phone }}</td>
+									<td>{{ expert.expertprofile.phone }}</td>
 									<td>{{ expert.rating_finish }}/{{ expert.rating_total }}</td>
 									<td>{% if expert.is_active %}正常{% else %}已停用{% endif %}
 									<td>
@@ -118,10 +118,10 @@ $(document).ready(function() {
 								<tr>
 									<td>{{ expert.username }}</td>
 									<td>{{ expert.last_name }}{{ expert.first_name }}</td>
-									<td>{{ expert.profile.organization }}</td>
-									<td>{{ expert.profile.research_field }}</td>
+									<td>{{ expert.expertprofile.organization }}</td>
+									<td>{{ expert.expertprofile.research_field }}</td>
 									<td>{{ expert.email }}</td>
-									<td>{{ expert.profile.phone }}</td>
+									<td>{{ expert.expertprofile.phone }}</td>
 									<td>
 										<a href="#">启用帐号</a>
 									</td>
