@@ -34,7 +34,7 @@ class PatentReportDetailView(SuccessMessageMixin, UpdateView):
 				# 分项分值
 				o.ratings = o.ratings.split(',')
 				# 权重
-				o.weights = o.report.package.rating_weight.split(',')
+				o.weights = [string.atof(x)/10 for x in o.report.package.rating_weight.split(',')]
 				o.summary = 0
 				for x in xrange(len(o.weights)):
 					o.summary += string.atof(o.weights[x]) * string.atof(o.ratings[x])

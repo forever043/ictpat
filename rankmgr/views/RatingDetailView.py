@@ -34,6 +34,8 @@ class PatentRatingDetailView(SuccessMessageMixin, UpdateView):
 		return self.success_message % dict(cleaned_data, **{'name':self.object.report.patent.name})
 
 	def get_success_url(self):
+		if self.request.POST["action"] == "save":
+			return ""
 		return self.request.POST['__next__']
 
 	def form_invalid(self, form):

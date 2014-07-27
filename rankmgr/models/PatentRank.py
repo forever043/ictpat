@@ -7,7 +7,7 @@ from patmgr.models import Patent
 class PatentPackage(models.Model):
 	name = models.CharField(verbose_name='专利包名称', max_length=100, unique=True)
 	rating_weight = models.CommaSeparatedIntegerField(verbose_name='评分权重', max_length=20,
-													  default='0.2,0.2,0.2,0.2,0.2')
+													  default='2,2,2,2,2')
 	submit_date = models.DateField(verbose_name='提交时间', null=True, blank=True)
 	finish_date = models.DateField(verbose_name='完成时间', null=True, blank=True)
 	def __unicode__(self):

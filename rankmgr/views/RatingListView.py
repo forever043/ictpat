@@ -24,7 +24,7 @@ class PatentRatingListView(ListView):
 		context['submit_list'] = self.model.objects.filter(expert=self.request.user).exclude(submit_date=None).exclude(ratings="-1").order_by("report__package")
 		for o in context['submit_list']:
 			ratings = o.ratings.split(',')
-			weights = o.report.package.rating_weight.split(',')
+			weights = [string.atof(x)/10 for x in o.report.package.rating_weight.split(',')]
 			o.my_rating = 0
 			for x in xrange(len(weights)):
 				o.my_rating += string.atof(weights[x]) * string.atof(ratings[x])
@@ -44,7 +44,7 @@ class PatentRatingListView(ListView):
 
 			# 用户当前评级
 			ratings = o.ratings.split(',')
-			weights = o.report.package.rating_weight.split(',')
+			weights = [string.atof(x)/10 for x in o.report.package.rating_weight.split(',')]
 			o.my_rating = 0
 			for x in xrange(len(weights)):
 				o.my_rating += string.atof(weights[x]) * string.atof(ratings[x])

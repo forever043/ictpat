@@ -39,18 +39,18 @@ function update_summary() {
 $(document).ready(function() {
 	// 初始化按钮动作
     $('#return').click(function() { window.location.href='{% url "patent-rating-list" %}'; });
-	$('.submit').each(function() {
-		$(this).click(function() {
-			$("#id_{{ form.action.name }}").val($(this).attr('id'));
-			$("form:first").submit();
-		});
-	});
-	$('#save').click(function() {
-		if ($('#id_{{ form.remark.name }}').val().match(/[\u4e00-\u9fa5]/g).length < 50) {
+    $('#submit').click(function() {
+        var word_match = $('#{{ form.remark.auto_id }}').val().match(/[\u4e00-\u9fa5]/g);
+        if (!word_match || word_match.length < 50) {
 			alert('专利评价至少要包含50个汉字');
-			return false;
+			return;
 		}
-		return false;
+		$("#{{ form.action.auto_id }}").val($(this).attr('id'));
+		$("form:first").submit();
+	});
+    $('#save').click(function() {
+        $("#{{ form.action.auto_id }}").val($(this).attr('id'));
+		$("form:first").submit();
 	});
 	$('#reject').click(function() { alert("该操作无法撤销，请确认是否要拒绝评价该专利"); return false; });
 

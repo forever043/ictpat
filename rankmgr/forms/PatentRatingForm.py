@@ -11,9 +11,10 @@ class PatentPackageCreateForm(forms.ModelForm):
 	selected_patent_list = forms.CharField(max_length=4096, label='专利列表', widget=forms.HiddenInput())
 	class Meta:
 		model = PatentPackage
-		fields = [ 'name' ]
+		fields = [ 'name', 'rating_weight' ]
 		widgets = {
 			'name': forms.TextInput(attrs={'class':'text-input large-input'}),
+            'rating_weight': forms.HiddenInput(),
 		}
 
 	def save(self, commit=True):
@@ -29,6 +30,7 @@ class PatentPackageCreateForm(forms.ModelForm):
 				#print u"ERR create report for: %s, %s\n" % (instance.__unicode__(), patent_id)
 				continue
 		return instance
+
 
 class PatentExpertRatingForm(forms.ModelForm):
 	action = forms.CharField(widget=forms.HiddenInput(), initial="save")
