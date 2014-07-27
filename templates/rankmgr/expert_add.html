@@ -1,0 +1,64 @@
+{% extends "common/mgrbase.html" %}
+{% load staticfiles %}
+
+{% block csslink %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static "css/jquery.dataTables.css" %}" type="text/css" media="screen" />
+<link rel="stylesheet" href="{% static "css/bootstrap.btn.css" %}">
+<style type="text/css">
+tr:hover td { background-color:#e0e0e0; }
+tr td { text-align: center; }
+tr th { text-align: center; }
+</style>
+{% endblock %}
+
+
+{% block main_content %}
+			
+			<!-- Page Head -->
+			<h2>创建专家帐号</h2>
+			<p id="page-intro">创建专家帐号，并修改专家信息</p>
+
+			<span class="btn btn-success" onclick="$('form:first').submit();" style="margin-bottom:18px;">
+				<i class="glyphicon glyphicon-ok"></i>
+				<span>创建专家帐号</span>
+			</span>
+			<span class="btn btn-info" onclick="window.location.href='{% url "rank-expert-list" %}'" style="margin-bottom:18px;">
+				<i class="glyphicon glyphicon-remove"></i>
+				<span>取消</span>
+			</span>
+
+            {% include "common/notifymsg.html" %}
+
+            <form>
+			<div class="content-box">
+				<div class="content-box-header">
+					<h3>帐号信息</h3>
+					<div class="clear"></div>
+				</div>
+
+				<div class="content-box-content">
+					<div class="tab-content default-tab" id="tabAccount">
+                        {{ form }}
+					</div>
+                    <div class="clear"></div>
+				</div>
+			</div>
+
+    		<div class="content-box">
+				<div class="content-box-header">
+					<h3>专家信息</h3>
+					<div class="clear"></div>
+				</div>
+				<div class="content-box-content">
+					<div class="tab-content default-tab" id="tabExpertProfile">
+                        {{ form.phone }}
+                        {{ form.research_field }}
+                        {{ form.organization }}
+					</div>
+                    <div class="clear"></div>
+				</div>
+			</div>
+            </form>
+{% endblock %}
+

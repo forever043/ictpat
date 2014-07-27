@@ -106,6 +106,7 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'scrmgr/resources'),
     os.path.join(BASE_DIR, 'retrvhome/resources'),
 	os.path.join(BASE_DIR, 'rankmgr/resources'),
+    os.path.join(BASE_DIR, 'sysmgr/resources'),
 )
 
 TEMPLATE_DIRS = (

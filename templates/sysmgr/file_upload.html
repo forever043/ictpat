@@ -1,0 +1,28 @@
+{% extends "common/mgrbase.html" %}
+{% load staticfiles %}
+
+{% block main_content %}
+<h2>批量证书上传</h2>
+<p id="page-intro">批量上传专利或软件登记证书文件</p>
+
+    <div style="height:500px; vertical-align: center;">
+        <br/><br/><br/><br/><br/>
+        <fieldset class="column-left" style="text-align:center;">
+            <a href="{% url 'patent-file' %}">
+            <img src="{% static 'images/csv-icon-300x300.png' %}" height="300" />
+            <br/>
+            <span style="font-size: 36px;">批量导入专利证书</span>
+            </a>
+        </fieldset>
+        <fieldset class="column-right" style="text-align:center;">
+            <a href="{% url 'scr-file' %}">
+            <img src="{% static 'images/move-waiting-alternative.png' %}" height="300" />
+            <br/>
+            <span style="font-size: 36px;">批量导入软件登记证书</span>
+            </a>
+        </fieldset>
+
+    </div>
+
+{% endblock %}
+

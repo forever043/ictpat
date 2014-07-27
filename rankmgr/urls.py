@@ -5,18 +5,29 @@ from django.views.generic import RedirectView, TemplateView
 from django.contrib.auth.decorators import login_required
 
 from dashboard.views import *
+from dashboard.forms import ExpertProfileForm
 from patmgr.models import *
 from rankmgr.models import *
 from rankmgr.views import *
 from rankmgr.forms import *
 
+
 urlpatterns = patterns('',
     url(r'^$', login_required(RedirectView.as_view(pattern_name='patent-list')), name='rank'),
     url(r'^summary/$', login_required(RankSummaryView.as_view()), name='rank-summary'),
+
+    # 专家用户管理
     url(r'^expert/$',
 		login_required(RankExpertListView.as_view(
 			context_object_name = 'expert_list')),
 		name='rank-expert-list'),
+    url(r'^expert/add/$',
+        login_required(CreateView.as_view(
+            template_name='rankmgr/expert_add.html',
+            model=User,
+            form_class=ExpertProfileForm)),
+        name='rank-expert-add'),
+
 
 	# Patent Rating Manager
 	## 专利包列表

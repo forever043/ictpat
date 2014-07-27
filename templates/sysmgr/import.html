@@ -1,0 +1,28 @@
+{% extends "common/mgrbase.html" %}
+{% load staticfiles %}
+
+{% block main_content %}
+<h2>批量数据导入</h2>
+<p id="page-intro">批量导入专利或软件登记数据</p>
+
+    <div style="height:500px; vertical-align: center;">
+        <br/><br/><br/><br/><br/>
+        <fieldset class="column-left" style="text-align:center;">
+            <a href="{% url 'patent-import' %}">
+            <img src="{% static 'images/csv-icon-300x300.png' %}" height="300" />
+            <br/>
+            <span style="font-size: 36px;">批量导入专利数据</span>
+            </a>
+        </fieldset>
+        <fieldset class="column-right" style="text-align:center;">
+            <a href="{% url 'scr-import' %}">
+            <img src="{% static 'images/move-waiting-alternative.png' %}" height="300" />
+            <br/>
+            <span style="font-size: 36px;">批量导入软件登记数据</span>
+            </a>
+        </fieldset>
+
+    </div>
+
+{% endblock %}
+

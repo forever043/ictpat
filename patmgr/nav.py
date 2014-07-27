@@ -33,7 +33,7 @@ class PATFileUploadOption(NavOption):
 	view = 'patent-file'
 
 class PATMgrNav(Nav):
-	name = '专利信息维护'
+	name = '专利登记管理'
 	view = 'patent'
 	nav_group = 'main'
 	options = [PATApplyOption, PATListOption, PATImportOption, PATFileUploadOption, PATExtFieldMgrOption, PATRetvMgrOption]

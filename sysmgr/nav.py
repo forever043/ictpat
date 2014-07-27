@@ -12,8 +12,8 @@ class MetaMgrOption(NavOption):
 	}
 
 class BatchImportOption(NavOption):
-	name = '批量数据上传'
-	view = 'sysmgr-meta'
+	name = '批量数据导入'
+	view = 'sysmgr-import'
 	conditional = {
 		'function': user_has_perm,
 		'args': [],
@@ -22,7 +22,7 @@ class BatchImportOption(NavOption):
 
 class BatchUploadOption(NavOption):
 	name = '批量证书上传'
-	view = 'sysmgr-meta'
+	view = 'sysmgr-upload'
 	conditional = {
 		'function': user_has_perm,
 		'args': [],
@@ -56,7 +56,7 @@ nav_groups.register(SysMgrNav)
 
 class BatchImportShortcut(Nav):
 	name = '批量数据导入'
-	view = 'patent-import'
+	view = 'sysmgr-import'
 	nav_group = 'shortcut'
 	template = 'dashboard/shortcut.html'
 	icon = 'images/icons/paper_content_pencil_48.png'
