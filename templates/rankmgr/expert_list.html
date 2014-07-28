@@ -57,7 +57,7 @@ $(document).ready(function() {
 				
 				{% include "common/notifymsg.html" %}
 				<div class="content-box-content">
-					<div class="tab-content default-tab" id="tab1"> <!-- This is the target div. id must match the href of this div's tab -->
+					<div class="tab-content default-tab" id="tab1">
 						<table id="active-expert-list">
 							<thead>
 							<tr>
@@ -84,10 +84,10 @@ $(document).ready(function() {
 									<td>{{ expert.email }}</td>
 									<td>{{ expert.expertprofile.phone }}</td>
 									<td>{{ expert.rating_finish }}/{{ expert.rating_total }}</td>
-									<td>{% if expert.is_active %}正常{% else %}已停用{% endif %}
+									<td>{% if expert.is_active %}正常{% else %}已停用{% endif %}</td>
 									<td>
 										<a href="#">重置密码</a>&nbsp;|
-										<a href="#">修改信息</a>&nbsp;|
+										<a href="{% url 'rank-expert-edit' expert.pk %}">修改信息</a>&nbsp;|
 										<a href="#">停用帐号</a>
 									</td>
 								</tr>

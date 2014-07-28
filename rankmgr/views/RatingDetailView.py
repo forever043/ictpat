@@ -11,6 +11,8 @@ from django.core import exceptions
 import json
 import string
 
+from rankmgr.models import PatentRatingReport
+
 
 class PatentRatingDetailView(SuccessMessageMixin, UpdateView):
     error_message = u'"%(name)s" 评价失败'
@@ -22,7 +24,10 @@ class PatentRatingDetailView(SuccessMessageMixin, UpdateView):
         context['patent'] = self.object.report.patent
         context['ratings'] = self.object.ratings.split(',')
         context['weights'] = [string.atof(x)/10 for x in self.object.report.package.rating_weight.split(',')]
-        context['history_rating'] = self.model.objects.filter(report__patent=self.object.report.patent).exclude(report=self.object.report).exclude(submit_date=None).exclude(ratings=-1).order_by("submit_date")
+        context['history_rating'] = PatentRatingReport.objects.filter(patent=self.object.report.patent)\
+                                                              .exclude(package=self.object.report.package)\
+                                                              .exclude(finish_date=None)
+
 
         if not self.object.submit_date:
             context['i__next__'] = reverse_lazy('patent-rating-list')

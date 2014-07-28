@@ -183,7 +183,15 @@ $(document).ready(function() {
 							<tr>
 								<td>
 									&nbsp;({{ o.report.rating_finish }}/{{ o.report.rating_total }})&nbsp;&nbsp;{{ o.report.patent.name }}
-									<span style="float:right;"><a onclick="window.location.href='{% url 'patent-report-detail' pkgpk=o.report.package.pk pk=o.report.pk %}';" href="#">撰写评级报告</a></span>
+									<span style="float:right;"><a onclick="window.location.href='{% url 'patent-report-detail' pkgpk=o.report.package.pk pk=o.report.pk %}';" href="#">
+                                        {% if o.report.finish_date %}
+                                            查看
+                                        {% else %}
+                                            {% ifnotequal o.report.rating_finish 0 %}
+                                            撰写评级报告
+                                            {% endifnotequal %}
+                                        {% endif %}
+                                    </a></span>
 								</td>
 								<td>{{ o.expert.last_name }}{{ o.expert.first_name}}</td>
 								<td>{% if o.submit_date %}{% ifequal o.ratings "-1" %}已拒绝{% else %}已完成{% endifequal %}{% else %}进行中{% endif %}</td>

@@ -3,6 +3,8 @@ from django.shortcuts import render, render_to_response
 from django.template import RequestContext
 from django.views.generic import TemplateView
 from django.db.models import Count
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse_lazy
 
 from libs.chartit import DataPool, Chart
 

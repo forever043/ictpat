@@ -25,8 +25,16 @@ urlpatterns = patterns('',
         login_required(CreateView.as_view(
             template_name='rankmgr/expert_add.html',
             model=User,
-            form_class=ExpertProfileForm)),
+            form_class=ExpertProfileForm,
+            success_url=reverse_lazy('rank-expert-list'))),
         name='rank-expert-add'),
+    url(r'^expert/(?P<pk>\d+)/edit/$',
+        login_required(UpdateView.as_view(
+            template_name='rankmgr/expert_add.html',
+            model=User,
+            form_class=ExpertProfileForm,
+            success_url=reverse_lazy('rank-expert-list'))),
+        name='rank-expert-edit'),
 
 
 	# Patent Rating Manager

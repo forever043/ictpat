@@ -56,8 +56,18 @@ $(document).ready(function() {
 	$('#reject').click(function() { alert("该操作无法撤销，请确认是否要拒绝评价该专利"); return false; });
     {% endif %}
 
+
+
 	// Rating Stars
 	$.fn.raty.defaults.path = '{% static "jquery.raty/images" %}';
+
+	$('.history_rating_raty').raty({
+		half: true,
+		number: 5,
+		score: function() { return $(this).attr('rating'); },
+		readOnly: true
+	});
+
 	$('#rating_summary_raty').raty({
 		half: true,
 		number: 5,
@@ -159,16 +169,15 @@ $(document).ready(function() {
 								<p><b>历史评价：</b></p>
 								<div style="padding-left:10px">
 								{% for o in history_rating %}
-								<p>
-									<input class="star" type="radio" name="rating{{ o.pk }}" value="1" disabled="disabled" {% ifequal o.rank 1 %}checked="checked"{% endifequal %}/>
-									<input class="star" type="radio" name="rating{{ o.pk }}" value="2" disabled="disabled" {% ifequal o.rank 2 %}checked="checked"{% endifequal %}/>
-									<input class="star" type="radio" name="rating{{ o.pk }}" value="3" disabled="disabled" {% ifequal o.rank 3 %}checked="checked"{% endifequal %}/>
-									<input class="star" type="radio" name="rating{{ o.pk }}" value="4" disabled="disabled" {% ifequal o.rank 4 %}checked="checked"{% endifequal %}/>
-									<input class="star" type="radio" name="rating{{ o.pk }}" value="5" disabled="disabled" {% ifequal o.rank 5 %}checked="checked"{% endifequal %}/>
-									&nbsp;&nbsp;({{ o.submit_date }})
-									<br/>
-									{% if o.remark %}{{ o.remark }}{% else %}<i>无评价内容</i>{% endif %}
-								</p>
+                                    <p>
+                                    <span>({{ o.finish_date }})</span>
+                                    <span style="float:right;" class="history_rating_raty" rating="{{ o.rank }}" readonly="true" />
+                                    </p>
+
+                                    <p>
+									{% if o.report %}{{ o.report }}{% else %}<i>无评价内容</i>{% endif %}</span>
+                                    </p>
+
 								{% endfor %}
 								</div>
 								{% else %}

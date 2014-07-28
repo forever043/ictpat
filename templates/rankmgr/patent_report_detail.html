@@ -18,13 +18,22 @@
 $(document).ready(function() {
 	// 初始化按钮动作
     $('#return').click(function() { window.location.href='{% url "patent-package-detail" report.package.pk %}'; });
-	$('.submit').each(function() {
-		$(this).click(function() {
-			$("#id_{{ form.action.name }}").val($(this).attr('id'));
-			$("form:first").submit();
-		});
+    {% if not rating.submit_date %}
+    $('#submit').click(function() {
+        var word_match = $('#{{ form.report.auto_id }}').val().match(/[\u4e00-\u9fa5]/g);
+        if (!word_match || word_match.length < 50) {
+			alert('专利评级报告至少要包含50个汉字');
+			return;
+		}
+		$("#{{ form.action.auto_id }}").val($(this).attr('id'));
+		$("form:first").submit();
 	});
-	$('#reject').click(function() { alert("该操作无法撤销，请确认是否要拒绝评价该专利"); return false; });
+    $('#save').click(function() {
+        $("#{{ form.action.auto_id }}").val($(this).attr('id'));
+		$("form:first").submit();
+	});
+    {% endif %}
+
 
 	// Rating Stars
 	$.fn.raty.defaults.path = '{% static "jquery.raty/images" %}';
@@ -32,10 +41,14 @@ $(document).ready(function() {
 		number: 5,
 		score: function() { return $(this).attr('rank'); },
 		readOnly: function() { return $(this).attr('readonly'); },
-		target: '#id_{{ form.rank.name }}',
+		target: '#{{ form.rank.auto_id }}',
 		targetType: 'score',
 		targetKeep: true
 	});
+
+    $('#{{ form.rank.auto_id }}').val(parseInt({{ report.rank }}));
+    $('#{{ form.rating.auto_id }}').val(parseInt({{ report.rating }}));
+
 	$('.rating_summary_raty').raty({
 		half: true,
 		number: 5,
