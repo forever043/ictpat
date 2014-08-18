@@ -58,12 +58,13 @@ urlpatterns = patterns('',
 
 	## 专利包提交
 	url(r'^package/(?P<pk>\d+)/edit/$',
-		login_required(DashMgrDetailView.as_view(
+		login_required(PackageEditView.as_view(
 				model = PatentPackage,
 				context_object_name = 'patpkg',
 				template_name='rankmgr/patent_package_edit.html',
 				default_referer_url = reverse_lazy('patent-package-list'))),
 		name='patent-package-edit'),
+
 	url(r'package/(?P<pk>\d+)/submit/$',	# 提交一个专利包
 		login_required(DashMgrRatingPackageSubmit.as_view(
 			return_url = reverse_lazy('patent-package-list'))),

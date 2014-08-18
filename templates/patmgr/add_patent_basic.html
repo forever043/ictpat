@@ -29,8 +29,8 @@
 					
 					<h3>专利信息</h3>
 					<ul class="content-box-tabs">
-						<li><a href="#tab_basic" class="default-tab">普通模式</a></li>
-						<!-- <li><a href="{% url 'patent-batchadd' %}">高级模式</a></li> -->
+						<li><a href="#tab_info" class="default-tab">专利信息</a></li>
+						<li><a href="#tab_brief">专利简介</a></li>
 					</ul>
 
 					<div class="clear"></div>
@@ -38,13 +38,19 @@
 				</div> <!-- End .content-box-header -->
 				
 				<div class="content-box-content">
+                    <form method="post" {% if form.is_multipart %}enctype="multipart/form-data"{% endif %}>
+						{% csrf_token %}
 
-					<div class="tab-content default-tab" id="tab_basic" >
-					
-						<form method="post" {% if form.is_multipart %}enctype="multipart/form-data"{% endif %}>
+                        <div class="tab-content" id="tab_brief" >
+                            <fieldset>
+                                <p>
+                                    <small>专利简介用于专利评级时给专家提供该专利的概要信息，可以在提交专利包前进行修改。</small>
+                                    {{ form.brief }}
+                                </p>
+                            </fieldset>
+                        </div>
 
-							{% csrf_token %}
-							
+	    				<div class="tab-content default-tab" id="tab_info" >
 							<fieldset>
 								
 								<p>
@@ -225,9 +231,10 @@
 								{% endfor %}
 
 							</fieldset>
-					
-						</form>
-					</div> <!-- End #tab_basic -->
+
+					    </div> <!-- End #tab_basic -->
+
+   					</form>
 
 				</div> <!-- End .content-box-content -->
 				

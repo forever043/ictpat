@@ -23,29 +23,18 @@ tr:hover td { background-color:#e0e0e0; }
 $(document).ready(function() {
     var queryTable = $('#patent_package_list').dataTable({
         "bProcessing": true,
-        "bServerSide": true,
-        "sAjaxSource": "{% url "patent-package-edit-json" patpkg.pk %}?package={{patpkg.pk}}",
         "bSort": false,
         "sPaginationType": "full_numbers",
         "oLanguage": oLanguage,
-        // Column Design
-        "bAutoWidth": false,
-        "aoColumns": [
-            { "mData": "DT_RowId",    "sWidth": "10%" },
-            { "mData": "name",        "sWidth": "45%" },
-            { "mData": "department",  "sWidth": "35%" },
-            { "mData": "count",       "sWidth": "10%" }
-		],
 		// set click handler for each row
 		"fnDrawCallback": function () {
 			$(this).find("tr").not(':first').click( function() {
-				if ( $(this).hasClass('selected-row') ) {
-					$(this).removeClass('selected-row');
-				}
-				else {
-					queryTable.$('tr.selected-row').removeClass('selected-row');
-					$(this).addClass('selected-row');
-				}
+				if ($(this).hasClass('selected-row')) {
+                    $(this).removeClass('selected-row');
+                } else {
+                    queryTable.$('tr.selected-row').removeClass('selected-row');
+                    $(this).addClass('selected-row');
+                }
 				expertTable.fnDraw();
 			});
 		}
@@ -147,7 +136,7 @@ $(document).ready(function() {
 				</div>
 			</div>
 
-			<div class="content-box column-left">
+            <div class="content-box">
 				<div class="content-box-header">
 					<h3>专利列表</h3>
 					<div class="clear"></div>
@@ -163,8 +152,37 @@ $(document).ready(function() {
 								<th>专家</th>
 							</tr>
 							</thead>
+                            <tbody>
+                            {% for report in report_list %}
+                            <tr id="{{ report.id }}">
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ report.patent.name }}</td>
+                                <td>{{ report.patent.department }}</td>
+                                <td>{{ report.count }}</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
 						</table>
 					</div>
+				</div>
+			</div>
+
+			<div class="content-box column-left">
+				<div class="content-box-header">
+					<h3>专利信息</h3>
+					<div class="clear"></div>
+				</div>
+				<div class="content-box-content">
+                    <form>
+                    <fieldset>
+						<p>
+                            <label>说明文件：<a id="patent-file-url" href="#">查看</a>&nbsp;<input type="file" /></label>
+                            <label>专利简介：</label>
+                            <textarea id="patent-summary" class="input-large" rows="10"></textarea>
+                        </p>
+                        <p style="text-align: right; padding-right: 10px;"><input class="button" type="submit" value="保存" /></p>
+                    </fieldset>
+                    </form>
 				</div>
 			</div>
 

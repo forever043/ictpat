@@ -1,5 +1,6 @@
 from DashMgrRating import *
 from PackageDetailView import *
+from PackageEditView import *
 from PackageListView import *
 from PackageExportView import *
 from ReportDetailView import *
