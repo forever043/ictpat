@@ -135,6 +135,6 @@ LOGOUT_URL = reverse('dashboard-logout')
 
 #for filebrowsers
 #FILEBROWSER_DIRECTORY = os.path.join(BASE_DIR, 'uploads')
-PATENT_FILE_DIRECTORY = os.path.join(BASE_DIR, 'patent_files')
-SCR_FILE_DIRECTORY = os.path.join(BASE_DIR, 'scr_files')
+PATENT_FILE_DIRECTORY = os.path.join(BASE_DIR, 'files/patent')
+SCR_FILE_DIRECTORY = os.path.join(BASE_DIR, 'files/scr')
 

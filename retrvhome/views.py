@@ -1,13 +1,16 @@
 # -*- coding: UTF-8 -*-
 from django.http import HttpResponse
 from django.http import Http404
-from django.views.generic import TemplateView, ListView
+from django.views.generic import TemplateView, ListView, View
 from django.views.generic.edit import FormMixin
 from django.contrib import messages
 from django.db import IntegrityError, DatabaseError
 from django.core import exceptions
+from django.core.files.base import File
 from django.db.models import Q
 from libs.django_datatables_view.base_datatable_view import BaseDatatableView
+from filetransfers.api import serve_file
+import os
 
 from retrvhome.models import *
 from retrvhome.forms import *
@@ -98,4 +101,22 @@ class RetrvListJson(BaseDatatableView):
 			else:
 				return row.state
 		return super(RetrvListJson, self).render_column(row, column)
+
+
+class FileServeView(View):
+	base_dir = ''
+	ext_list = ["pdf", "jpg", "jpeg", "png"]
+
+	def get(self, request, *args, **kwargs):
+		fcode = kwargs["fcode"]
+		file = None
+		for ext in self.ext_list:
+			filename = self.base_dir + fcode + "." + ext
+			if os.path.exists(filename):
+				file = File(None, filename)
+				file.open('r')
+				break
+		if not file:
+			raise Http404
+		return serve_file(request, file, save_as=False)
 
