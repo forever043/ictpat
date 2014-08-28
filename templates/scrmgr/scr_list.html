@@ -4,40 +4,31 @@
 {% block csslink %}
 {{ block.super }}
 <link rel="stylesheet" href="{% static "css/jquery.dataTables.css" %}" type="text/css" media="screen" />
+<style type="text/css">
+tr:hover td { background-color:#e0e0e0; }
+</style>
 {% endblock %}
 
 
 {% block scripts %}
 {{ block.super }}
-<script type="text/javascript" src="{% static "scripts/jquery.jeditable.mini.js" %}"></script>
 <script type="text/javascript" src="{% static "scripts/jquery.dataTables.min.js" %}"></script>
 <script type="text/javascript" src="{% static "scripts/simpla.dataTables.configuration.js" %}"></script>
 
 <script type="text/javascript">
-	$(document).ready(function() {
-		// Reset filter form
-		$("#reset").click(function() {
-			window.location.href='{% url "scr-list-fresh" %}';
-			return false;
-		});
-
-		// Delete
-		$(".delete").click(function(){
-			$.post(this.href, function(data) {
-				if (data.result == "ok"){
-					$(this).parent().parent().remove();
-					alert("删除成功");
-				} else {
-					// handle error processed by server here
-					alert("删除失败：" + data.result);
-				}
-			}).fail(function() {
-				// handle unexpected error here
-				alert("error");
-			});
-			return false;
-		});
+$(document).ready(function() {
+    $('#scr-list').dataTable({
+		"sPaginationType": "full_numbers",
+		"oLanguage": oLanguage,
+		"bAutoWidth": false
 	});
+
+	// Reset filter form
+	$("#reset").click(function() {
+		window.location.href='{% url "scr-list-fresh" %}';
+		return false;
+	});
+});
 </script>
 {% endblock %}
 
@@ -81,7 +72,6 @@
 							</fieldset>
 							
 							<fieldset class="column-left">
-								
 								<p>
 									<label>
 										{{ form.name.label }}
@@ -95,7 +85,6 @@
 									</label>
 									{{ form.name }}
 								</p>
-
 								<p>
 									<label>
 										{{ form.developers.label }}
@@ -109,11 +98,9 @@
 									</label>
 									{{ form.developers }}
 								</p>
-
 							</fieldset>
 
 							<fieldset class="column-right">
-
 								<p>
 									<label>
 										{{ form.authorize_code.label }}
@@ -127,7 +114,6 @@
 									</label>
 									{{ form.authorize_code }}
 								</p>
-
 								<p>
 									<label>
 										{{ form.authorize_date.label }}
@@ -141,24 +127,17 @@
 									</label>
 									{{ form.authorize_date }}
 								</p>
-								
 							</fieldset>
 
 							<div class="clear"></div><!-- End .clear -->
 
 							<p>
-
 								<input class="button" type="submit" id="search" name="search" value="检索" />
 								<input class="button" type="submit" id="reset" name="reset" value="重置" />
-
 							</p>
-							
 						</form>
-						
-					</div> <!-- End #tab2 -->		
-					
+					</div> <!-- End #tab2 -->
 				</div> <!-- End .content-box-content -->
-				
 			</div> <!-- End .content-box -->
 					
 
@@ -184,76 +163,36 @@
 						{% include "common/notifymsg.html" %}
 
 						{% if scr_list %}
-						<table>
-							
+						<table id="scr-list" class="datatable">
 							<thead>
 							<tr>
-								<th><input class="check-all" type="checkbox" /></th>
-								<th>部门</th>
-								<th>软件名称</th>
-								<th>完成人</th>
-								<th>发证日期</th>
-								<th>软件登记号</th>
-								<th>操作</th>
+								<th width="5%">序号</th>
+								<th width="15%">部门</th>
+								<th width="20%">软件名称</th>
+								<th width="30%">完成人</th>
+								<th width="10%">发证日期</th>
+								<th width="10%">软件登记号</th>
+								<th width="10%">操作</th>
 							</tr>
-								
 							</thead>
-						 
-							<tfoot>
-								<tr>
-									<td colspan="6">
-										<div class="bulk-actions align-left">
-											<select name="dropdown">
-												<option value="option1">Choose an action...</option>
-												<option value="option2">Edit</option>
-												<option value="option3">Delete</option>
-											</select>
-											<a class="button" href="#">Apply to selected</a>
-										</div>
-										
-										<div class="pagination">
-											<a href="{% if not page_obj.has_previous %}javascript:void(0){% else %}{% url 'scr-list' %}?page=1{% endif %}" title="First Page">&laquo; First</a>
-											<a href="{% if not page_obj.has_previous %}javascript:void(0){% else %}{% url 'scr-list' %}?page={{ page_obj.previous_page_number }}{% endif %}" title="Previous Page">&laquo; Previous</a>
-											
 
-											{% for pid in page_obj.paginator.page_range %}
-											<a href="{% url 'scr-list' %}?page={{ pid }}" class="number{% ifequal pid page_obj.number %} current{% endifequal %}" title="{{pid}}">{{pid}}</a>
-											{% endfor %}
-
-											<a href="{% if not page_obj.has_next %}javascript:void(0){% else %}{% url 'scr-list' %}?page={{ page_obj.next_page_number }}{% endif %}" title="Next page">Next &raquo;</a>
-
-											<a href="{% if not page_obj.has_next %}javascript:void(0){% else %}{% url 'scr-list' %}?page={{ page_obj.paginator.num_pages }}{% endif %}" title="Last Page">Last &raquo;</a>
-										</div> <!-- End .pagination -->
-										
-										<div class="clear"></div>
-									</td>
-								</tr>
-							</tfoot>
-						 
 							<tbody>
 								{% for software in scr_list %}
 								<tr>
-									<td><input type="checkbox" /></td>
+									<td>{{ forloop.counter }}</td>
 									<td>{{ software.department.name }}</td>
 									<td><a href="{% url 'scr-detail' software.id %}" title="点击查看详细信息">{{ software.name }}</a></td>
 									<td>{{ software.developers }}</td>
 									<td>{{ software.authorize_date|date:"Y-m-d" }}</td>
 									<td>{{ software.authorize_code }}</td>
 									<td>
-										<!-- Icons -->
 										<a href="{% url 'scr-edit' software.id %}" title="编辑">
 											<img src="{% static "images/icons/pencil.png" %}" alt="Edit" />编辑
 										</a>
-										<!--
-                                        <a href="{% url 'scr-delete' software.id %}" class="delete" title="删除">
-											<img src="{% static "images/icons/cross.png" %}" alt="Delete" />
-										</a>
-										-->
 									</td>
 								</tr>
 								{% endfor %}
 							</tbody>
-							
 						</table>
 
 						<!-- End if scr_list -->
