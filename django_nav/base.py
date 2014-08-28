@@ -22,22 +22,23 @@ THE SOFTWARE.
 """
 from django.core.urlresolvers import reverse
 
+
 class NavType(object):
     name = u'I Forgot to Name this'
     view = None
     args = ()
-    kwargs ={}
+    kwargs = {}
     options = []
     conditional = {'function': None, 'args': [], 'kwargs': {}}
 
-    #def active_if(self, url, path):
+    # def active_if(self, url, path):
     #    return path == url
 
     def active_if(self, url, path):
-	if (path == reverse('dashboard')):
-	    return url == reverse('dashboard')
-	else:
-    	    return (url != reverse('dashboard')) and (path.find(url) == 0)
+        if (path == reverse('dashboard')):
+            return url == reverse('dashboard')
+        else:
+            return (url != reverse('dashboard')) and (path.find(url) == 0)
 
     def get_absolute_url(self):
         if self.view:
@@ -45,15 +46,19 @@ class NavType(object):
 
         return '#'
 
+
 class NavOption(NavType):
     template = 'django_nav/option.html'
+
 
 class Nav(NavType):
     template = 'django_nav/nav.html'
     nav_group = 'main'
 
+
 class NavGroups(object):
     _groups = {}
+
     def __new__(cls):
         it = cls.__dict__.get("__it__")
         if it is not None:
@@ -84,5 +89,6 @@ class NavGroups(object):
 
     def __setitem__(self, *args):
         raise AttributeError
+
 
 nav_groups = NavGroups()

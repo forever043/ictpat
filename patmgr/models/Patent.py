@@ -39,7 +39,7 @@ class Patent(models.Model):
     inventors = models.CharField(max_length=256, verbose_name=u'发明人')
     type = models.ForeignKey(PatentType, verbose_name=u'专利类型')
     state = models.ForeignKey(PatentState, verbose_name=u'专利状态')
-    brief = models.TextField(verbose_name=u'专利简介', null=True)
+    brief = models.TextField(verbose_name=u'专利简介', null=True, blank=True)
     apply_code = models.CharField(max_length=20, unique=True, verbose_name=u'申请号', error_messages={'required': '申请号不能为空', 'unique': '申请号必须唯一',})
     apply_date = models.DateField(verbose_name=u'申请时间')
     authorize_code = models.CharField(max_length=20, blank=True, null=True, verbose_name=u'授权号')
