@@ -12,7 +12,8 @@ from libs.django_datatables_view.base_datatable_view import BaseDatatableView
 import json
 
 from rankmgr.models import *
-
+from dashboard.models import DashboardConfig
+from retrvhome.views import FileServeView
 
 class PackageEditView(DetailView):
     model = PatentPackage
@@ -28,7 +29,15 @@ class PackageEditView(DetailView):
                 context['i__next__'] = self.request.META['HTTP_REFERER']
             else:
                 context['i__next__'] = self.default_referer_url
+
+        patrank_email_template = DashboardConfig.objects.get(name='patrank_email_template')
+        if patrank_email_template:
+            context['email_template'] = patrank_email_template.value
+
         context['report_list'] = PatentRatingReport.objects.filter(package=self.object)
         for o in context['report_list']:
             o.count = u"%d/3" % PatentExpertRating.objects.filter(report=o).count()
+            o.rankfile_exist = FileServeView().exist('rankfile', o.patent.apply_code)
+            o.specfile_exist = FileServeView().exist('specfile', o.patent.apply_code)
+
         return context

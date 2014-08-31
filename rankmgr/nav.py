@@ -22,7 +22,7 @@ class PATRatingOption(NavOption):
         'args': [],
         'kwargs': {'perm': 'rankmgr.can_operate_rating'},
     }
-    regex = re.compile(r'^/dashboard/rank/rating/(?:list|(\d+))/$')
+    regex = re.compile(r'^/dashboard/rank/rating/(?:list|(\d+/pending))/$')
 
     def active_if(self, url, path):
         return self.regex.match(path)
@@ -36,7 +36,7 @@ class PATSubmittedRatingOption(NavOption):
         'args': [],
         'kwargs': {'perm': 'rankmgr.can_operate_rating'},
     }
-    regex = re.compile(r'^/dashboard/rank/rating/(?:list/submit|(\d+))/')
+    regex = re.compile(r'^/dashboard/rank/rating/(?:list/submit|(\d+/submit))/')
 
     def active_if(self, url, path):
         print url
@@ -52,7 +52,7 @@ class PATRejectedRatingOption(NavOption):
         'args': [],
         'kwargs': {'perm': 'rankmgr.can_operate_rating'},
     }
-    regex = re.compile(r'^/dashboard/rank/rating/(?:list/reject|(\d+))/')
+    regex = re.compile(r'^/dashboard/rank/rating/(?:list/reject|(\d+/reject))/')
 
     def active_if(self, url, path):
         return self.regex.match(path)

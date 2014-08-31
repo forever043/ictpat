@@ -76,7 +76,7 @@ $(document).ready(function() {
 								<td>{% if rating.current_rating %}<div id='raty' class="history_rating_list_raty" rating="{{ rating.current_rating }}" />{% else %}----{% endif %}</td>
 								<td>{% if rating.my_rating %}<div id='raty' class="rating_list_raty" rating="{{ rating.my_rating }}" />{% else %}----{% endif %}</td>
 								<td>
-									<a href="{% url 'patent-rating-detail' rating.pk %}?pending" title="评价">
+									<a href="{% url 'patent-rating-detail' rating.pk 'pending' %}" title="评价">
 										<img src="{% static "images/icons/hammer_screwdriver.png" %}"/>评价
 									</a>
 								</td>

@@ -129,7 +129,7 @@ $(document).ready(function() {
 					<div class="tab-content{% if not extmode %} default-tab{% endif %}" id="tab1" >
 						<form>
 						<fieldset>
-						<textarea class="text-area" cols="40" id="id_content" name="content" rows="20"></textarea>
+						<textarea class="text-area" cols="40" id="id_content" name="content" rows="20">{{ email_template }}</textarea>
 						</fieldset>
 						</form>
 					</div>
@@ -165,8 +165,8 @@ $(document).ready(function() {
                                 <td>{{ report.patent.department }}</td>
                                 <td>{{ report.patent.state }}</td>
                                 <td>{{ report.patent.apply_code }}</td>
-                                <td>----</td>
-                                <td>----</td>
+                                <td>{% if report.rankfile_exist %}<a target="_blank" href="/resources/Viewer.js/index.html#{% url 'patent-rank-file-service' report.patent.apply_code report.patent.apply_code %}">查看</a>{% else %}----{% endif %}</td>
+                                <td>{% if report.specfile_exist %}<a target="_blank" href="/resources/Viewer.js/index.html#{% url 'patent-spec-file-service' report.patent.apply_code report.patent.apply_code %}">查看</a>{% else %}----{% endif %}</td>
                                 <td>{{ report.count }}</td>
                                 <td><a href="{% url 'patent-edit' report.patent.pk %}">修改</a></td>
                             </tr>

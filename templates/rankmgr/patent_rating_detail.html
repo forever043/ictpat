@@ -250,11 +250,11 @@ $(document).ready(function() {
 						</div>
 
 						<div class="tab-content" id="tab2" >
-							<iframe id="viewer" src = "/resources/Viewer.js/index.html#/file/{{ patent.apply_code }}/rank.pdf" width='100%' height='800' allowfullscreen webkitallowfullscreen></iframe>
+							<iframe id="viewer" src = "/resources/Viewer.js/index.html#{% url 'patent-rank-file-service' patent.apply_code patent.apply_code %}" width='100%' height='800' allowfullscreen webkitallowfullscreen></iframe>
 						</div>
 
 						<div class="tab-content" id="tab3" >
-							<iframe id="viewer" src = "/resources/Viewer.js/index.html#/file/201310138440.9/spec.pdf" width='100%' height='800' allowfullscreen webkitallowfullscreen></iframe>
+							<iframe id="viewer" src = "/resources/Viewer.js/index.html#{% url 'patent-spec-file-service' patent.apply_code patent.apply_code %}" width='100%' height='800' allowfullscreen webkitallowfullscreen></iframe>
 						</div>
 					</div>
 				</div>

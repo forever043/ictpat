@@ -115,7 +115,7 @@ urlpatterns = patterns('',
                                template_name='rankmgr/patent_rating_reject_list.html')),
                            name='reject-patent-rating-list'),
 
-                       url(r'^rating/(?P<pk>\d+)/$',
+                       url(r'^rating/(?P<pk>\d+)/(?P<state>.+)/$',
                            login_required(PatentRatingDetailView.as_view(
                                model=PatentExpertRating,
                                form_class=PatentExpertRatingForm,

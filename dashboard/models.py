@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 # Create your models here.
 class DashboardConfig(models.Model):
     name = models.CharField(verbose_name='配置名称', max_length=64, unique=True)
-    value = models.CharField(verbose_name='配置值', max_length=1024)
+    value = models.TextField(verbose_name='配置值', max_length=1024)
     memo = models.CharField(verbose_name='说明', max_length=1024, blank=True, null=True)
 
     def __unicode__(self):
