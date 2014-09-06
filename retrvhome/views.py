@@ -131,3 +131,9 @@ class FileServeView(View):
                 return True
         return False
 
+    def handle_uploaded_file(self, type, fcode, file):
+        base_dir = {'rankfile': 'files/patent/rank/', 'specfile': 'files/patent/spec/'}[type]
+        destination = open(base_dir + fcode + '.pdf', 'wb+')
+        for chunk in file.chunks():
+            destination.write(chunk)
+        destination.close()

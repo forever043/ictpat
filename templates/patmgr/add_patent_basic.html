@@ -30,7 +30,8 @@
 					<h3>专利信息</h3>
 					<ul class="content-box-tabs">
 						<li><a href="#tab_info" class="default-tab">专利信息</a></li>
-						<li><a href="#tab_brief">专利简介</a></li>
+                        <li><a href="#tab_file">专利文件</a></li>
+                        <li><a href="#tab_brief">专利简介</a></li>
 					</ul>
 
 					<div class="clear"></div>
@@ -40,7 +41,6 @@
 				<div class="content-box-content">
                     <form method="post" {% if form.is_multipart %}enctype="multipart/form-data"{% endif %}>
 						{% csrf_token %}
-
                         <div class="tab-content" id="tab_brief" >
                             <fieldset>
                                 <p>
@@ -49,7 +49,6 @@
                                 </p>
                             </fieldset>
                         </div>
-
 	    				<div class="tab-content default-tab" id="tab_info" >
 							<fieldset>
 								
@@ -146,19 +145,7 @@
 								
 							</fieldset>
 
-							<fieldset>
 
-								<p>
-									<label>
-										{{ form.apply_file.label }}*
-										{% if form.apply_file.errors %}
-										<span class="input-notification error png_bg"></span>
-										{% endif %}
-										{{ form.apply_file }}
-									</label>
-								</p>
-
-							</fieldset>
 
 							<fieldset class="column-left">
 
@@ -196,24 +183,9 @@
 
 							</fieldset>
 
-							<fieldset>
-
-								<p>
-									<label>
-										{{ form.authorize_file.label }}
-										{% if form.authorize_file.errors %}
-										<span class="input-notification error png_bg"></span>
-										{% endif %}
-										{{ form.authorize_file }}
-									</label>
-								</p>
-
-							</fieldset>
-
-							<div class="clear"></div><!-- End .clear -->
+                            <div class="clear"></div>
 
 							<fieldset>
-
 								{% for field in form.get_extfields %}
 								<p>
 									<label>
@@ -229,11 +201,52 @@
 									{{ field }}
 								</p>
 								{% endfor %}
-
 							</fieldset>
+                        </div>
+                        <div class="tab-content" id="tab_file" >
+                            <fieldset>
+								<p>
+									<label>
+										{{ form.apply_file.label }}
+										{% if form.apply_file.errors %}
+										<span class="input-notification error png_bg"></span>
+										{% endif %}
+										{{ form.apply_file }}
+									</label>
+								</p>
 
-					    </div> <!-- End #tab_basic -->
+								<p>
+									<label>
+										{{ form.authorize_file.label }}
+										{% if form.authorize_file.errors %}
+										<span class="input-notification error png_bg"></span>
+										{% endif %}
+										{{ form.authorize_file }}
+									</label>
+								</p>
 
+								<p>
+									<label>
+										{{ form.rank_file.label }}
+										{% if form.rank_file.errors %}
+										<span class="input-notification error png_bg"></span>
+										{% endif %}
+										{{ form.rank_file }}
+									</label>
+								</p>
+
+								<p>
+									<label>
+										{{ form.spec_file.label }}
+										{% if form.spec_file.errors %}
+										<span class="input-notification error png_bg"></span>
+										{% endif %}
+										{{ form.spec_file }}
+									</label>
+								</p>
+							</fieldset>
+                            <div class="clear"></div>
+					    </div>
    					</form>
 
 				</div> <!-- End .content-box-content -->

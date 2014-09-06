@@ -4,90 +4,31 @@
 {% block csslink %}
 {{ block.super }}
 <link rel="stylesheet" href="{% static "css/jquery.dataTables.css" %}" type="text/css" media="screen" />
+<style type="text/css">
+tr:hover td { background-color:#e0e0e0; }
+</style>
 {% endblock %}
 
 
 {% block scripts %}
 {{ block.super }}
-<script type="text/javascript" src="{% static "scripts/jquery.jeditable.mini.js" %}"></script>
 <script type="text/javascript" src="{% static "scripts/jquery.dataTables.min.js" %}"></script>
 <script type="text/javascript" src="{% static "scripts/simpla.dataTables.configuration.js" %}"></script>
 
 <script type="text/javascript">
-var retrieve_fields = {
-    'department': 'select',
-    'type': 'select',
-    'state': 'select',
-    'name': 'input',
-    'inventors': 'input',
-    'apply_code': 'input',
-    'authorize_code': 'input'
-};
-
-function retrieveData( sSource, aoData, fnCallback ) {
-    for(var field in retrieve_fields) {
-        value = $(retrieve_fields[field]+"[name='" + field + "']").val();
-        if (value != "")
-            aoData.push({ "name": field, "value": value });
-    }
-
-    $.ajax({
-        "type": "GET", 
-        "url": sSource,
-        "dataType": "json",
-        "data": aoData,
-        "cache": false,
-        "success": fnCallback,
-        "error": function () {
-            alert( "DataTables warning: JSON data from server failed to load or be parsed. "+
-                "This is most likely to be caused by a JSON formatting error." );
-        }
-    });
-}
-
-var queryTable;
 $(document).ready(function() {
-	queryTable = $('#patent-list').dataTable({
-		"bProcessing": true,
-		"bServerSide": true,
-		"sAjaxSource": "{% url "patent-list-json" %}",
-        "fnServerData": retrieveData,
-		"bSort": false,
-		"sPaginationType": "full_numbers",
-		"oLanguage": oLanguage,
-		// Column Design
-		"bAutoWidth": false,
-		"aoColumns": [
-			{ "mData": "department",		"sWidth": "15%" },
-			{ "mData": "name",				"sWidth": "25%" },
-			{ "mData": "inventors", 		"sWidth": "20%" },
-			{ "mData": "apply_code",		"sWidth": "10%" },
-			{ "mData": "apply_date",		"sWidth": "8%"  },
-			{ "mData": "authorize_code",	"sWidth": "11%" },
-			{ "mData": "pk",				"sWidth": "11%"  }
-		],
-		"fnDrawCallback": function () {
-			// MouseOver high-light
-			$(".datatable tr").not(':first').hover(
-				function () { $(this).addClass('selected-row'); }, 
-				function () { $(this).removeClass('selected-row'); }
-			);
-		},
+	$('#patent-list').dataTable({
+        "sPaginationType": "full_numbers",
+        "oLanguage": oLanguage,
+        "bAutoWidth": false
+    });
+
+    // Reset filter form
+	$("#reset").click(function() {
+		window.location.href='{% url "patent-list-fresh" %}';
+		return false;
 	});
 });
-
-function doSubmitQuery() {
-    //$('#filter').removeClass('closed-box');
-    queryTable.fnDraw();
-    return false;
-}
-function doResetQuery() {
-    $.each(retrieve_fields, function(field_name, field_type) {
-        $(field_type + "[name='" + field_name + "']").val('')
-    });
-    queryTable.fnDraw();
-    return false;
-}
 </script>
 {% endblock %}
 
@@ -210,10 +151,8 @@ function doResetQuery() {
 							<div class="clear"></div>
 
 							<p>
-
-								<input class="button" type="submit" id="search" name="search" value="检索" onclick="return doSubmitQuery();" />
-								<input class="button" type="submit" id="reset" name="reset" value="重置" onclick="return doResetQuery();" />
-
+								<input class="button" type="submit" id="search" name="search" value="检索" />
+								<input class="button" type="submit" id="reset" name="reset" value="重置" />
 							</p>
 							
 						</form>
@@ -241,15 +180,34 @@ function doResetQuery() {
 						<table id="patent-list" class="datatable">
 							<thead>
 							<tr>
-								<th>申请部门</th>
-								<th>专利名称</th>
-								<th>发明人</th>
-								<th>申请号</th>
-								<th>申请时间</th>
-								<th>授权号</th>
-								<th>操作</th>
+                                <th width="8%">序号</th>
+								<th width="15%">申请部门</th>
+								<th width="25%">专利名称</th>
+								<th width="20%">发明人</th>
+								<th width="8%">申请号</th>
+								<th width="8%">申请时间</th>
+								<th width="8%">授权号</th>
+								<th width="8%">操作</th>
 							</tr>
 							</thead>
+							<tbody>
+								{% for patent in patent_list %}
+								<tr>
+									<td>{{ forloop.counter }}</td>
+									<td>{{ patent.department.name }}</td>
+									<td><a href="{% url 'patent-detail' patent.id %}" title="点击查看详细信息">{{ patent.name }}</a></td>
+									<td>{{ patent.inventors }}</td>
+                                    <td>{{ patent.apply_code }}</td>
+									<td>{{ patent.apply_date|date:"Y-m-d" }}</td>
+									<td>{{ patent.authorize_code }}</td>
+									<td>
+										<a href="{% url 'patent-edit' patent.id %}" title="编辑">
+											<img src="{% static "images/icons/pencil.png" %}" alt="Edit" />编辑
+										</a>
+									</td>
+								</tr>
+								{% endfor %}
+							</tbody>
 						</table>
 
 						<div class="clear"></div>

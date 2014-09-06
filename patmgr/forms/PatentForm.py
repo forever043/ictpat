@@ -7,8 +7,8 @@ from patmgr.models import *
 
 
 class PatentForm(forms.ModelForm):
-    # apply_file = forms.FileField(required=False, label="专利受理证书")
-    #authorize_file = forms.FileField(required=False, label="专利授权证书")
+    rank_file = forms.FileField(required=False, label="专利评价文件")
+    spec_file = forms.FileField(required=False, label="专利说明文件")
     class Meta:
         model = Patent
         fields = ['name', 'department', 'inventors', 'type', 'state', 'brief',
@@ -31,8 +31,11 @@ class PatentForm(forms.ModelForm):
         self.fields["type"].empty_label = None
         self.fields["state"].empty_label = None
         self.fields["department"].empty_label = "请选择专利所属部门..."
+        #self.fields["apply_date"].value = timezone.now()
 
-    #self.fields["apply_date"].value = timezone.now()
+    def save(self, commit=True):
+        pass
+
 
 
 class PatentExtForm(PatentForm):
@@ -102,27 +105,27 @@ class PatentEditForm(forms.Form):
         return self.forms['basic'].save(commit)
 
 
-class PatentFormBasic(forms.Form):
-    name = forms.CharField(max_length=128, label='专利名称',
-                           widget=forms.TextInput(attrs={'class': 'text-input large-input'}))
-    department = forms.ModelChoiceField(queryset=Department.objects.all(), empty_label="请选择专利所属部门...", label="所属部门")
-    inventors = forms.CharField(max_length=256, label='发明人',
-                                widget=forms.TextInput(attrs={'class': 'text-input large-input'}))
-    type = forms.ModelChoiceField(queryset=PatentType.objects.all(), empty_label=None, label="专利类型")
-    state = forms.ModelChoiceField(queryset=PatentState.objects.all(), empty_label=None, label='专利状态')
-    apply_code = forms.CharField(max_length=20, label='申请号',
-                                 widget=forms.TextInput(attrs={'class': 'text-input large-input'}))
-    apply_date = forms.DateField(label='申请时间',
-                                 widget=forms.TextInput(attrs={'class': 'text-input large-input datepicker'}))
-    apply_file = forms.FileField(required=False, label="专利受理证书")
-    authorize_code = forms.CharField(max_length=20, required=False, label='授权号',
-                                     widget=forms.TextInput(attrs={'class': 'text-input large-input'}))
-    authorize_date = forms.DateField(label='授权时间', required=False,
-                                     widget=forms.TextInput(attrs={'class': 'text-input large-input datepicker'}))
-    authorize_file = forms.FileField(required=False, label="专利授权证书")
-# extfields = forms.ManyToManyField(PatentExtField, blank=True, null=True, label='扩展属性')
-#ranks = forms.ManyToManyField(PatentRank, blank=True, null=True, label='评分')
+#class PatentFormBasic(forms.Form):
+#    name = forms.CharField(max_length=128, label='专利名称',
+#                           widget=forms.TextInput(attrs={'class': 'text-input large-input'}))
+#    department = forms.ModelChoiceField(queryset=Department.objects.all(), empty_label="请选择专利所属部门...", label="所属部门")
+#    inventors = forms.CharField(max_length=256, label='发明人',
+#                                widget=forms.TextInput(attrs={'class': 'text-input large-input'}))
+#    type = forms.ModelChoiceField(queryset=PatentType.objects.all(), empty_label=None, label="专利类型")
+#    state = forms.ModelChoiceField(queryset=PatentState.objects.all(), empty_label=None, label='专利状态')
+#    apply_code = forms.CharField(max_length=20, label='申请号',
+#                                 widget=forms.TextInput(attrs={'class': 'text-input large-input'}))
+#    apply_date = forms.DateField(label='申请时间',
+#                                 widget=forms.TextInput(attrs={'class': 'text-input large-input datepicker'}))
+#    apply_file = forms.FileField(required=False, label="专利受理证书")
+#    authorize_code = forms.CharField(max_length=20, required=False, label='授权号',
+#                                     widget=forms.TextInput(attrs={'class': 'text-input large-input'}))
+#    authorize_date = forms.DateField(label='授权时间', required=False,
+#                                     widget=forms.TextInput(attrs={'class': 'text-input large-input datepicker'}))
+#    authorize_file = forms.FileField(required=False, label="专利授权证书")
+## extfields = forms.ManyToManyField(PatentExtField, blank=True, null=True, label='扩展属性')
+##ranks = forms.ManyToManyField(PatentRank, blank=True, null=True, label='评分')
 
 
-class PatentFormAdvance(forms.Form):
-    content = forms.CharField(widget=forms.Textarea(attrs={'class': 'text-area', 'rows': '20'}))
+#class PatentFormAdvance(forms.Form):
+#    content = forms.CharField(widget=forms.Textarea(attrs={'class': 'text-area', 'rows': '20'}))
