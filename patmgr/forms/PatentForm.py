@@ -9,11 +9,13 @@ from patmgr.models import *
 class PatentForm(forms.ModelForm):
     rank_file = forms.FileField(required=False, label="专利评价文件")
     spec_file = forms.FileField(required=False, label="专利说明文件")
+    apply_file = forms.FileField(required=False, label="专利受理证书")
+    authorize_file = forms.FileField(required=False, label="专利授权证书")
     class Meta:
         model = Patent
         fields = ['name', 'department', 'inventors', 'type', 'state', 'brief',
                   'apply_code', 'apply_date', 'authorize_code',
-                  'authorize_date', 'apply_file', 'authorize_file']
+                  'authorize_date'] #, 'apply_file', 'authorize_file']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'text-input large-input'}),
             'inventors': forms.TextInput(attrs={'class': 'text-input large-input'}),
@@ -34,7 +36,7 @@ class PatentForm(forms.ModelForm):
         #self.fields["apply_date"].value = timezone.now()
 
     def save(self, commit=True):
-        pass
+        return super(PatentForm, self).save(commit)
 
 
 

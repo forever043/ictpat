@@ -13,6 +13,7 @@ import json
 
 from patmgr.models import *
 from patmgr.forms import *
+from retrvhome.views import FileServeView
 
 
 class DashMgrFreshListView(RedirectView):
@@ -248,7 +249,9 @@ class DashMgrUpdateView(SuccessMessageMixin, UpdateView):
                 context['i__next__'] = self.request.META['HTTP_REFERER']
             else:
                 context['i__next__'] = reverse_lazy('patent-list')
-
+        context['object'] = self.object
+        self.object.rankfile_exist = FileServeView().exist('rankfile', self.object.apply_code)
+        self.object.specfile_exist = FileServeView().exist('specfile', self.object.apply_code)
         return context
 
     def get_success_message(self, cleaned_data):

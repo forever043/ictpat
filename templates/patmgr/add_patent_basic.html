@@ -205,45 +205,45 @@
                         </div>
                         <div class="tab-content" id="tab_file" >
                             <fieldset>
-								<p>
+								<div style="float:left;">
 									<label>
-										{{ form.apply_file.label }}
-										{% if form.apply_file.errors %}
-										<span class="input-notification error png_bg"></span>
-										{% endif %}
-										{{ form.apply_file }}
-									</label>
-								</p>
+                                        <a href="#"><img src="{% static "images/icon_pdf.png" %}" />{{ form.apply_file.label }}</a>
+                                    </label>
+									{% if form.apply_file.errors %}
+									<span class="input-notification error png_bg"></span>
+									{% endif %}
+									{{ form.apply_file }}
+								</div>
 
-								<p>
+								<div style="float:left;">
 									<label>
-										{{ form.authorize_file.label }}
-										{% if form.authorize_file.errors %}
-										<span class="input-notification error png_bg"></span>
-										{% endif %}
-										{{ form.authorize_file }}
-									</label>
-								</p>
+                                        <a href="#"><img src="{% static "images/icon_pdf.png" %}" />{{ form.authorize_file.label }}</a>
+                                    </label>
+									{% if form.authorize_file.errors %}
+									<span class="input-notification error png_bg"></span>
+									{% endif %}
+									{{ form.authorize_file }}
+								</div>
 
-								<p>
+								<div style="float:left;">
 									<label>
-										{{ form.rank_file.label }}
-										{% if form.rank_file.errors %}
-										<span class="input-notification error png_bg"></span>
-										{% endif %}
-										{{ form.rank_file }}
-									</label>
-								</p>
+                                        <a href="#"><img src="{% static "images/icon_pdf.png" %}" />{{ form.rank_file.label }}</a>
+                                    </label>
+									{% if form.rank_file.errors %}
+									<span class="input-notification error png_bg"></span>
+									{% endif %}
+									{{ form.rank_file }}
+								</div>
 
-								<p>
+								<div style="float:left;">
 									<label>
-										{{ form.spec_file.label }}
-										{% if form.spec_file.errors %}
-										<span class="input-notification error png_bg"></span>
-										{% endif %}
-										{{ form.spec_file }}
-									</label>
-								</p>
+                                        <a href="#"><img src="{% static "images/icon_pdf.png" %}" />{{ form.spec_file.label }}</a>
+                                    </label>
+									{% if form.spec_file.errors %}
+									<span class="input-notification error png_bg"></span>
+									{% endif %}
+									{{ form.spec_file }}
+								</div>
 							</fieldset>
                             <div class="clear"></div>
 					    </div>

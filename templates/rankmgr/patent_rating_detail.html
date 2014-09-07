@@ -41,6 +41,17 @@ $(document).ready(function() {
     $('#return').click(function() { window.location.href = $("input[name=__next__]").val(); });
     {% if not rating.submit_date %}
     $('#submit').click(function() {
+        // 检查是否所有项目都已经给分
+        rating_all_check = true;
+        $('.rating_detail_raty').each(function() {
+            if (!$(this).raty('score'))
+                rating_all_check = false;
+        });
+        if (!rating_all_check) {
+            alert('有项目没有打分');
+            return;
+        }
+
         var word_match = $('#{{ form.remark.auto_id }}').val().match(/[\u4e00-\u9fa5]/g);
         if (!word_match || word_match.length < 50) {
 			alert('专利评价至少要包含50个汉字');

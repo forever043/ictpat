@@ -30,7 +30,7 @@
 					<h3>专利信息</h3>
 					<ul class="content-box-tabs">
 						<li><a href="#tab1" class="default-tab">基本信息</a></li>
-						<li><a href="#tab2">扩展信息</a></li>
+                        <li><a href="#tab_file">专利文件</a></li>
                         <li><a href="#tab_brief">专利简介</a></li>
 					</ul>
 
@@ -144,24 +144,6 @@
 								
 							</fieldset>
 
-							<fieldset>
-
-								<p>
-									<label>
-										{{ form.apply_file.label }}*
-										{% if form.apply_file.errors %}
-										<span class="input-notification error png_bg">
-											{% for error in form.apply_file.errors %}
-											{{ error }}
-											{% endfor %}
-										</span>
-										{% endif %}
-										{{ form.apply_file }}
-									</label>
-								</p>
-
-							</fieldset>
-
 							<fieldset class="column-left">
 
 								<p>
@@ -198,29 +180,7 @@
 
 							</fieldset>
 
-							<fieldset>
-
-								<p>
-									<label>
-										{{ form.authorize_file.label }}*
-										{% if form.authorize_file.errors %}
-										<span class="input-notification error png_bg">
-											{% for error in form.authorize_file.errors %}
-											{{ error }}
-											{% endfor %}
-										</span>
-										{% endif %}
-										{{ form.authorize_file }}
-									</label>
-								</p>
-
-							</fieldset>
-
-							<div class="clear"></div><!-- End .clear -->
-					
-						</div> <!-- End #tab1 -->
-
-						<div class="tab-content{% if extmode %} default-tab{% endif %}" id="tab2" >
+							<div class="clear"></div>
 
 							<fieldset>
 
@@ -242,9 +202,58 @@
 
 							</fieldset>
 
-							<div class="clear"></div><!-- End .clear -->
+							<div class="clear"></div>
 
-						</div> <!-- End #tab2 -->	
+						</div>
+
+                        <div class="tab-content" id="tab_file" >
+                            <fieldset>
+								<div style="float:left;">
+									<label>1. {{ form.apply_file.label }}</label>
+                                    <a href="#"><img src="{% static "images/icon_pdf.png" %}" /></a>
+                                    {% if object.applyfile_exist %}<a target="_blank" href="/resources/Viewer.js/index.html#{% url 'patent-apply-file-service' object.apply_code object.apply_code %}">查看</a>{% else %}文件不存在{% endif %}
+                                    <br/>
+									{{ form.apply_file }}
+                                    {% if form.apply_file.errors %}
+                                     <span class="input-notification error png_bg"></span>
+									{% endif %}
+								</div>
+
+								<div style="float:left;">
+									<label>2. {{ form.authorize_file.label }}</label>
+                                    <a href="#"><img src="{% static "images/icon_pdf.png" %}" /></a>
+									{% if object.authfile_exist %}<a target="_blank" href="/resources/Viewer.js/index.html#{% url 'patent-auth-file-service' object.apply_code object.apply_code %}">查看</a>{% else %}文件不存在{% endif %}
+                                    <br/>
+                                    {{ form.authorize_file }}
+                                    {% if form.authorize_file.errors %}
+									<span class="input-notification error png_bg"></span>
+									{% endif %}
+								</div>
+
+								<div style="float:left;">
+									<label>3. {{ form.rank_file.label }}</label>
+                                    <a href="#"><img src="{% static "images/icon_pdf.png" %}" /></a>
+									{% if object.rankfile_exist %}<a target="_blank" href="/resources/Viewer.js/index.html#{% url 'patent-rank-file-service' object.apply_code object.apply_code %}">查看</a>{% else %}文件不存在{% endif %}
+                                    <br/>
+                                    {{ form.rank_file }}
+                                    {% if form.rank_file.errors %}
+									<span class="input-notification error png_bg"></span>
+									{% endif %}
+								</div>
+
+								<div style="float:left;">
+									<label>4. {{ form.spec_file.label }}</label>
+                                    <a href="#"><img src="{% static "images/icon_pdf.png" %}" /></a>
+                                    {% if object.specfile_exist %}<a target="_blank" href="/resources/Viewer.js/index.html#{% url 'patent-spec-file-service' object.apply_code object.apply_code %}">查看</a>{% else %}文件不存在{% endif %}
+                                    <br/>
+									{{ form.spec_file }}
+                                    {% if form.spec_file.errors %}
+									<span class="input-notification error png_bg"></span>
+									{% endif %}
+								</div>
+							</fieldset>
+                            <div class="clear"></div>
+					    </div>
 
                         <div class="tab-content" id="tab_brief" >
                             <fieldset>
