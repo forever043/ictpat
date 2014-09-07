@@ -252,6 +252,8 @@ class DashMgrUpdateView(SuccessMessageMixin, UpdateView):
         context['object'] = self.object
         self.object.rankfile_exist = FileServeView().exist('rankfile', self.object.apply_code)
         self.object.specfile_exist = FileServeView().exist('specfile', self.object.apply_code)
+        self.object.authfile_exist = FileServeView().exist('authfile', self.object.apply_code)
+        self.object.applyfile_exist = FileServeView().exist('applyfile', self.object.apply_code)
         return context
 
     def get_success_message(self, cleaned_data):

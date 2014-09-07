@@ -5,6 +5,8 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from patmgr.models import *
 
+#from retrvhome.views import FileServeView
+import os
 
 class PatentForm(forms.ModelForm):
     rank_file = forms.FileField(required=False, label="专利评价文件")
@@ -36,8 +38,27 @@ class PatentForm(forms.ModelForm):
         #self.fields["apply_date"].value = timezone.now()
 
     def save(self, commit=True):
+        if self.cleaned_data["rank_file"]:
+            self.handle_uploaded_file('rankfile', self.cleaned_data["apply_code"], self.cleaned_data["rank_file"])
+        if self.cleaned_data["spec_file"]:
+            self.handle_uploaded_file('specfile', self.cleaned_data["apply_code"], self.cleaned_data["spec_file"])
+        if self.cleaned_data["apply_file"]:
+            self.handle_uploaded_file('applyfile', self.cleaned_data["apply_code"], self.cleaned_data["apply_file"])
+        if self.cleaned_data["authorize_file"]:
+            self.handle_uploaded_file('authfile', self.cleaned_data["apply_code"], self.cleaned_data["authorize_file"])
         return super(PatentForm, self).save(commit)
 
+    def handle_uploaded_file(self, type, fcode, file):
+        base_dir = {
+            'applyfile': 'files/patent/apply/',
+            'authfile': 'files/patent/auth/',
+            'rankfile': 'files/patent/rank/',
+            'specfile': 'files/patent/spec/'}[type]
+        ext = os.path.splitext(file.name)[1]
+        destination = open(base_dir + fcode + ext, 'wb+')
+        for chunk in file.chunks():
+            destination.write(chunk)
+        destination.close()
 
 
 class PatentExtForm(PatentForm):

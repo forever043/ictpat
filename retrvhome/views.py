@@ -123,7 +123,11 @@ class FileServeView(View):
         return serve_file(request, file, save_as=False)
 
     def exist(self, type, fcode):
-        base_dir = {'rankfile': 'files/patent/rank/', 'specfile': 'files/patent/spec/'}[type]
+        base_dir = {
+            'applyfile': 'files/patent/apply/',
+            'authfile': 'files/patent/auth/',
+            'rankfile': 'files/patent/rank/',
+            'specfile': 'files/patent/spec/'}[type]
         for ext in self.ext_list:
             filename = base_dir + fcode + "." + ext
             print filename
@@ -132,7 +136,11 @@ class FileServeView(View):
         return False
 
     def handle_uploaded_file(self, type, fcode, file):
-        base_dir = {'rankfile': 'files/patent/rank/', 'specfile': 'files/patent/spec/'}[type]
+        base_dir = {
+            'applyfile': 'files/patent/apply/',
+            'authfile': 'files/patent/auth/',
+            'rankfile': 'files/patent/rank/',
+            'specfile': 'files/patent/spec/'}[type]
         destination = open(base_dir + fcode + '.pdf', 'wb+')
         for chunk in file.chunks():
             destination.write(chunk)
