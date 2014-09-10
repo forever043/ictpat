@@ -49,13 +49,14 @@ class PatentForm(forms.ModelForm):
         return super(PatentForm, self).save(commit)
 
     def handle_uploaded_file(self, type, fcode, file):
+        root_dir = '/opt/ictpat/'
         base_dir = {
             'applyfile': 'files/patent/apply/',
             'authfile': 'files/patent/auth/',
             'rankfile': 'files/patent/rank/',
             'specfile': 'files/patent/spec/'}[type]
         ext = os.path.splitext(file.name)[1]
-        destination = open(base_dir + fcode + ext, 'wb+')
+        destination = open(root_dir + base_dir + fcode + ext, 'wb+')
         for chunk in file.chunks():
             destination.write(chunk)
         destination.close()

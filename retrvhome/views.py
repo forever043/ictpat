@@ -106,6 +106,7 @@ class RetrvListJson(BaseDatatableView):
 
 
 class FileServeView(View):
+    root_dir = '/opt/ictpat/'
     base_dir = ''
     ext_list = ["pdf", "jpg", "jpeg", "png"]
 
@@ -113,7 +114,7 @@ class FileServeView(View):
         fcode = kwargs["fcode"]
         file = None
         for ext in self.ext_list:
-            filename = self.base_dir + fcode + "." + ext
+            filename = self.root_dir + self.base_dir + fcode + "." + ext
             if os.path.exists(filename):
                 file = File(None, filename)
                 file.open('r')
@@ -129,7 +130,7 @@ class FileServeView(View):
             'rankfile': 'files/patent/rank/',
             'specfile': 'files/patent/spec/'}[type]
         for ext in self.ext_list:
-            filename = base_dir + fcode + "." + ext
+            filename = self.root_dir + base_dir + fcode + "." + ext
             print filename
             if os.path.exists(filename):
                 return True
@@ -141,7 +142,7 @@ class FileServeView(View):
             'authfile': 'files/patent/auth/',
             'rankfile': 'files/patent/rank/',
             'specfile': 'files/patent/spec/'}[type]
-        destination = open(base_dir + fcode + '.pdf', 'wb+')
+        destination = open(self.root_dir + base_dir + fcode + '.pdf', 'wb+')
         for chunk in file.chunks():
             destination.write(chunk)
         destination.close()

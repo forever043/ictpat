@@ -211,7 +211,7 @@
 								<div style="float:left;">
 									<label>1. {{ form.apply_file.label }}</label>
                                     <a href="#"><img src="{% static "images/icon_pdf.png" %}" /></a>
-                                    {% if object.applyfile_exist %}<a target="_blank" href="/resources/Viewer.js/index.html#{% url 'patent-apply-file-service' object.apply_code %}">查看</a>{% else %}文件不存在{% endif %}
+                                    {% if object.applyfile_exist %}<a target="_blank" href="{% url 'patent-apply-file-service' object.apply_code %}">查看</a>{% else %}文件不存在{% endif %}
                                     <br/>
 									{{ form.apply_file }}
                                     {% if form.apply_file.errors %}
@@ -222,7 +222,7 @@
 								<div style="float:left;">
 									<label>2. {{ form.authorize_file.label }}</label>
                                     <a href="#"><img src="{% static "images/icon_pdf.png" %}" /></a>
-									{% if object.authfile_exist %}<a target="_blank" href="/resources/Viewer.js/index.html#{% url 'patent-auth-file-service' object.apply_code %}">查看</a>{% else %}文件不存在{% endif %}
+									{% if object.authfile_exist %}<a target="_blank" href="{% url 'patent-auth-file-service' object.apply_code %}">查看</a>{% else %}文件不存在{% endif %}
                                     <br/>
                                     {{ form.authorize_file }}
                                     {% if form.authorize_file.errors %}
