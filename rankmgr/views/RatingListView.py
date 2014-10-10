@@ -24,7 +24,7 @@ class PatentRatingListView(ListView):
         context['reject_list'] = self.model.objects.filter(expert=self.request.user).exclude(submit_date=None).filter(
             ratings="-1").order_by("report__package")
         context['submit_list'] = self.model.objects.filter(expert=self.request.user).exclude(submit_date=None).exclude(
-            ratings="-1").order_by("report__package")
+            ratings="-1").order_by("report__package").order_by("submit_date")
         for o in context['submit_list']:
             ratings = o.ratings.split(',')
             weights = [string.atof(x) / 10 for x in o.report.package.rating_weight.split(',')]

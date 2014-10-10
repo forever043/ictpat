@@ -28,8 +28,40 @@ class PatentRatingDetailView(SuccessMessageMixin, UpdateView):
         context['history_rating'] = PatentRatingReport.objects.filter(patent=self.object.report.patent)\
                                                               .exclude(package=self.object.report.package)\
                                                               .exclude(finish_date=None)
+        # 判断文件是否存在
         context['rankfile_exist'] = FileServeView().exist('rankfile', self.object.report.patent.apply_code)
         context['specfile_exist'] = FileServeView().exist('specfile', self.object.report.patent.apply_code)
+
+        # 查询上一条和下一条记录
+        if self.object.submit_date:
+            context['state'] = 'submit'
+            prev_rank_list = self.model.objects.filter(expert=self.request.user)   \
+                                        .exclude(submit_date=None)                 \
+                                        .exclude(report__package__submit_date=None)\
+                                        .filter(pk__lt=self.object.pk)             \
+                                        .order_by("report__package").order_by("submit_date")
+            next_rank_list = self.model.objects.filter(expert=self.request.user)   \
+                                        .exclude(submit_date=None)                 \
+                                        .exclude(report__package__submit_date=None)\
+                                        .filter(pk__gt=self.object.pk)             \
+                                        .order_by("report__package").order_by("submit_date")
+        else:
+            context['state'] = 'pending'
+            prev_rank_list = self.model.objects.filter(expert=self.request.user)   \
+                                        .filter(submit_date=None)                  \
+                                        .exclude(report__package__submit_date=None)\
+                                        .filter(pk__lt=self.object.pk)             \
+                                        .order_by("report__package")
+            next_rank_list = self.model.objects.filter(expert=self.request.user)   \
+                                        .filter(submit_date=None)                  \
+                                        .exclude(report__package__submit_date=None)\
+                                        .filter(pk__gt=self.object.pk)             \
+                                        .order_by("report__package")
+ 
+        if prev_rank_list:
+            context['rating_prev'] = prev_rank_list[len(prev_rank_list)-1].pk
+        if next_rank_list:
+            context['rating_next'] = next_rank_list[0].pk
 
         if not self.object.submit_date:
             context['i__next__'] = reverse_lazy('patent-rating-list')

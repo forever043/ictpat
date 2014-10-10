@@ -129,6 +129,15 @@ $(document).ready(function() {
 			</span>
             {%  endif %}
 
+			<span id="next" class="btn btn-success submit" style="margin-bottom:18px; margin-left:5px; float:right;" {% if rating_next %}onclick="window.location.href = '{% url 'patent-rating-detail' rating_next state %}';"{%endif%}>
+				<span>下一个</span>
+				<i class="glyphicon glyphicon-step-forward"></i>
+			</span>
+			<span id="prev" class="btn btn-success submit" style="margin-bottom:18px; float:right;" {% if rating_prev %}onclick="window.location.href = '{% url 'patent-rating-detail' rating_prev state %}';"{%endif%}>
+				<i class="glyphicon glyphicon-step-backward"></i>
+				<span>上一个</span>
+			</span>
+
 			{% include 'common/notifymsg.html' %}
 
 			<div class="content-box"><!-- Start Content Box -->
