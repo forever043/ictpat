@@ -25,10 +25,10 @@ var oLanguage = {
 	"sInfoEmpty": "无记录",
 	"sInfoFiltered": "(从 _MAX_ 项中筛选)",
 	"oPaginate": {
-		"sFirst": "&laquo; First",
-		"sPrevious": "&laquo; Prev",
-		"sNext": "Next &raquo;",
-		"sLast": "Last &raquo;"
+		"sFirst": "&laquo; 首页",
+		"sPrevious": "&laquo; 上一页",
+		"sNext": "下一页 &raquo;",
+		"sLast": "尾页 &raquo;"
 	}
 };
 

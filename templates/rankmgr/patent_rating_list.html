@@ -14,6 +14,23 @@
 <script type="text/javascript" src="{% static "scripts/simpla.dataTables.configuration.js" %}"></script>
 <script type="text/javascript" src="{% static "jquery.raty/jquery.raty.js" %}"></script>
 <script type="text/javascript">
+
+var oLanguage = {
+	"sProcessing": "加载中...",
+	"sSearch": "筛选条件",
+	"sLengthMenu": "每页显示 _MENU_ 项",
+	"sZeroRecords": "无待评价专利",
+	"sInfo": "显示 _START_ - _END_ 记录（共_TOTAL_条）",
+	"sInfoEmpty": "无待评价专利",
+	"sInfoFiltered": "(从 _MAX_ 项中筛选)",
+	"oPaginate": {
+		"sFirst": "&laquo; 首页",
+		"sPrevious": "&laquo; 上一页",
+		"sNext": "下一页 &raquo;",
+		"sLast": "尾页 &raquo;"
+	}
+};
+
 $(document).ready(function() {
 	$('#pending-list').dataTable({
 		"bSort": false,

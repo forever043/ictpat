@@ -28,10 +28,12 @@ $(document).ready(function() {
 		"oLanguage": oLanguage,
 		"bAutoWidth": false,
 		"aoColumns": [
-			{ "mData": "DT_RowId",		"sWidth": "10%" },
-			{ "mData": "name", 			"sWidth": "40%" },
-			{ "mData": "department",	"sWidth": "30%" },
-			{ "mData": "apply_date",	"sWidth": "20%" }
+			{ "mData": "DT_RowId",		"sWidth": "5%" },
+			{ "mData": "apply_code",	"sWidth": "10%" },
+			{ "mData": "name", 		"sWidth": "30%" },
+			{ "mData": "department",	"sWidth": "20%" },
+			{ "mData": "state",		"sWidth": "10%" },
+			{ "mData": "inventors",		"sWidth": "25%" }
 		],
 		"fnCreatedRow": function(nRow, aData, iDataIndex) {
 			$(nRow).click( function() {
@@ -53,10 +55,12 @@ $(document).ready(function() {
 		// Column Design
 		"bAutoWidth": false,
 		"aoColumns": [
-			{ "mData": "DT_RowId",		"sWidth": "10%" },
-			{ "mData": "name", 			"sWidth": "40%" },
-			{ "mData": "department",	"sWidth": "30%" },
-			{ "mData": "apply_date",	"sWidth": "20%" }
+			{ "mData": "DT_RowId",		"sWidth": "5%" },
+			{ "mData": "apply_code",	"sWidth": "10%" },
+			{ "mData": "name", 		"sWidth": "30%" },
+			{ "mData": "department",	"sWidth": "20%" },
+			{ "mData": "state",		"sWidth": "10%" },
+			{ "mData": "inventors",		"sWidth": "25%" }
 		],
         // set click handler for each row
         "fnDrawCallback": function () {
@@ -67,11 +71,13 @@ $(document).ready(function() {
 				}
 				else {
 					selectedTable.fnAddData({
-						"name":			$(this).find("td:eq(1)").text(),
-						"department":	$(this).find("td:eq(2)").text(),
-						"apply_date":	$(this).find("td:eq(3)").text(),
-						"pk":			id,
-						"DT_RowId":		id
+						"apply_code":   $(this).find("td:eq(1)").text(),
+						"name":		$(this).find("td:eq(2)").text(),
+						"department":	$(this).find("td:eq(3)").text(),
+						"state":	$(this).find("td:eq(4)").text(),
+						"inventors":    $(this).find("td:eq(5)").text(),
+						"pk":		id,
+						"DT_RowId":	id
 					});
 				}
 				$(this).toggleClass('selected-row');
@@ -215,31 +221,7 @@ $(document).ready(function() {
 
 			</div>
 
-
-			<div class="content-box column-left">
-				<div class="content-box-header">
-					<h3>所有专利</h3>
-					<div class="clear"></div>
-				</div>
-				
-				<div class="content-box-content">
-					<div class="tab-content default-tab" id="tab_all" >
-						<table id="patent_list_all" class="datatable">
-							<thead>
-							<tr>
-								<th>序号</th>
-								<th>专利名称</th>
-								<th>所属部门</th>
-								<th>申请时间</th>
-							</tr>
-							</thead>
-						</table>
-						<div class="clear"></div>
-					</div>
-				</div>
-			</div>
-
-			<div class="content-box column-right">
+			<div class="content-box">
 				<div class="content-box-header">
 					<h3>专利包</h3>
 					<div class="clear"></div>
@@ -258,9 +240,36 @@ $(document).ready(function() {
 							<thead>
 							<tr>
 								<th>序号</th>
+								<th>专利号</th>
 								<th>专利名称</th>
 								<th>所属部门</th>
-								<th>申请时间</th>
+								<th>专利状态</th>
+								<th>发明人</th>
+							</tr>
+							</thead>
+						</table>
+						<div class="clear"></div>
+					</div>
+				</div>
+			</div>
+
+			<div class="content-box">
+				<div class="content-box-header">
+					<h3>所有专利</h3>
+					<div class="clear"></div>
+				</div>
+				
+				<div class="content-box-content">
+					<div class="tab-content default-tab" id="tab_all" >
+						<table id="patent_list_all" class="datatable">
+							<thead>
+							<tr>
+								<th>序号</th>
+								<th>专利号</th>
+								<th>专利名称</th>
+								<th>所属部门</th>
+								<th>专利状态</th>
+								<th>发明人</th>
 							</tr>
 							</thead>
 						</table>
@@ -270,4 +279,3 @@ $(document).ready(function() {
 			</div>
 						
 {% endblock %}
-

@@ -5,7 +5,7 @@ from django.views.generic import RedirectView, TemplateView
 from django.contrib.auth.decorators import login_required
 
 from dashboard.views import *
-from dashboard.forms import ExpertProfileForm
+from dashboard.forms import ExpertProfileForm, ExpertProfileEditForm
 from patmgr.models import *
 from rankmgr.models import *
 from rankmgr.views import *
@@ -30,9 +30,9 @@ urlpatterns = patterns('',
                            name='rank-expert-add'),
                        url(r'^expert/(?P<pk>\d+)/edit/$',
                            login_required(UpdateView.as_view(
-                               template_name='rankmgr/expert_add.html',
+                               template_name='rankmgr/expert_edit.html',
                                model=User,
-                               form_class=ExpertProfileForm,
+                               form_class=ExpertProfileEditForm,
                                success_url=reverse_lazy('rank-expert-list'))),
                            name='rank-expert-edit'),  # Patent Rating Manager  # # 专利包列表
                        url(r'^package/$',

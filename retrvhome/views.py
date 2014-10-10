@@ -118,7 +118,10 @@ class FileServeView(View):
             if os.path.exists(filename):
                 file = File(None, filename)
                 file.open('r')
+                print "OK: %s" % filename
                 break
+            else:
+                print "Failed: %s" % filename
         if not file:
             raise Http404
         return serve_file(request, file, save_as=False)

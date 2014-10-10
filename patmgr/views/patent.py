@@ -205,13 +205,6 @@ class PatentUpdateView(SuccessMessageMixin, UpdateView):
 	def get_success_url(self):
 		return self.request.POST['__next__']
 
-	def get_initial(self):
-		initial = {}
-		extfields_list = PatentExtField.objects.filter(patent=self.object)
-		for extfield in extfields_list:
-			initial[extfield.type.field_name] = extfield.value
-		return initial
-
 	def form_invalid(self, form):
 		messages.error(self.request, self.error_message % dict(name=self.object.name))
 		return super(PatentUpdateView, self).form_invalid(form)

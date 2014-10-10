@@ -89,7 +89,7 @@ $(document).ready(function() {
 					if (json.result == "ok") {
 						selected_expert_row.toggleClass('selected-row');
 						var expnr = expertTable.$('tr.selected-row').length;
-						queryTable.$('tr.selected-row').find('td:eq(3)').text(expnr + '/3');
+						queryTable.$('tr.selected-row').find('td:eq(7)').text(expnr + '/3');
 					} else {
 						alert("错误请求，请刷新页面重试。");
 					}

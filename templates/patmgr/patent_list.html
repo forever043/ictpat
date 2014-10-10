@@ -184,9 +184,9 @@ $(document).ready(function() {
 								<th width="15%">申请部门</th>
 								<th width="25%">专利名称</th>
 								<th width="20%">发明人</th>
-								<th width="8%">申请号</th>
+								<th width="8%">专利号</th>
 								<th width="8%">申请时间</th>
-								<th width="8%">授权号</th>
+								<th width="8%">专利状态</th>
 								<th width="8%">操作</th>
 							</tr>
 							</thead>
@@ -199,7 +199,7 @@ $(document).ready(function() {
 									<td>{{ patent.inventors }}</td>
                                     <td>{{ patent.apply_code }}</td>
 									<td>{{ patent.apply_date|date:"Y-m-d" }}</td>
-									<td>{{ patent.authorize_code }}</td>
+									<td>{{ patent.state }}</td>
 									<td>
 										<a href="{% url 'patent-edit' patent.id %}" title="编辑">
 											<img src="{% static "images/icons/pencil.png" %}" alt="Edit" />编辑

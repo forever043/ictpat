@@ -78,9 +78,31 @@ class RankMgrNav(Nav):
     name = '知识产权等级评定'
     view = 'rank'
     nav_group = 'main'
-    options = [PATPackageOption, PATRatingOption, PATSubmittedRatingOption, PATRejectedRatingOption, SummaryOption,
-               ExpertMgrOption]
+    options = [PATPackageOption, PATRatingOption, PATSubmittedRatingOption, #PATRejectedRatingOption,
+               SummaryOption, ExpertMgrOption]
 
 
 nav_groups.register(RankMgrNav)
+
+#class PATRatingNav(Nav):
+#    name = '待评价专利列表'
+#    view = 'patent-rating-list'
+#    nav_group = 'main' regex = re.compile(r'^/dashboard/rank/rating/(?:list|(\d+/pending))/$')
+#    conditional = {
+#        'function': user_has_perm,
+#        'args': [],
+#        'kwargs': {'perm': 'rankmgr.can_operate_rating'},
+#    }
+#class PATSubmittedRatingNav(Nav):
+#    name = '已评价专利列表'
+#    view = 'submit-patent-rating-list'
+#    nav_group = 'main'
+#    regex = re.compile(r'^/dashboard/rank/rating/(?:list/submit|(\d+/submit))/')
+#    conditional = {
+#        'function': user_has_perm,
+#        'args': [],
+#        'kwargs': {'perm': 'rankmgr.can_operate_rating'},
+#    }
+#nav_groups.register(PATRatingNav)
+#nav_groups.register(PATSubmittedRatingNav)
 

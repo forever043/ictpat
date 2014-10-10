@@ -12,6 +12,7 @@ import json
 import string
 
 from rankmgr.models import PatentRatingReport
+from retrvhome.views import FileServeView
 
 
 class PatentRatingDetailView(SuccessMessageMixin, UpdateView):
@@ -27,7 +28,8 @@ class PatentRatingDetailView(SuccessMessageMixin, UpdateView):
         context['history_rating'] = PatentRatingReport.objects.filter(patent=self.object.report.patent)\
                                                               .exclude(package=self.object.report.package)\
                                                               .exclude(finish_date=None)
-
+        context['rankfile_exist'] = FileServeView().exist('rankfile', self.object.report.patent.apply_code)
+        context['specfile_exist'] = FileServeView().exist('specfile', self.object.report.patent.apply_code)
 
         if not self.object.submit_date:
             context['i__next__'] = reverse_lazy('patent-rating-list')
