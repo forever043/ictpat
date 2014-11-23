@@ -13,6 +13,8 @@ class PatentExtFieldType(models.Model):
         return self.field_label
     class Meta:
         app_label = 'patmgr'
+        verbose_name = u'专利扩展字段类型'
+        verbose_name_plural = u'专利扩展字段类型'
 
 
 class PatentExtField(models.Model):
@@ -23,5 +25,7 @@ class PatentExtField(models.Model):
         return self.value
     class Meta:
         app_label = 'patmgr'
+        verbose_name = u'专利扩展字段数据'
+        verbose_name_plural = u'专利扩展字段数据'
 	unique_together=(("patent", "type"),)
 

@@ -13,6 +13,8 @@ class PatentState(models.Model):
         return self.name
     class Meta:
         app_label = 'patmgr'
+        verbose_name = u'专利状态'
+        verbose_name_plural = u'专利状态'
 
 
 class PatentType(models.Model):
@@ -23,6 +25,8 @@ class PatentType(models.Model):
         return self.name
     class Meta:
         app_label = 'patmgr'
+        verbose_name = u'专利类型'
+        verbose_name_plural = u'专利类型'
 
 
 class OverwriteStorage(FileSystemStorage):
@@ -52,4 +56,6 @@ class Patent(models.Model):
 
     class Meta:
         app_label = 'patmgr'
+        verbose_name = u'专利'
+        verbose_name_plural = u'专利'
 

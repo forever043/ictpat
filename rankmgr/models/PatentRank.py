@@ -29,8 +29,8 @@ class PatentPackageRankItem(models.Model):
         return u"[%s][%s]%s" % (self.package.name, self.item.catalog.name, self.item.desc)
     class Meta:
         app_label = 'rankmgr'
-        verbose_name = u'专利包评分项目'
-        verbose_name_plural = u'专利包评分项目'
+        verbose_name = u'专利包问卷'
+        verbose_name_plural = u'专利包评分问卷'
         unique_together=(("package", "item"),)
 
 class ExpertCatalogWeight(models.Model):

@@ -10,4 +10,6 @@ class Department(models.Model):
 
 	class Meta:
 		app_label = 'patmgr'
+		verbose_name = u'部门'
+		verbose_name_plural = u'部门'
 
