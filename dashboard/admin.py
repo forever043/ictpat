@@ -8,6 +8,11 @@ class DashboardConfigAdmin(admin.ModelAdmin):
 admin.site.register(DashboardConfig, DashboardConfigAdmin)
 
 class ExpertProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'phone', 'organization', 'research_field')
+    list_display = ('user', 'catalog', 'phone', 'organization', 'research_field')
     choise_display = ('user')
 admin.site.register(ExpertProfile, ExpertProfileAdmin)
+
+class ExpertCatalogAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    choise_display = ('name')
+admin.site.register(ExpertCatalog, ExpertCatalogAdmin)
