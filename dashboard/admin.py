@@ -8,15 +8,20 @@ class DashboardConfigAdmin(admin.ModelAdmin):
 admin.site.register(DashboardConfig, DashboardConfigAdmin)
 
 class ExpertProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'phone', 'organization', 'research_field')
+    list_display = ('user', 'catalog', 'phone', 'organization', 'research_field')
     choise_display = ('user')
 admin.site.register(ExpertProfile, ExpertProfileAdmin)
 
 #class ExpertProfileInline(admin.StackedInline):
 #    model = ExpertProfile
- #   max_num = 1
+#    max_num = 1
 #    can_delete = False
 #class ExpertUserAdmin(UserAdmin):
 #    inlines = [ExpertProfileInline,]
 #admin.site.unregister(User)
 #admin.site.register(User, ExpertUserAdmin)
+
+class ExpertCatalogAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    choise_display = ('name')
+admin.site.register(ExpertCatalog, ExpertCatalogAdmin)
