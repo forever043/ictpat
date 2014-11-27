@@ -6,6 +6,9 @@ from rankmgr.models import *
 class PatentPackageAdmin(admin.ModelAdmin):
 	list_display = ('name', 'rating_weight', 'submit_date', 'finish_date')
 	choise_display = 'name'
+class PatentPackageCatalogWeightAdmin(admin.ModelAdmin):
+    list_display = ('package', 'catalog', 'weight')
+    choise_display = 'package'
 class PatentPackageRankItemAdmin(admin.ModelAdmin):
 	list_display = ('package', 'item', 'weight')
 	choise_display = 'item'
@@ -19,6 +22,7 @@ class PatentExpertRatingAdmin(admin.ModelAdmin):
 	list_display = ('report', 'expert', 'ratings', 'remark', 'submit_date')
 	choise_display = 'expert'
 admin.site.register(PatentPackage, PatentPackageAdmin)
+admin.site.register(PatentPackageCatalogWeight, PatentPackageCatalogWeightAdmin)
 admin.site.register(PatentPackageRankItem, PatentPackageRankItemAdmin)
 admin.site.register(PatentExpertItemRating, PatentExpertItemRatingAdmin)
 admin.site.register(PatentRatingReport, PatentRatingReportAdmin)
@@ -32,7 +36,7 @@ admin.site.register(ExpertCatalogWeight, ExpertCatalogWeightAdmin)
 
 # 评分项目库
 class RankCatalogAdmin(admin.ModelAdmin):
-	list_display = ('name', 'desc')
+	list_display = ('name', 'sort', 'disabled', 'desc')
 	choise_display = 'name'
 class RankOptionAdmin(admin.ModelAdmin):
 	list_display = ('name', 'index')

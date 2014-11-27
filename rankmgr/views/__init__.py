@@ -1,4 +1,5 @@
 from DashMgrRating import *
+from PackageWizardView import *
 from PackageDetailView import *
 from PackageEditView import *
 from PackageListView import *

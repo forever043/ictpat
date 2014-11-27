@@ -34,12 +34,25 @@ urlpatterns = patterns('',
                                model=User,
                                form_class=ExpertProfileEditForm,
                                success_url=reverse_lazy('rank-expert-list'))),
-                           name='rank-expert-edit'),  # Patent Rating Manager  # # 专利包列表
+                           name='rank-expert-edit'),
+
+                       # Patent Rating Manager  # # 专利包列表
                        url(r'^package/$',
                            login_required(PatentPackageListView.as_view(
                                context_object_name='package_list',
                                template_name='rankmgr/patent_package_list.html')),
-                           name='patent-package-list'),  ## 专利包创建
+                           name='patent-package-list'),
+
+                       # Patent ImportWizard View
+                       url(r'^package/wizard/',
+                           login_required(PatentPackageWizardView.as_view(
+                                   return_url = reverse_lazy('patent-package-list'),
+                           )), 
+                           name='patent-package-wizard'),
+
+
+#----------------- 老流程 ----------------------
+                       ## 专利包创建
                        url(r'^package/add/$',
                            login_required(DashMgrCreateView.as_view(
                                model=PatentPackage,

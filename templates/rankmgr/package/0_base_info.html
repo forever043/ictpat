@@ -1,0 +1,77 @@
+{% extends "rankmgr/package/base.html" %}
+{% load staticfiles %}
+
+
+{% block intro %}
+为新创建的专利评价包指定名称，设置评分项目权重，并编写专利包描述信息。
+{% endblock %}
+
+{% block form_content %}
+			
+	<div class="content-box">
+		<div class="content-box-header">
+			<h3>专利评价包信息</h3>
+			<div class="clear"></div>
+		</div>
+		
+		<div class="content-box-content">
+			<div class="tab-content default-tab" id="tab1" >
+				<fieldset>
+					<p> 
+						<label>
+							{{ form.name.label}}*
+							{% if form.name.errors %}
+							<span class="input-notification error png_bg">
+								{% for error in form.name.errors %}
+								{{ error }}
+								{% endfor %}
+							</span>
+							{% endif %}
+						</label>
+						{{ form.name }}
+					</p>
+				</fieldset>
+
+				<fieldset>
+					<p><label>评分权重*</label></p>
+					<table>
+						<tr>
+							<th>指标类别</th>
+							<th>总分</th>
+							{% for expert_catalog in wizard.form.get_expert_catalog %}
+							<th>{{ expert_catalog }}权重</th>
+							{% endfor %}
+						</tr>
+						{% for catalog, expert_weight in wizard.form.get_rank_catalog_weight %}
+						<tr>
+							<td width="10%">{{ catalog.label }}</td>
+							<td width="15%">{{ catalog }}</td>
+							{% for expert in expert_weight %}
+							<td>{{ expert }}</td>
+							{% endfor %}
+						</tr>
+						{% endfor %}
+					</table>
+				</fieldset>
+		
+				<br/>
+
+				<fieldset>
+					<p> 
+						<label>
+							{{ form.desc.label}}
+							{% if form.desc.errors %}
+							<span class="input-notification error png_bg">
+								{% for error in form.desc.errors %}
+								{{ error }}
+								{% endfor %}
+							</span>
+							{% endif %}
+						</label>
+						{{ form.desc }}
+					</p>
+				</fieldset>
+			</div>
+		</div>
+	</div>
+{% endblock %}

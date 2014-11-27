@@ -5,6 +5,8 @@ from django.db import models
 class RankCatalog(models.Model):
 	name = models.CharField(verbose_name='评分项目类别', max_length=20, unique=True)
 	desc = models.CharField(verbose_name='评分项目类别描述', max_length=200, null=True, blank=True)
+	sort = models.IntegerField(verbose_name='排序')
+	disabled = models.BooleanField(verbose_name='已禁用')
 
 	def __unicode__(self):
 		return self.name

@@ -20,6 +20,19 @@ class PatentPackage(models.Model):
         verbose_name_plural = u'专利包'
         permissions = (("can_operate_package", u"可以操作专利包"),)
 
+class PatentPackageCatalogWeight(models.Model):
+    package = models.ForeignKey(PatentPackage, verbose_name='专利包')
+    catalog = models.ForeignKey(RankCatalog, verbose_name='评分项目类别')
+    weight = models.IntegerField(verbose_name='权重')
+
+    def __unicode__(self):
+        return u"[%s][%s]%d" % (self.package.name, self.catalog.name, self.weight)
+    class Meta:
+        app_label = 'rankmgr'
+        verbose_name = u'专利包评分类别权重'
+        verbose_name_plural = u'专利包评分类别权重'
+        unique_together=(("package", "catalog"),)
+
 class PatentPackageRankItem(models.Model):
     package = models.ForeignKey(PatentPackage, verbose_name='专利包')
     item = models.ForeignKey(RankItem, verbose_name='评分项目')

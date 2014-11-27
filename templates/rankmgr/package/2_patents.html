@@ -1,0 +1,281 @@
+{% extends "common/mgrbase.html" %}
+{% load staticfiles %}
+
+
+{% block csslink %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static "css/jquery.dataTables.css" %}" type="text/css" media="screen" />
+<link rel="stylesheet" href="{% static "css/bootstrap.btn.css" %}">
+<style type="text/css">
+tr:hover td {
+    background-color:#e0e0e0;
+}
+</style>
+{% endblock %}
+
+
+{% block scripts %}
+{{ block.super }}
+<script type="text/javascript" src="{% static "scripts/jquery.jeditable.mini.js" %}"></script>
+<script type="text/javascript" src="{% static "scripts/jquery.dataTables.min.js" %}"></script>
+<script type="text/javascript" src="{% static "scripts/jquery.dataTables.rowGrouping.js" %}"></script>
+<script type="text/javascript" src="{% static "scripts/simpla.dataTables.configuration.js" %}"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	var selectedTable = $('#patent_list_selected').dataTable({
+		"sPaginationType": "full_numbers",
+		"oLanguage": oLanguage,
+		"bAutoWidth": false,
+		"aoColumns": [
+			{ "mData": "DT_RowId",		"sWidth": "5%" },
+			{ "mData": "apply_code",	"sWidth": "10%" },
+			{ "mData": "name", 		"sWidth": "30%" },
+			{ "mData": "department",	"sWidth": "20%" },
+			{ "mData": "state",		"sWidth": "10%" },
+			{ "mData": "inventors",		"sWidth": "25%" }
+		],
+		"fnCreatedRow": function(nRow, aData, iDataIndex) {
+			$(nRow).click( function() {
+				id = $(this).attr("id");
+				queryTable.find('tr[id="' + id + '"]').removeClass("selected-row");
+				selectedTable.fnDeleteRow(nRow);
+				selectedTable.draw();
+			});
+		}
+	});
+
+	var queryTable = $('#patent_list_all').dataTable({
+		"bProcessing": true,
+		"bServerSide": true,
+		"sAjaxSource": "{% url "patent-list-json" %}",
+		"bSort": false,
+		"sPaginationType": "full_numbers",
+		"oLanguage": oLanguage,
+		// Column Design
+		"bAutoWidth": false,
+		"aoColumns": [
+			{ "mData": "DT_RowId",		"sWidth": "5%" },
+			{ "mData": "apply_code",	"sWidth": "10%" },
+			{ "mData": "name", 		"sWidth": "30%" },
+			{ "mData": "department",	"sWidth": "20%" },
+			{ "mData": "state",		"sWidth": "10%" },
+			{ "mData": "inventors",		"sWidth": "25%" }
+		],
+        // set click handler for each row
+        "fnDrawCallback": function () {
+            $(this).find("tr").not(':first').click( function() {
+				var id = $(this).attr('id');
+				if ($(this).hasClass('selected-row')) {
+					selectedTable.fnDeleteRow(selectedTable.$('tr[id="' + id + '"]').get(0));
+				}
+				else {
+					selectedTable.fnAddData({
+						"apply_code":   $(this).find("td:eq(1)").text(),
+						"name":		$(this).find("td:eq(2)").text(),
+						"department":	$(this).find("td:eq(3)").text(),
+						"state":	$(this).find("td:eq(4)").text(),
+						"inventors":    $(this).find("td:eq(5)").text(),
+						"pk":		id,
+						"DT_RowId":	id
+					});
+				}
+				$(this).toggleClass('selected-row');
+            });
+        },
+		"fnCreatedRow": function(nRow, aData, iDataIndex) {
+			if (selectedTable.$('tr[id="' + aData["DT_RowId"] + '"]').length > 0) {
+				$(nRow).addClass('selected-row');
+			}
+		}
+	});
+
+	// Submit Form
+	$("#submit").click(function() { $("#pkgform").submit(); });
+	$("#pkgform").submit(function(event) {
+		// 验证专利包名不能为空
+        if ($("#{{ form.name.auto_id }}").val() == "") {
+			alert("专利包名称不能为空");
+			preventDefault(); 
+		}
+
+        // 验证评分权重，并生成权重值
+        var totalWeight = 0;
+        var rating_weight = "";
+        for (i=1; i<=5; i++) {
+            totalWeight += parseInt($("#weight_" + i).val());
+            if (i != 1)
+                rating_weight += ","
+            rating_weight += $("#weight_" + i).val();
+        }
+        if (totalWeight == 10)
+            $("#{{ form.rating_weight.auto_id }}").val(rating_weight);
+        else
+            alert("评分权重和必须为10");
+
+        // 验证是否选择了专利，并生成专利列表
+		if (selectedTable.$('tr').length <= 0) {
+			alert("请选择加入到该专利包中的专利");
+			preventDefault(); 
+		}
+		var lst = "";
+		selectedTable.$('tr').each(function() { lst += $(this).attr("id") + "&"; });
+		$("#{{ form.selected_patent_list.auto_id }}").val(lst);
+	});
+});
+</script>
+{% endblock %}
+
+{% block main_content %}
+			
+			<!-- Page Head -->
+			<h2>新建专利评价包</h2>
+			<p id="page-intro">创建专利评价包，并选择要评价的专利</p>
+
+			{% include 'common/notifymsg.html' %}
+
+			<span id="submit" class="btn btn-success" style="margin-bottom:18px;"> 
+				<i class="glyphicon glyphicon-ok"></i>
+				<span>创建专利包</span>
+			</span>
+			<span class="btn btn-info" onclick="window.location.href='{% url "patent-package-list" %}'" style="margin-bottom:18px;"> 
+				<i class="glyphicon glyphicon-remove"></i>
+				<span>取消</span>
+			</span>
+
+    {% if form.rating_weight.errors %}
+										<span class="input-notification error png_bg">
+											{% for error in form.rating_weight.errors %}
+											{{ error }}
+											{% endfor %}
+										</span>
+										{% endif %}
+
+			<div class="content-box">
+				
+				<div class="content-box-header">
+					<h3>专利评价包信息</h3>
+					<div class="clear"></div>
+				</div>
+				
+				<div class="content-box-content">
+					<div class="tab-content default-tab" id="tab1" >
+						<form id="pkgform" method="post">
+							{% csrf_token %}
+							{{ form.selected_patent_list }}
+                            {{ form.rating_weight }}
+
+							<fieldset>
+								<p>
+									<label>
+										{{ form.name.label}}*
+										{% if form.name.errors %}
+										<span class="input-notification error png_bg">
+											{% for error in form.name.errors %}
+											{{ error }}
+											{% endfor %}
+										</span>
+										{% endif %}
+									</label>
+									{{ form.name }}
+								</p>
+							</fieldset>
+
+							<fieldset>
+                                <p><label>评分权重*</label></p>
+                                <table>
+                                    <tr>
+                                        <th colspan="4">法律价值</th>
+                                        <th colspan="2">技术价值</th>
+                                        <th colspan="4">经济价值</th>
+                                    </tr>
+                                    <tr>
+                                        <td width=" 6%">依赖性</td>
+                                        <td width="10%"><input id="weight_1" type="number" max="9" min="1" value="2" class="text-input small-input" /></td>
+                                        <td width="10%">侵权可判定性</td>
+                                        <td width="10%"><input id="weight_2" type="number" max="9" min="1" value="2" class="text-input small-input" /></td>
+                                        <td width=" 6%">先进性</td>
+                                        <td width="10%"><input id="weight_3" type="number" max="9" min="1" value="2" class="text-input small-input" /></td>
+                                        <td width="10%">市场规模前景</td>
+                                        <td width="10%"><input id="weight_4" type="number" max="9" min="1" value="2" class="text-input small-input" /></td>
+                                        <td width="18%">政策适应性（与标准相关性）</td>
+                                        <td width="10%"><input id="weight_5" type="number" max="9" min="1" value="2" class="text-input small-input" /></td>
+                                    </tr>
+                                </table>
+							</fieldset>
+<!--
+							<fieldset style="text-align:right; padding-right:30px;">
+								<span id="submit" class="btn btn-success" style="margin-bottom:18px;"> 
+									<i class="glyphicon glyphicon-ok"></i>
+									<span>创建专利包</span>
+								</span>
+								<span class="btn btn-info" onclick="window.location.href='{% url "patent-package-list" %}'" style="margin-bottom:18px;"> 
+									<i class="glyphicon glyphicon-remove"></i>
+									<span>取消</span>
+								</span>
+							</fieldset>
+-->
+						</form>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="content-box">
+				<div class="content-box-header">
+					<h3>专利包</h3>
+					<div class="clear"></div>
+				</div>
+				
+				<div class="content-box-content">
+					<div class="tab-content default-tab" id="tab_selected" >
+						{% if form.selected_patent_list.errors %}
+						<span class="input-notification error png_bg">
+							{% for error in form.selected_patent_list.errors %}
+							{{ error }}
+							{% endfor %}
+						</span>
+						{% endif %}
+						<table id="patent_list_selected" class="datatable">
+							<thead>
+							<tr>
+								<th>序号</th>
+								<th>专利号</th>
+								<th>专利名称</th>
+								<th>所属部门</th>
+								<th>专利状态</th>
+								<th>发明人</th>
+							</tr>
+							</thead>
+						</table>
+						<div class="clear"></div>
+					</div>
+				</div>
+			</div>
+
+			<div class="content-box">
+				<div class="content-box-header">
+					<h3>所有专利</h3>
+					<div class="clear"></div>
+				</div>
+				
+				<div class="content-box-content">
+					<div class="tab-content default-tab" id="tab_all" >
+						<table id="patent_list_all" class="datatable">
+							<thead>
+							<tr>
+								<th>序号</th>
+								<th>专利号</th>
+								<th>专利名称</th>
+								<th>所属部门</th>
+								<th>专利状态</th>
+								<th>发明人</th>
+							</tr>
+							</thead>
+						</table>
+						<div class="clear"></div>
+					</div>
+				</div>
+			</div>
+						
+{% endblock %}
