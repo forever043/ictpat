@@ -47,7 +47,7 @@
 							<td width="10%">{{ catalog.label }}</td>
 							<td width="15%">{{ catalog }}</td>
 							{% for expert in expert_weight %}
-							<td>{{ expert }}</td>
+							<td>{{expert.label}}{{ expert }}</td>
 							{% endfor %}
 						</tr>
 						{% endfor %}

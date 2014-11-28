@@ -63,7 +63,7 @@ class PatentPackageWizardView(SessionWizardView):
             expert_weight = []
             # 获取 专家->类别 权重
             for expert_catalog in expert_catalog_list:
-                expert_weight.append((expert_catalog.name, cd["rank_%d_expert_%d_weight" % (catalog.id, expert_catalog.id)]))
+                expert_weight.append(('%s-%s' % (expert_catalog.name, catalog.name), cd["rank_%d_expert_%d_weight" % (catalog.id, expert_catalog.id)]))
             # 类别权重+专家类别权重
             rank_weight.append({
                 'catalog': catalog.name,

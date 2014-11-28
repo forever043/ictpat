@@ -157,7 +157,6 @@ $(document).ready(function() {
 		var lst = "";
 		selectedTable.$('tr').each(function() { lst += $(this).attr("id") + "&"; });
 		$("#{{ form.selected_patent_list.auto_id }}").val(lst);
-		alert($("#{{ form.selected_patent_list.auto_id }}").val());
 	});
 });
 </script>

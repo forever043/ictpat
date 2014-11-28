@@ -46,7 +46,7 @@ tr:hover td {
 						<td width="10%">{{ rank_weight.catalog }}</td>
 						<td width="15%">{{ rank_weight.weight }}</td>
 						{% for expert, weight in rank_weight.expert_weight %}
-						<td>{{weight}}</td>
+						<td>{{expert}}{{weight}}</td>
 						{% endfor %}
 					</tr>
 					{% endfor %}
