@@ -63,6 +63,36 @@ tr:hover td {
 	</div>
 	<div class="content-box-content">
 		<div class="tab-content default-tab" id="tab1" >
+		{% for catalog in package_summary.item_list %}
+		<label>{{ catalog.name }}</label>
+		<ul>
+			{% for item in catalog.items %}
+			<li>
+				{{ item.desc }}
+				<ul>
+					{% ifequal item.optNr 1 %}
+					<li>{{item.optA}}</li>
+					{% endifequal %}
+					{% ifequal item.optNr 2 %}
+					<li>{{item.optA}}</li>
+					<li>{{item.optB}}</li>
+					{% endifequal %}
+					{% ifequal item.optNr 3 %}
+					<li>{{item.optA}}</li>
+					<li>{{item.optB}}</li>
+					<li>{{item.optC}}</li>
+					{% endifequal %}
+					{% ifequal item.optNr 4 %}
+					<li>{{item.optA}}</li>
+					<li>{{item.optB}}</li>
+					<li>{{item.optC}}</li>
+					<li>{{item.optD}}</li>
+					{% endifequal %}
+				</ul>
+			</li>
+			{% endfor %}
+		</ul>
+		{% endfor %}
 		</div>
 	</div>
 </div>

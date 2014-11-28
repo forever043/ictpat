@@ -49,11 +49,23 @@ class PatentPackageWizardView(SessionWizardView):
                 'name': cd['name'],
                 'desc': cd['desc'],
                 'rank_weight': self.__get_rank_weight(cd),
+                'item_list': self.__get_item_list(cd),
                 'patent_list': Patent.objects.filter(pk__in = 
                     [int(s) for s in cd["selected_patent_list"].split('&') if s!=u""]),
             }
             context.update({'package_summary': summary})
+
         return context
+
+    def __get_item_list(self, cd):
+        item_list = []
+        rank_catalog_list = RankCatalog.objects.filter(disabled=False).order_by('sort')
+        for catalog in rank_catalog_list:
+            item_list.append({
+                'name': catalog.name,
+                'items': RankItem.objects.filter(pk__in = [int (s) for s in cd["catalog_%d_item" % catalog.id]]),
+            })
+        return item_list
 
     def __get_rank_weight(self, cd):
         rank_weight = []
