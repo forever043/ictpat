@@ -35,6 +35,7 @@
 				<fieldset>
 					<p><label>评分权重*</label></p>
 					<table>
+						<thead>
 						<tr>
 							<th>指标类别</th>
 							<th>总分</th>
@@ -42,15 +43,18 @@
 							<th>{{ expert_catalog }}权重</th>
 							{% endfor %}
 						</tr>
+						</thead>
+						<tbody>
 						{% for catalog, expert_weight in wizard.form.get_rank_catalog_weight %}
 						<tr>
 							<td width="10%">{{ catalog.label }}</td>
 							<td width="15%">{{ catalog }}</td>
 							{% for expert in expert_weight %}
-							<td>{{expert.label}}{{ expert }}</td>
+							<td>{{ expert }}</td>
 							{% endfor %}
 						</tr>
 						{% endfor %}
+						</tbody>
 					</table>
 				</fieldset>
 		
