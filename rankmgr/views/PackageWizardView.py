@@ -5,8 +5,10 @@ from django.core.urlresolvers import reverse_lazy
 from django.contrib.formtools.wizard.views import SessionWizardView
 from django.contrib import messages
 
-from rankmgr.models import PatentPackage
-from rankmgr.forms import PatentPackageBaseInfoForm, PatentPackageItemsForm, PatentPackagePatentsForm
+from dashboard.models import ExpertCatalog
+from patmgr.models import Patent
+from rankmgr.models import PatentPackage, RankCatalog, RankItem
+from rankmgr.forms import PatentPackageBaseInfoForm, PatentPackageItemsForm, PatentPackagePatentsForm, PatentPackageSummaryForm
 
 class PatentPackageWizardView(SessionWizardView):
     model=PatentPackage
@@ -14,11 +16,13 @@ class PatentPackageWizardView(SessionWizardView):
         ("base_info", PatentPackageBaseInfoForm),
         ("items",     PatentPackageItemsForm),
         ("patents",   PatentPackagePatentsForm),
+        ("summary",   PatentPackageSummaryForm),
     ]
     template_list = { 
         "base_info": "rankmgr/package/0_base_info.html",
         "items":     "rankmgr/package/1_items.html",
         "patents":   "rankmgr/package/2_patents.html",
+        "summary":   "rankmgr/package/3_summary.html",
     }
 
     initial_dict = {
@@ -39,7 +43,34 @@ class PatentPackageWizardView(SessionWizardView):
     def get_context_data(self, **kwargs):
         context = super(PatentPackageWizardView, self).get_context_data(**kwargs)
         context['request'] = self.request
+        if self.steps.current == 'summary':
+            cd = self.get_all_cleaned_data()
+            summary = {
+                'name': cd['name'],
+                'desc': cd['desc'],
+                'rank_weight': self.__get_rank_weight(cd),
+                'patent_list': Patent.objects.filter(pk__in = 
+                    [int(s) for s in cd["selected_patent_list"].split('&') if s!=u""]),
+            }
+            context.update({'package_summary': summary})
         return context
+
+    def __get_rank_weight(self, cd):
+        rank_weight = []
+        rank_catalog_list = RankCatalog.objects.filter(disabled=False).order_by('sort')
+        expert_catalog_list = ExpertCatalog.objects.all()
+        for catalog in rank_catalog_list:
+            expert_weight = []
+            # 获取 专家->类别 权重
+            for expert_catalog in expert_catalog_list:
+                expert_weight.append((expert_catalog.name, cd["rank_%d_expert_%d_weight" % (catalog.id, expert_catalog.id)]))
+            # 类别权重+专家类别权重
+            rank_weight.append({
+                'catalog': catalog.name,
+                'weight': cd["rank_%d_weight" % catalog.id],
+                'expert_weight': expert_weight,
+            })
+        return rank_weight
 
     def get_template_names(self):
         return [self.template_list[self.steps.current]]

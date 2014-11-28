@@ -11,11 +11,9 @@
 
 			{% include 'common/notifymsg.html' %}
 
-
-			<form enctype="multipart/form-data" method="post">
+			<form enctype="multipart/form-data" method="post" id="wizard_form">
 				{% csrf_token %}
 				{{ wizard.management_form }}
-
 
 				<p>
 					

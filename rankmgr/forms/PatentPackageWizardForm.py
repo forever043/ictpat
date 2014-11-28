@@ -43,6 +43,8 @@ class PatentPackageBaseInfoForm(forms.Form):
 
 
 class PatentPackageItemsForm(forms.Form):
+    rank_catalog = {}
+
     def __init__(self, *args, **kwargs):
         super(PatentPackageItemsForm, self).__init__(*args, **kwargs)
 
@@ -51,7 +53,16 @@ class PatentPackageItemsForm(forms.Form):
             items = ((i.id, i.desc) for i in RankItem.objects.filter(catalog=catalog))
             self.fields["catalog_%d_item" % catalog.id] = forms.MultipleChoiceField(label=catalog.name,
                 choices=items, widget=forms.CheckboxSelectMultiple())
+            self.rank_catalog["catalog_%d_item" % catalog.id] = self.fields["catalog_%d_item" % catalog.id]
+
+    def get_rank_catalog(self):
+        for catalog in self.rank_catalog:
+            yield self[catalog]
 
 class PatentPackagePatentsForm(forms.Form):
-    val = forms.CharField(widget=forms.Textarea(attrs={'class': 'large-input'}))
+    selected_patent_list = forms.CharField(max_length=4096, label='专利列表', widget=forms.HiddenInput())
+
+
+class PatentPackageSummaryForm(forms.Form):
+    pass
 

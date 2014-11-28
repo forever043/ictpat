@@ -1,51 +1,22 @@
 {% extends "rankmgr/package/base.html" %}
 {% load staticfiles %}
 
-
 {% block intro %}
 为专利包创建评分问卷
 {% endblock %}
 
 {% block form_content %}
-
-			<div class="content-box">
-
-				{{ wizard.form }}
-				
-				<div class="content-box-header">
-					<h3>法律指标</h3>
-					<div class="clear"></div>
-				</div>
-				
-				<div class="content-box-content">
-					<div class="tab-content default-tab" id="tab1" >
-					</div>
-				</div>
-
-			</div>
-
-			<div class="content-box">
-				<div class="content-box-header">
-					<h3>专利包</h3>
-					<div class="clear"></div>
-				</div>
-				
-				<div class="content-box-content">
-					<div class="tab-content default-tab" id="tab1" >
-					</div>
-				</div>
-			</div>
-
-			<div class="content-box">
-				<div class="content-box-header">
-					<h3>所有专利</h3>
-					<div class="clear"></div>
-				</div>
-				
-				<div class="content-box-content">
-					<div class="tab-content default-tab" id="tab_all" >
-					</div>
-				</div>
-			</div>
-						
+{% for catalog in wizard.form.get_rank_catalog %}
+<div class="content-box">
+	<div class="content-box-header">
+		<h3>{{ catalog.label }}</h3>
+		<div class="clear"></div>
+	</div>
+	<div class="content-box-content">
+		<div class="tab-content default-tab" id="tab1" >
+		{{ catalog }}
+		</div>
+	</div>
+</div>
+{% endfor %}
 {% endblock %}

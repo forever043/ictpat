@@ -33,12 +33,12 @@ $(document).ready(function() {
 			<h2>专利评价包</h2>
 			<p id="page-intro">专利评价包列表，检查未完成评价包状态，并导出已完成评价包的数据</p>
 
-			{% include 'common/notifymsg.html' %}
-
 			<span class="btn btn-success" onclick="window.location.href='{% url "patent-package-add" %}'" style="margin-bottom:18px;"> 
 				<i class="glyphicon glyphicon-plus"></i>
 				<span>添加专利包</span>
 			</span>
+
+			{% include 'common/notifymsg.html' %}
 
 			<div class="content-box">
 				

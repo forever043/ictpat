@@ -1,0 +1,105 @@
+{% extends "rankmgr/package/base.html" %}
+{% load staticfiles %}
+
+{% block intro %}
+预览并确认专利包
+{% endblock %}
+
+{% block csslink %}
+{{ block.super }}
+<style type="text/css">
+tr:hover td {
+        background-color:#e0e0e0;
+}
+</style>
+{% endblock %}
+
+{% block form_content %}
+<div class="content-box">
+	<div class="content-box-header">
+		<h3>专利包汇总信息</h3>
+		<div class="clear"></div>
+	</div>
+	<div class="content-box-content">
+		<div class="tab-content default-tab" id="tab1" >
+			<fieldset>
+				<p><b>专利包名称：</b>{{ package_summary.name }}</p>
+				<p><b>描述：</b>{{ package_summary.desc }}</p>
+			</fieldset>
+
+			<fieldset>
+				<p><label>评分权重*</label></p>
+				<table class="datatable">
+					{% for rank_weight in package_summary.rank_weight %}
+					{% ifequal forloop.counter 1 %}
+					<thead>
+					<tr>
+						<th>指标类别</th>
+						<th>总分</th>
+						{% for expert_catalog,weight in rank_weight.expert_weight %}
+						<th>{{ expert_catalog }}权重</th>
+						{% endfor %}
+					</tr>
+					</thead>
+					{% endifequal %}
+					<tr>
+						<td width="10%">{{ rank_weight.catalog }}</td>
+						<td width="15%">{{ rank_weight.weight }}</td>
+						{% for expert, weight in rank_weight.expert_weight %}
+						<td>{{weight}}</td>
+						{% endfor %}
+					</tr>
+					{% endfor %}
+				</table>
+			</fieldset>
+		</div>
+	</div>
+</div>
+
+<div class="content-box">
+	<div class="content-box-header">
+		<h3>评分项目预览</h3>
+		<div class="clear"></div>
+	</div>
+	<div class="content-box-content">
+		<div class="tab-content default-tab" id="tab1" >
+		</div>
+	</div>
+</div>
+
+<div class="content-box">
+	<div class="content-box-header">
+		<h3>专利列表</h3>
+		<div class="clear"></div>
+	</div>
+	<div class="content-box-content">
+		<div class="tab-content default-tab" id="tab1" >
+                        <table id="patent_list_selected" class="datatable">
+                                <thead>
+                                <tr>
+                                        <th>序号</th>
+                                        <th>专利号</th>
+                                        <th>专利名称</th>
+                                        <th>所属部门</th>
+                                        <th>专利状态</th>
+                                        <th>发明人</th>
+                                </tr>
+                                </thead>
+				<tbody>
+				{% for patent in package_summary.patent_list %}
+				<tr>
+					<td>{{ forloop.counter }}</td>
+					<td>{{ patent.apply_code }}</td>
+					<td>{{ patent.name }}</td>
+					<td>{{ patent.department }}</td>
+					<td>{{ patent.state }}</td>
+					<td>{{ patent.inventors }}</td>
+				</tr>
+				{% endfor %}
+				</tbody>
+                        </table>
+		</ul>
+		</div>
+	</div>
+</div>
+{% endblock %}
