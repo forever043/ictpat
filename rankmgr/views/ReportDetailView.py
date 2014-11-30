@@ -76,6 +76,7 @@ class PatentReportDetailView(SuccessMessageMixin, UpdateView):
 		total = 0
 		for catalog in catalog_list:
 			total += catalog_score['%d'%catalog.id]/catalog_weight['%d'%catalog.id]
+		self.object.rating = total
 		expert_rating_detail.append(('TOTAL',
 									[('TOTAL', catalog_score['%d'%catalog.id]/catalog_weight['%d'%catalog.id], 0) for catalog in catalog_list],
 									total))
