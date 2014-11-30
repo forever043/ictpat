@@ -1,0 +1,242 @@
+{% extends "common/mgrbase.html" %}
+{% load staticfiles %}
+
+{% block csslink %}
+{{ block.super }}
+<link href='{% static "css/jquery.rating.css" %}' type="text/css" rel="stylesheet"/>
+<link rel="stylesheet" href="{% static "css/bootstrap.btn.css" %}">
+<link rel="stylesheet" href="{% static "jquery.raty/jquery.raty.css" %}" type="text/css" media="screen" />
+<link rel="stylesheet" href="{% static "jquery.powerFloat/css/powerFloat.css" %}" type="text/css" media="screen" />
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }}
+<script type="text/javascript" src="{% static "scripts/jquery.rating.js" %}"></script>
+<script type="text/javascript" src="{% static "jquery.raty/jquery.raty.js" %}"></script>
+<script type="text/javascript" src="{% static "jquery.powerFloat/js/jquery-powerFloat.js" %}"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	// 初始化按钮动作
+    $('#return').click(function() { window.location.href = $("input[name=__next__]").val(); });
+    {% if not rating.submit_date %}
+    $('#submit').click(function() {
+        // 检查是否所有项目都已经给分
+        rating_all_check = true;
+        $('.rating_detail_raty').each(function() {
+            if (!$(this).raty('score'))
+                rating_all_check = false;
+        });
+        if (!rating_all_check) {
+            alert('有项目没有打分');
+            return;
+        }
+
+        var word_match = $('#{{ form.remark.auto_id }}').val() //.match(/[\u4e00-\u9fa5]/g);
+        if (!word_match || word_match.length < 50) {
+			alert('专利评价至少要包含50个字符');
+			return;
+		}
+		$("#{{ form.action.auto_id }}").val($(this).attr('id'));
+		$("#{{ form.ratings.auto_id }}").val('0,0,0,0,0');
+		$("form:first").submit();
+	});
+    $('#save').click(function() {
+        $("#{{ form.action.auto_id }}").val($(this).attr('id'));
+		$("#{{ form.ratings.auto_id }}").val('0,0,0,0,0');
+		$("form:first").submit();
+	});
+	$('#reject').click(function() { alert("该操作无法撤销，请确认是否要拒绝评价该专利"); return false; });
+    {% endif %}
+});
+</script>
+{% endblock %}
+
+{% block main_content %}
+			
+<!-- Page Head -->
+<h2>专利等级评定</h2>
+<p id="page-intro">为专利评级，并填写专利意见</p>
+
+<span id="return" class="btn btn-info" style="margin-bottom:18px;"> 
+	<i class="glyphicon glyphicon-backward"></i>
+	<span>返回列表</span>
+</span>
+{% if not rating.submit_date %}
+<span id="submit" class="btn btn-success submit" style="margin-bottom:18px;"> 
+	<i class="glyphicon glyphicon-ok"></i>
+	<span>提交评价</span>
+</span>
+<span id="save" class="btn btn-warning submit" style="margin-bottom:18px;"> 
+	<i class="glyphicon glyphicon-save"></i>
+	<span>保存草稿</span>
+</span>
+<span id="reject" class="btn btn-danger submit" style="margin-bottom:18px; float:right; display:none;"> 
+	<i class="glyphicon glyphicon-remove"></i>
+	<span>拒绝</span>
+</span>
+{%  endif %}
+
+<span id="next" class="btn btn-success submit" style="margin-bottom:18px; margin-left:5px; float:right;" {% if rating_next %}onclick="window.location.href = '{% url 'patent-rating-detail' rating_next state %}';"{%endif%}>
+	<span>下一个</span>
+	<i class="glyphicon glyphicon-step-forward"></i>
+</span>
+<span id="prev" class="btn btn-success submit" style="margin-bottom:18px; float:right;" {% if rating_prev %}onclick="window.location.href = '{% url 'patent-rating-detail' rating_prev state %}';"{%endif%}>
+	<i class="glyphicon glyphicon-step-backward"></i>
+	<span>上一个</span>
+</span>
+
+{% include 'common/notifymsg.html' %}
+
+<form method="post">
+	{% csrf_token %}
+	{{ form.action }}
+	{{ form.patent }} {{ form.expert }} {{ form.ratings }}
+	<input type="hidden" name="__next__" value="{{ i__next__ }}">
+
+	<div class="content-box">
+		<div class="content-box-header">
+			<h3>专利信息</h3>
+			<ul class="content-box-tabs">
+				<li><a href="#tab1" class="default-tab">专利信息</a></li>
+				{% if rankfile_exist %}<li><a href="#tab2">评价材料</a></li>{% endif %}
+				{% if specfile_exist %}<li><a href="#tab3">说明材料</a></li>{% endif %}
+			</ul>
+			<div class="clear"></div>
+		</div>
+		
+		<div class="content-box-content">
+			<div class="tab-content{% if not extmode %} default-tab{% endif %}" id="tab1" >
+				<fieldset class="column-left">
+					<p><b>专利名称：</b>{{ patent.name }}</p>
+					<p><b>专利状态：</b>{{ patent.state }}</p>
+					<p><b>专利类型：</b>{{ patent.type }}</p>
+					<p>
+						{% if not patent.apply_file and not patent.authorize_file %}
+						<label>暂无相关证书</label>
+						{% else %}
+						<label>
+							查看证书：
+							{% if patent.apply_file %}
+							<a target="_blank" href="{% url 'patent-file-service' patent.apply_code %}">申请证书</a>
+							&nbsp;&nbsp;&nbsp;&nbsp;
+							{% endif %}
+							{% if patent.authorize_file %}
+							<a target="_blank" href="{% url 'patent-file-service' patent.authorize_code %}">授权证书</a>
+							{% endif %}
+						</label>
+						{% endif %}
+					</p>
+					{% if history_rating %}
+					<p><b>历史评价：</b></p>
+					<div style="padding-left:10px">
+					{% for o in history_rating %}
+                        <p>
+                        <span>({{ o.finish_date }})</span>
+                        <span style="float:right;" class="history_rating_raty" rating="{{ o.rank }}" readonly="true" />
+                        </p>
+                        <p>
+						{% if o.report %}{{ o.report }}{% else %}<i>无评价内容</i>{% endif %}</span>
+                        </p>
+					{% endfor %}
+					</div>
+					{% else %}
+					<p><b>暂无历史评价</b></p>
+					{% endif %}
+				</fieldset>
+
+				<fieldset class="column-right">
+					<label>评分统计</label>
+					<table>
+						<thead>
+						<tr>
+							<th>指标类别</th>
+							<th>分数</th>
+							<th>题目总数</th>
+							<th>完成数</th>
+							<th>得分</th>
+						</tr>
+						</thead>
+						<tbody>
+						{% for catalog in summary %}
+						<tr>
+							<td>{{ catalog.name }}</td>
+							<td>{{ catalog.score }}</td>
+							<td>{{ catalog.count }}</td>
+							<td>{{ catalog.finish_count }}</td>
+							<td>{{ catalog.final_score }}</td>
+						</tr>
+						{% endfor %}
+						</tbody>
+						<tfoot>
+						<tr>
+							<td colspan=4 style="text-align:right; font-size:18px;">总分</td>
+							<td style="font-size:24px;">{{ overall_score }}</td>
+						</tr>
+						</tfoot>
+					</table>
+					<div class="clear" />
+				</fieldset>
+				<div class="clear"></div>
+			</div>
+
+			<div class="tab-content" id="tab2" >
+				<iframe id="viewer" src = "/resources/Viewer.js/index.html#{% url 'patent-rank-file-service' patent.apply_code patent.apply_code %}" width='100%' height='800' allowfullscreen webkitallowfullscreen></iframe>
+			</div>
+
+			<div class="tab-content" id="tab3" >
+				<iframe id="viewer" src = "/resources/Viewer.js/index.html#{% url 'patent-spec-file-service' patent.apply_code patent.apply_code %}" width='100%' height='800' allowfullscreen webkitallowfullscreen></iframe>
+			</div>
+		</div>
+	</div>
+
+	<div class="content-box">
+		<div class="content-box-header">
+			<h3>评分项目</h3>
+			<div class="clear"></div>
+		</div>
+
+		<div class="content-box-content">
+			<div class="tab-content default-tab" style="font-size:14px;">
+				{% for catalog, item_list in form.get_rank_catalog %}
+				<fieldset>
+					<p>
+					<label style="font-size:16px;">{{ forloop.counter }}. {{catalog}}</label>
+					{% for item in item_list %}
+					{{ forloop.parentloop.counter }}.{{ forloop.counter }} {{item.label}}
+					{{item}}
+					{% endfor %}
+					</p>
+				</fieldset>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+
+	<div class="content-box">
+		<div class="content-box-header">
+			<h3>{{form.remark.label}}</h3>
+			<div class="clear"></div>
+		</div>
+		<div class="content-box-content">
+			<div class="tab-content default-tab">
+				<fieldset>
+					<label>
+						<!--<h4>{{ form.remark.label }}*</h4>-->
+						<small>意见内容不能少于50个字符</small>
+						{% if form.remark.errors %}
+						<span class="input-notification error png_bg">
+							{% for error in form.remark.errors %}
+							{{ error }}
+							{% endfor %}
+						</span>
+						{% endif %}
+					</label>
+					{{ form.remark }}
+				</fieldset>
+			</div>
+		</div>
+	</div>
+
+	</form>
+{% endblock %}
+

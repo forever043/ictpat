@@ -11,7 +11,7 @@ from django.core import exceptions
 import json
 import string
 
-from rankmgr.models import PatentRatingReport
+from rankmgr.models import *
 from retrvhome.views import FileServeView
 
 
@@ -68,7 +68,46 @@ class PatentRatingDetailView(SuccessMessageMixin, UpdateView):
         else:
             context['i__next__'] = reverse_lazy('submit-patent-rating-list')
 
+        # 评分统计表格
+        summary = []
+        overall_score = 0
+        for catalog in RankCatalog.objects.filter(disabled=False).order_by('sort'):
+            score = PatentPackageCatalogWeight.objects.get(package=self.object.report.package, catalog=catalog).weight
+            count = len(PatentPackageRankItem.objects.filter(package=self.object.report.package, item__catalog=catalog))
+            finish_count = len(RatingSelect.objects.filter(rating=self.object, item__catalog=catalog))
+            if count == finish_count:
+                item_list = PatentPackageRankItem.objects.filter(package=self.object.report.package, item__catalog=catalog)
+                total_weight = 0
+                for item in item_list:
+                    total_weight += item.weight
+                final_score = 0
+                for item in item_list:
+                    item_score = float(score * item.weight)/total_weight
+                    select_percent = float(item.item.optNr - RatingSelect.objects.get(rating=self.object, item=item.item).select.index)/item.item.optNr
+                    final_score += item_score * select_percent
+
+                if overall_score >= 0:
+                    overall_score+=final_score
+            else:
+                final_score = '----'
+                overall_score = -1
+            summary.append({
+                'name': catalog.name,
+                'score': score,
+                'count': count,
+                'finish_count': finish_count,
+                'final_score': final_score,
+            })
+        context['summary'] = summary
+        context['overall_score'] = overall_score if overall_score >= 0 else '----'
+
         return context
+
+    def get_initial(self):
+        initial = {}
+        for rating in RatingSelect.objects.filter(rating__report=self.object.report):
+            initial.update({'item_%d' % rating.item.id: rating.select.index})
+        return initial 
 
     def get_success_message(self, cleaned_data):
         if self.request.POST["action"] == "save":

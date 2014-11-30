@@ -53,15 +53,16 @@ urlpatterns = patterns('',
 
 #----------------- 老流程 ----------------------
                        ## 专利包创建
-                       url(r'^package/add/$',
-                           login_required(DashMgrCreateView.as_view(
-                               model=PatentPackage,
-                               form_class=PatentPackageCreateForm,
-                               template_name='rankmgr/patent_package_add.html',
-                               success_url=reverse_lazy('patent-package-list'),
-                               success_message=u'专利包 "%(name)s" 添加成功',
-                               error_message=u'专利包失败')),
-                           name='patent-package-add'),  ## 专利包提交
+                       #url(r'^package/add/$',
+                       #    login_required(DashMgrCreateView.as_view(
+                       #        model=PatentPackage,
+                       #        form_class=PatentPackageCreateForm,
+                       #        template_name='rankmgr/patent_package_add.html',
+                       #        success_url=reverse_lazy('patent-package-list'),
+                       #        success_message=u'专利包 "%(name)s" 添加成功',
+                       #        error_message=u'专利包失败')),
+                       #    name='patent-package-add'),
+                       ## 专利包提交
                        url(r'^package/(?P<pk>\d+)/edit/$',
                            login_required(PackageEditView.as_view(
                                model=PatentPackage,
@@ -111,7 +112,10 @@ urlpatterns = patterns('',
                                context_object_name='report',
                                form_class=PatentRatingReportForm,
                                template_name='rankmgr/patent_report_detail.html')),
-                           name='patent-report-detail'),  ########## 专家评价界面 ########  # 待评专利列表
+                           name='patent-report-detail'),
+
+                       ########## 专家评价界面 ########
+                       # 待评专利列表
                        url(r'^rating/list/$',
                            login_required(PatentRatingListView.as_view(
                                context_object_name='rating_list',
@@ -131,9 +135,11 @@ urlpatterns = patterns('',
                        url(r'^rating/(?P<pk>\d+)/(?P<state>.+)/$',
                            login_required(PatentRatingDetailView.as_view(
                                model=PatentExpertRating,
-                               form_class=PatentExpertRatingForm,
+                               #form_class=PatentExpertRatingForm,
                                context_object_name='rating',
-                               template_name='rankmgr/patent_rating_detail.html',
+                               #template_name='rankmgr/patent_rating_detail.html',
+                               form_class=PatentRatingPageForm,
+                               template_name='rankmgr/patent_rating_page.html',
                                default_referer_url=reverse_lazy('patent-rating-list'),
                                success_message=u'专利 "%(name)s" 评价成功',
                                error_message=u'专利 "%(name)s" 评价失败')),
