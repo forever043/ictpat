@@ -89,7 +89,7 @@ class PatentRatingDetailView(SuccessMessageMixin, UpdateView):
                 if overall_score >= 0:
                     overall_score+=final_score
             else:
-                final_score = '----'
+                final_score = -1
                 overall_score = -1
             summary.append({
                 'name': catalog.name,
@@ -99,13 +99,13 @@ class PatentRatingDetailView(SuccessMessageMixin, UpdateView):
                 'final_score': final_score,
             })
         context['summary'] = summary
-        context['overall_score'] = overall_score if overall_score >= 0 else '----'
+        context['overall_score'] = overall_score
 
         return context
 
     def get_initial(self):
         initial = {}
-        for rating in RatingSelect.objects.filter(rating__report=self.object.report):
+        for rating in RatingSelect.objects.filter(rating=self.object):
             initial.update({'item_%d' % rating.item.id: rating.select.index})
         return initial 
 

@@ -64,12 +64,12 @@ $(document).ready(function() {
 								<th width="10%">帐号</th>
 								<th width="8%">姓名</th>
 								<th width="7%">工作单位</th>
-								<th width="20%">研究领域</th>
+								<th width="10%">专家类别</th>
+								<th width="25%">研究领域</th>
 								<th width="10%">E-Mail</th>
 								<th width="10%">联系电话</th>
 								<th width="10%">评审统计（完成/分配）</th>
-								<th width="10%">状态</th>
-								<th width="15%">操作</th>
+								<th width="10%">操作</th>
 							</tr>
 							</thead>
 							{% if expert_list %}
@@ -80,15 +80,15 @@ $(document).ready(function() {
 									<td>{{ expert.username }}</td>
 									<td>{{ expert.last_name }}{{ expert.first_name }}</td>
 									<td>{{ expert.expertprofile.organization }}</td>
+									<td>{{ expert.expertprofile.catalog.name }}</td>
 									<td>{{ expert.expertprofile.research_field }}</td>
 									<td>{{ expert.email }}</td>
 									<td>{{ expert.expertprofile.phone }}</td>
 									<td>{{ expert.rating_finish }}/{{ expert.rating_total }}</td>
-									<td>{% if expert.is_active %}正常{% else %}已停用{% endif %}</td>
 									<td>
-										<a href="#">重置密码</a>&nbsp;|
-										<a href="{% url 'rank-expert-edit' expert.pk %}">修改信息</a>&nbsp;|
-										<a href="#">停用帐号</a>
+										<!--<a href="#">重置密码</a>&nbsp;|-->
+										<a href="{% url 'rank-expert-edit' expert.pk %}">修改信息</a>&nbsp;
+										<!--|<a href="#">停用帐号</a>-->
 									</td>
 								</tr>
 								{% endif %}

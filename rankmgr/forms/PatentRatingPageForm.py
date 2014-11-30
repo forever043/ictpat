@@ -6,6 +6,7 @@ from datetime import datetime
 
 from  patmgr.models import Patent
 from rankmgr.models import *
+from rankmgr.views import RatingScore
 
 class PatentRatingPageForm(forms.ModelForm):
     action = forms.CharField(widget=forms.HiddenInput(), initial="save")
@@ -63,6 +64,12 @@ class PatentRatingPageForm(forms.ModelForm):
             if not opt == '':
                 sel.select = option_idx[int(opt)]
                 sel.save()
+
+        # 如果总评分可用，更新到数据库
+        score = RatingScore.get_package_rating_score(instance)
+        if not score == -1:
+            instance.ratings = score
+            instance.save()
 
         return instance
 

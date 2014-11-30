@@ -93,7 +93,7 @@ $(document).ready(function() {
 	{{ form.patent }} {{ form.expert }} {{ form.ratings }}
 	<input type="hidden" name="__next__" value="{{ i__next__ }}">
 
-	<div class="content-box">
+	<div class="content-box column-left">
 		<div class="content-box-header">
 			<h3>专利信息</h3>
 			<ul class="content-box-tabs">
@@ -144,8 +144,27 @@ $(document).ready(function() {
 					{% endif %}
 				</fieldset>
 
-				<fieldset class="column-right">
-					<label>评分统计</label>
+				<div class="clear"></div>
+			</div>
+
+			<div class="tab-content" id="tab2" >
+				<iframe id="viewer" src = "/resources/Viewer.js/index.html#{% url 'patent-rank-file-service' patent.apply_code patent.apply_code %}" width='100%' height='800' allowfullscreen webkitallowfullscreen></iframe>
+			</div>
+
+			<div class="tab-content" id="tab3" >
+				<iframe id="viewer" src = "/resources/Viewer.js/index.html#{% url 'patent-spec-file-service' patent.apply_code patent.apply_code %}" width='100%' height='800' allowfullscreen webkitallowfullscreen></iframe>
+			</div>
+		</div>
+	</div>
+
+	<div class="content-box column-right">
+		<div class="content-box-header">
+			<h3>评分统计</h3>
+			<div class="clear"></div>
+		</div>
+		<div class="content-box-content">
+			<div class="tab-content default-tab">
+				<fieldset>
 					<table>
 						<thead>
 						<tr>
@@ -163,31 +182,24 @@ $(document).ready(function() {
 							<td>{{ catalog.score }}</td>
 							<td>{{ catalog.count }}</td>
 							<td>{{ catalog.finish_count }}</td>
-							<td>{{ catalog.final_score }}</td>
+							<td>{% ifnotequal catalog.final_score -1 %}{{ catalog.final_score | floatformat:"1" }}{% else %}----{% endifnotequal %}</td>
 						</tr>
 						{% endfor %}
 						</tbody>
 						<tfoot>
 						<tr>
 							<td colspan=4 style="text-align:right; font-size:18px;">总分</td>
-							<td style="font-size:24px;">{{ overall_score }}</td>
+							<td style="font-size:24px;">{% ifnotequal overall_score -1 %}{{ overall_score | floatformat:"1" }}{% else %}----{% endifnotequal %}</td>
 						</tr>
 						</tfoot>
 					</table>
 					<div class="clear" />
 				</fieldset>
-				<div class="clear"></div>
-			</div>
-
-			<div class="tab-content" id="tab2" >
-				<iframe id="viewer" src = "/resources/Viewer.js/index.html#{% url 'patent-rank-file-service' patent.apply_code patent.apply_code %}" width='100%' height='800' allowfullscreen webkitallowfullscreen></iframe>
-			</div>
-
-			<div class="tab-content" id="tab3" >
-				<iframe id="viewer" src = "/resources/Viewer.js/index.html#{% url 'patent-spec-file-service' patent.apply_code patent.apply_code %}" width='100%' height='800' allowfullscreen webkitallowfullscreen></iframe>
 			</div>
 		</div>
 	</div>
+
+	<div class="clear"></div>
 
 	<div class="content-box">
 		<div class="content-box-header">

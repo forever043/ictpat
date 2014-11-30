@@ -195,7 +195,7 @@ $(document).ready(function() {
 								</td>
 								<td>{{ o.expert.last_name }}{{ o.expert.first_name}}</td>
 								<td>{% if o.submit_date %}{% ifequal o.ratings "-1" %}已拒绝{% else %}已完成{% endifequal %}{% else %}进行中{% endif %}</td>
-								<td>{% if o.submit_date %}{% ifequal o.ratings "-1" %}----{% else %}{{ o.ratings }}{% endifequal %}{% else %}----{% endif %}</td>
+								<td>{% if o.submit_date %}{% ifequal o.ratings "-1" %}----{% else %}{{ o.ratings | floatformat:"1" }}{% endifequal %}{% else %}----{% endif %}</td>
 								<td>{% if o.remark %}{{ o.remark }}{% else %}----{% endif %}</td>
 								<td>{% if o.submit_date %}{{ o.submit_date }}{% else %}----{% endif %}</td>
 								<td>

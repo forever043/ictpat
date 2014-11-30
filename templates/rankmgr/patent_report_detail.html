@@ -136,7 +136,6 @@ $(document).ready(function() {
 				</div>
 			</div>
 
-
 			<div class="content-box">
 				<div class="content-box-header">
 					<h3>专利信息与专家评价</h3>
@@ -252,5 +251,62 @@ $(document).ready(function() {
 					</div>
 				</div>
 			</div>
-{% endblock %}
 
+			<div class="content-box closed-box">
+				<div class="content-box-header">
+					<h3>专利评分明细</h3>
+					<div class="clear"></div>
+				</div>
+
+				<div class="content-box-content">
+					<div class="tab-content default-tab" id="tab1" >
+						<table>
+							{% for expert, rating_detail, total_score in expert_rating_detail %}
+							{% if forloop.first %}
+							<thead>
+							<tr>
+								<th rowspan=2>评分专家</th>
+								<th rowspan=2>专家类别</th>
+								{% for catalog, score, weight  in rating_detail %}
+								<th colspan=2>{{ catalog }}</th>
+								{% endfor %}
+								<th rowspan=2>总分</th>
+							</tr>
+							<tr>
+								{% for catalog, score, weight  in rating_detail %}
+								<th>得分</th>
+								<th>权重</th>
+								{% endfor %}
+							</tr>
+							</thead>
+							<tbody>
+							{% endif %}
+							{% if not forloop.last %}
+							<tr>
+								<td>{{ expert.last_name }}{{ expert.first_name }}</td>
+								<td>{{ expert.expertprofile.catalog.name }}</td>
+								{% for catalog, score, weight  in rating_detail %}
+								<td>{% ifnotequal score -1 %}{{ score | floatformat:"1" }}{% else %}----{% endifnotequal %}</td>
+								<td>{{ weight }}</td>
+								{% endfor %}
+								<td>{% ifnotequal total_score -1 %}{{ total_score | floatformat:"1" }}{% else %}----{% endifnotequal %}</td>
+							</tr>
+							{% else %}
+							</tbody>
+							<tfoot>
+							<tr>
+								<td colspan=2 style="text-align:right;font-size:18px;">&nbsp;</td>
+								{% for catalog, score, weight  in rating_detail %}
+								<td colspan=2>{% ifnotequal score -1 %}{{ score | floatformat:"1" }}{% else %}----{% endifnotequal %}</td>
+								{% endfor %}
+								<td style="font-size:18px;">{% ifnotequal total_score -1 %}{{ total_score | floatformat:"1" }}{% else %}----{% endifnotequal %}</td>
+							</tr>
+							</tfoot>
+							{% endif %}
+							{% endfor %}
+						</table>
+					</div>
+				</div>
+			</div>
+
+{% endblock %}

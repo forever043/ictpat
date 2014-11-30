@@ -79,8 +79,8 @@ $(document).ready(function() {
 								<th>序号</th>
 								<th width="30%">专利名称</th>
 								<th>申请评价时间</th>
-								<th>历史评级</th>
-								<th>我的评价</th>
+								<th>评分进度</th>
+								<th>我的评分</th>
 								<th>操作</th>
 							</tr>
 							</thead>
@@ -90,8 +90,8 @@ $(document).ready(function() {
 								<td>{{ forloop.counter }}</td>
 								<td>{{ rating.report.patent.name }}</td>
 								<td>{{ rating.report.package.submit_date }}</td>
-								<td>{% if rating.current_rating %}<div id='raty' class="history_rating_list_raty" rating="{{ rating.current_rating }}" />{% else %}----{% endif %}</td>
-								<td>{% if rating.my_rating %}<div id='raty' class="rating_list_raty" rating="{{ rating.my_rating }}" />{% else %}----{% endif %}</td>
+								<td>{{ rating.finished_items }}/{{ rating.total_items }}</td>
+								<td>{% ifnotequal rating.my_rating -1 %}{{ rating.my_rating }}{% else %}----{% endifnotequal %}</td>
 								<td>
 									<a href="{% url 'patent-rating-detail' rating.pk 'pending' %}" title="评价">
 										<img src="{% static "images/icons/hammer_screwdriver.png" %}"/>评价
