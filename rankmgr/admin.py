@@ -4,7 +4,7 @@ from rankmgr.models import *
 
 # 专利评价管理
 class PatentPackageAdmin(admin.ModelAdmin):
-	list_display = ('name', 'rating_weight', 'submit_date', 'finish_date')
+	list_display = ('name', 'desc', 'rating_weight', 'submit_date', 'finish_date')
 	choise_display = 'name'
 class PatentPackageCatalogWeightAdmin(admin.ModelAdmin):
     list_display = ('package', 'catalog', 'weight')
@@ -12,21 +12,21 @@ class PatentPackageCatalogWeightAdmin(admin.ModelAdmin):
 class PatentPackageRankItemAdmin(admin.ModelAdmin):
 	list_display = ('package', 'item', 'weight')
 	choise_display = 'item'
-class PatentExpertItemRatingAdmin(admin.ModelAdmin):
-	list_display = ('report', 'expert', 'rankitem', 'select')
-	choise_display = 'rankitem'
 class PatentRatingReportAdmin(admin.ModelAdmin):
 	list_display = ('package', 'patent', 'rating', 'rank', 'report', 'finish_date')
 	choise_display = 'patent'
 class PatentExpertRatingAdmin(admin.ModelAdmin):
 	list_display = ('report', 'expert', 'ratings', 'remark', 'submit_date')
 	choise_display = 'expert'
+class RatingSelectAdmin(admin.ModelAdmin):
+	list_display = ('rating', 'item', 'select')
+	choise_display = 'rating'
 admin.site.register(PatentPackage, PatentPackageAdmin)
 admin.site.register(PatentPackageCatalogWeight, PatentPackageCatalogWeightAdmin)
 admin.site.register(PatentPackageRankItem, PatentPackageRankItemAdmin)
-admin.site.register(PatentExpertItemRating, PatentExpertItemRatingAdmin)
 admin.site.register(PatentRatingReport, PatentRatingReportAdmin)
 admin.site.register(PatentExpertRating, PatentExpertRatingAdmin)
+admin.site.register(RatingSelect, RatingSelectAdmin)
 
 
 class ExpertCatalogWeightAdmin(admin.ModelAdmin):

@@ -1,6 +1,15 @@
 {% extends "rankmgr/package/base.html" %}
 {% load staticfiles %}
 
+{% block csslink %}
+{{ block.super }}
+<style type="text/css">
+tbody tr:hover td {
+        background-color:#e0e0e0;
+}
+</style>
+{% endblock %}
+
 {% block intro %}
 为专利包创建评分问卷
 {% endblock %}
@@ -14,7 +23,28 @@
 	</div>
 	<div class="content-box-content">
 		<div class="tab-content default-tab" id="tab1" >
-		{{ catalog }}
+		<table>
+		<thead>
+		<tr>
+			<td>题目</td>
+			<td width="10%">权重</td>
+		</tr>
+		</thead>
+		<tbody>
+		{% for item in catalog %}
+		<tr>
+			<td>{{ item }}</td>
+			<td>
+				{% for weight in wizard.form.get_item_weight %}
+				{% ifequal item.choice_label weight.label %}
+				{{ weight }}
+				{% endifequal %}
+				{% endfor %}
+			</td>
+		</tr>
+		{% endfor %}
+		</tbody>
+		</table>
 		</div>
 	</div>
 </div>

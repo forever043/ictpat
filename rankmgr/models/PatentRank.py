@@ -8,6 +8,7 @@ from rankmgr.models.RankItem import RankItem, RankOption, RankCatalog
 
 class PatentPackage(models.Model):
     name = models.CharField(verbose_name='专利包名称', max_length=100, unique=True)
+    desc = models.CharField(verbose_name='专利包描述', max_length=1024, null=True, blank=True)
     rating_weight = models.CommaSeparatedIntegerField(verbose_name='评分权重', max_length=20,
                                                       default='2,2,2,2,2')
     submit_date = models.DateField(verbose_name='提交时间', null=True, blank=True)
@@ -74,21 +75,6 @@ class PatentRatingReport(models.Model):
         verbose_name = u'专利评级报告'
         verbose_name_plural = u'专利评级报告'
 
-
-class PatentExpertItemRating(models.Model):
-    report = models.ForeignKey(PatentRatingReport, verbose_name='所属评级报告')
-    expert = models.ForeignKey(User, verbose_name='专家')
-    rankitem = models.ForeignKey(PatentPackageRankItem, verbose_name='评分项目')
-    select = models.ForeignKey(RankOption, verbose_name='选择', null=True, blank=True)
-    def __unicode__(self):
-        return u"[%s][%s]<%s%s:%d> [%s]%s" % (self.rankitem.package.name, self.report.patent.name, self.expert.last_name, self.expert.first_name, self.select.index, self.rankitem.item.catalog.name, self.rankitem.item.desc)
-    class Meta:
-        app_label = 'rankmgr'
-        verbose_name = u'专家评分表(old)'
-        verbose_name_plural = u'专家评分表(old)'
-        unique_together=(("report", "expert", "rankitem"),)
-
-
 class PatentExpertRating(models.Model):
     report = models.ForeignKey(PatentRatingReport, verbose_name='所属评级报告')
     expert = models.ForeignKey(User, verbose_name='评分专家')
@@ -99,8 +85,21 @@ class PatentExpertRating(models.Model):
         return u"%s: %s[%s]" % (self.report.package.name, self.report.patent.name, self.expert.last_name + self.expert.first_name)
     class Meta:
         app_label = 'rankmgr'
-        verbose_name = u'专家评分'
-        verbose_name_plural = u'专家评分'
+        verbose_name = u'专家评分(old)'
+        verbose_name_plural = u'专家评分(old)'
         unique_together=(("report", "expert"),)
         permissions = (("can_operate_rating", u"可以操作专利评价"),)
+
+class RatingSelect(models.Model):
+    rating = models.ForeignKey(PatentExpertRating, verbose_name='评价目标')
+    item = models.ForeignKey(RankItem, verbose_name='评分项目')
+    select = models.ForeignKey(RankOption, verbose_name='选择', null=True, blank=True)
+    def __unicode__(self):
+        return u"[%s][%s]<%s%s:%d> [%s]%s" % (self.rating.report.package.name, self.rating.report.patent.name, self.rating.expert.last_name, self.rating.expert.first_name, self.select.index, self.item.catalog.name, self.item.desc)
+    class Meta:
+        app_label = 'rankmgr'
+        verbose_name = u'评分选择'
+        verbose_name_plural = u'评分选择'
+        unique_together=(("rating", "item"),)
+
 
