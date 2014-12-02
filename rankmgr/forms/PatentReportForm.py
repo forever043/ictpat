@@ -10,6 +10,7 @@ from rankmgr.models import PatentPackage, PatentRatingReport, PatentExpertRating
 
 class PatentRatingReportForm(forms.ModelForm):
     action = forms.CharField(widget=forms.HiddenInput(), initial="save")
+    rank_choices = (('高', 3), ('中', 2), ('低', 1),)
 
     class Meta:
         model = PatentRatingReport

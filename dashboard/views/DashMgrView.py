@@ -13,6 +13,7 @@ import json
 
 from patmgr.models import *
 from patmgr.forms import *
+from dashboard.models import *
 from retrvhome.views import FileServeView
 
 

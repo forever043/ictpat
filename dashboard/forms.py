@@ -6,6 +6,7 @@ from django.contrib.auth.models import User, Group
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
 from dashboard.models import ExpertProfile
+from dashboard.models import ExpertCatalog
 
 
 class ExpertProfileForm(UserCreationForm):
@@ -32,7 +33,8 @@ class ExpertProfileForm(UserCreationForm):
                 user=user,
                 phone=self.cleaned_data["phone"],
                 organization = self.cleaned_data["organization"],
-                research_field = self.cleaned_data["research_field"])
+                research_field = self.cleaned_data["research_field"],
+                catalog = ExpertCatalog.objects.get(id=1))
             user.expertprofile.save()
             user.groups.add(Group.objects.filter(name=u'评审专家').first())
             user.save()

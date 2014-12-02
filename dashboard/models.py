@@ -33,7 +33,7 @@ class ExpertCatalog(models.Model):
 
 class ExpertProfile(models.Model):
     user = models.OneToOneField(User)
-    catalog = models.ForeignKey(ExpertCatalog, verbose_name='专家类别')
+    catalog = models.ForeignKey(ExpertCatalog, verbose_name='专家类别', default=1)
     phone = models.CharField(verbose_name='联系电话', max_length=32, null=True, blank=True)
     organization = models.CharField(verbose_name='工作单位', max_length=128, null=True, blank=True)
     research_field = models.CharField(verbose_name='研究领域', max_length=128, null=True, blank=True)

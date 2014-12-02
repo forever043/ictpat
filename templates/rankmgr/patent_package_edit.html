@@ -43,17 +43,21 @@ $(document).ready(function() {
     var expertTable = $('#expert_list').dataTable({
         "bProcessing": true,
         "bServerSide": true,
-        "sAjaxSource": "{% url "user-list-json" %}",
+        "sAjaxSource": "{% url "expert-list-json" %}",
         "bSort": false,
-        "sPaginationType": "full_numbers",
+        //"sPaginationType": "full_numbers",
+        "bFilter": false,
+        "bPaginate": false,
+        "sScrollY": "400px",
         "oLanguage": oLanguage,
         // Column Design
         "bAutoWidth": false,
         "aoColumns": [
-            { "mData": "DT_RowId",   "sWidth": "10%" },
-            { "mData": "department", "sWidth": "35%" },
-            { "mData": "name",       "sWidth": "20%" },
-            { "mData": "email",      "sWidth": "35%" }
+            //{ "mData": "DT_RowId",   "sWidth": "10%" },
+            { "mData": "name",       "sWidth": "15%" },
+            { "mData": "department", "sWidth": "20%" },
+            { "mData": "email",      "sWidth": "20%" },
+            { "mData": "research",   "sWidth": "45%" }
         ],
 		"fnDrawCallback": function () {
 			var selected_patent_id = queryTable.$('tr.selected-row').attr('id');
@@ -206,10 +210,11 @@ $(document).ready(function() {
 						<table id="expert_list" class="datatable">
 							<thead>
 							<tr>
-								<th>序号</th>
-								<th>所属部门</th>
+								<!--<th>序号</th>-->
 								<th>姓名</th>
+								<th>所属部门</th>
 								<th>E-Mail</th>
+								<th>研究领域</th>
 							</tr>
 							</thead>
 						</table>

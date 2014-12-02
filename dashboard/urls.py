@@ -27,8 +27,20 @@ urlpatterns = patterns('',
                                column_template={
                                    "name": lambda o: u'%s%s' % (o.last_name, o.first_name),
                                    "email": lambda o: u'%s' % o.email,
-                                   "department": lambda o: u'%s' % "----",
+                                   "department": lambda o: u'%s' % '----',
                                })),
                            name='user-list-json'),
+
+                       url(r'^expert/list/data/$',
+                           login_required(ExpertListJson.as_view(
+                               model=User,
+                               columns=['name', 'email', 'research', 'department'],
+                               column_template={
+                                   "name": lambda o: u'%s%s' % (o.last_name, o.first_name),
+                                   "email": lambda o: u'%s' % o.email,
+                                   "research": lambda o: u'%s' % o.expertprofile.research_field,
+                                   "department": lambda o: u'%s' % o.expertprofile.organization,
+                               })),
+                           name='expert-list-json'),
 )
 

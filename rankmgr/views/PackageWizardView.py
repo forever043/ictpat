@@ -106,13 +106,11 @@ class PatentPackageWizardView(SessionWizardView):
             PatentPackageCatalogWeight(package=package, catalog=catalog,
                                        weight=int(cd["rank_%d_weight" % catalog.id])).save()
             # 专家类别权重
-            print u'专家类别权重'
             for expert_catalog in expert_catalog_list:
                 ExpertCatalogWeight(package=package,
                                     rank_catalog=catalog, expert_catalog=expert_catalog,
                                     weight=int(cd["rank_%d_expert_%d_weight" % (catalog.id, expert_catalog.id)])).save()
             # 项目列表与权重
-            print u'项目列表与权重'
             for item in RankItem.objects.filter(pk__in = [int (s) for s in cd["catalog_%d_item" % catalog.id]]):
                 PatentPackageRankItem(
                     package=package, item=item,
@@ -120,7 +118,6 @@ class PatentPackageWizardView(SessionWizardView):
                 ).save()
 
         # 专利列表
-        print u'专利列表'
         for patent in patent_list:
             PatentRatingReport(package=package, patent=patent).save()
   
