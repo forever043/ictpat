@@ -30,7 +30,7 @@ class PatentPackageDetailView(DetailView):
 		self.object.patent_count  = PatentRatingReport.objects.filter(package=self.object).count()
 		self.object.rating_finish = PatentExpertRating.objects.filter(report__package=self.object).filter(submit_date__gt="1900-01-01").count()
  		self.object.rating_total  = PatentExpertRating.objects.filter(report__package=self.object).count()
-		self.object.rating_percent = 100*self.object.rating_finish/self.object.rating_total
+    		self.object.rating_percent = (100*self.object.rating_finish/self.object.rating_total) if self.object.rating_finish!=0 else 0
 		self.object.report_finish = PatentRatingReport.objects.filter(package=self.object).filter(finish_date__gt="1900-01-01").count()
 		self.object.report_total  = PatentRatingReport.objects.filter(package=self.object).count()
 		self.object.report_percent = 100*self.object.report_finish / self.object.report_total

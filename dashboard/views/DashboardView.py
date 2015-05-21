@@ -72,6 +72,6 @@ class DashboardView(TemplateView):
         if request.user.has_perm('dashboard.operator'):
             return super(DashboardView, self).get(request, args, kwargs)
         elif request.user.has_perm('dashboard.expert'):
-            return HttpResponseRedirect('/dashboard/rank/rating/list/')
+            return HttpResponseRedirect(reverse_lazy('patent-rating-list'))
         else:
             return HttpResponseRedirect('/dashboard/login/')

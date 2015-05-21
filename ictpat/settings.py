@@ -116,6 +116,14 @@ TEMPLATE_DIRS = (
 # Sessions
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
+# E-Mail
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USER_TLS = True
+EMAIL_HOST = 'mail.ncic.ac.cn'
+EMAIL_HOST_USER = 'majiuyue@ncic.ac.cn'
+EMAIL_HOST_PASSWORD = 'myownapple'
+EMAIL_PORT = 25
+
 # Messages
 from django.contrib.messages import constants as message_constants
 MESSAGE_TAGS = {

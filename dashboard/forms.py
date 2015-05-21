@@ -73,6 +73,15 @@ class ExpertProfileEditForm(UserChangeForm):
     def clean_date_joined(self):
         return self.initial["date_joined"]
 
+    def clean_password2(self):
+        # Check that the two password entries match
+        password1 = self.cleaned_data.get("password1")
+        password2 = self.cleaned_data.get("password2")
+
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError(u'密码不匹配')
+        return password2
+
     def save(self, commit=True):
         user = super(ExpertProfileEditForm, self).save(True)
         user.first_name = self.cleaned_data["first_name"]
@@ -81,6 +90,8 @@ class ExpertProfileEditForm(UserChangeForm):
         user.expertprofile.phone=self.cleaned_data["phone"]
         user.expertprofile.organization = self.cleaned_data["organization"]
         user.expertprofile.research_field = self.cleaned_data["research_field"]
+        if self.cleaned_data["password2"]:
+            user.set_password(self.cleaned_data["password2"])
         if commit:
             user.is_active = True
             user.groups.add(Group.objects.filter(name=u'评审专家').first())

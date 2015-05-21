@@ -1,69 +1,81 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 {% load staticfiles %}
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>知识产权管理系统 | 登录</title>
-<link rel="stylesheet" href="{% static "css/reset.css" %}" type="text/css" media="screen" />
-<link rel="stylesheet" href="{% static "css/style.css" %}" type="text/css" media="screen" />
-<link rel="stylesheet" href="{% static "css/invalid.css" %}" type="text/css" media="screen" />	
-<script type="text/javascript" src="{% static "scripts/jquery-1.9.1.js" %}"></script>
-<script type="text/javascript" src="{% static "scripts/simpla.jquery.configuration.js" %}"></script>
-</head>
-  
-	<body id="login">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<base href=".">
+
+<title>知识产权管理系统</title>
+<link rel="shortcut icon" href="{% static "images/patent-logo.png" %}">
+<link rel="stylesheet" href="{% static "css/login.css" %}" type="text/css" media="screen">
+	<script type="text/javascript">
+	function check() {
+                return true;
+		$("#{{ form.username.auto_id }}").val($.trim($("#{{ form.username.auto_id }}").val()));
+		var name=$("#{{ form.username.auto_id }}").val();
+		alert (name);
+		if ( name== "") 
+		{
+			 $("#fromerror").html("请输入用户名");
+			 return false;
+		}
+
+		if ( $("#{{ form.password.auto_id }}").val()== "") 
+		{
+			 $("#fromerror").html("请输入密码");
+			 return false;
+		}
 		
-		<div id="login-wrapper" class="png_bg">
-			<div id="login-top">
-				<h1 style="color: #4F4F4F;">知识产权管理系统</h1>
-				<span style="font-size:32px;">知识产权管理系统</span>
-				<br />
-				<!-- Logo (221px width) -->
-				<!--<img id="logo" src="{% static "images/logo.png" %}" alt="知识产权管理系统" />-->
-			</div> <!-- End #logn-top -->
-			
-			<div id="login-content">
-				
-				<form method="POST" action="{% url 'django.contrib.auth.views.login' %}">
+		return true;	
+	}
+	</script>
+</head>
+<body id="splash">
 
+	<div class="container">
+		<div class="row large-rounded">
+			<div class="login ">
+				<div class="modal-header" align="center">
+					<h3>知识产权管理系统</h3>
+				</div>
+
+				<form action="{% url 'django.contrib.auth.views.login' %}" method="POST" onsubmit="return check();">
 					{% csrf_token %}
-
 					<input type="hidden" name="next" value="{{ next }}" />
-				
-					{% if form.errors %}
-					<div class="notification information png_bg">
-						<div>
-							用户名或密码不正确
-						</div>
-					</div>
-					{% else %}
-					<div class="notification information png_bg">
-						<div>
-							请输入用户名密码以登录系统
-						</div>
-					</div>
-					{% endif %}
-					
-					<p>
-						<label>用户名</label>
-						{{ form.username }}
-					</p>
-					<div class="clear"></div>
-					<p>
-						<label>密码</label>
-						{{ form.password }}
-					</p>
-					<div class="clear"></div>
 
-					<div class="clear"></div>
-					<p>
-						<input class="button" type="submit" value="登录" />
-					</p>
-					
+					<div class="modal-body clearfix">
+
+						<fieldset>
+
+							{% if form.errors %}
+							<div class="alert alert-message alert-error" style="">
+								<ul class="errorlist">
+									<li>密码错误或用户不存在，请联系POA管理员！<span id="fromerror"   ></span></li>
+								</ul>
+							</div>
+							{% endif %}
+
+							
+
+							<div class="control-group form-field clearfix ">
+								<label for="{{ form.username.auto_id }}">用户名</label>
+								<div class="input">
+									{{ form.username }}
+								</div>
+							</div>
+
+							<div class="control-group form-field clearfix ">
+								<label for="{{ form.password.auto_id }}">密码</label>
+								<div class="input">
+									{{ form.password }}
+								</div>
+							</div>
+						</fieldset>
+					</div>
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-primary pull-right">登入</button>
+					</div>
 				</form>
 			</div>
-            <div class="clear"></div>
-			<!--<div style="text-align:center;">推荐使用Chrome浏览器</div>-->
 		</div>
-  </body>
-</html>
+	</div>
+
+</body></html>

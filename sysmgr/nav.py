@@ -50,7 +50,7 @@ class SysMgrNav(Nav):
 	name = '系统信息维护'
 	view = 'sysmgr'
 	nav_group = 'main'
-	options = [MetaMgrOption, BatchImportOption, BatchUploadOption, FTPOption, ProfileOption, LoginMgrOption]
+	options = [MetaMgrOption, BatchImportOption, BatchUploadOption, FTPOption, ProfileOption]
 
 nav_groups.register(SysMgrNav)
 
